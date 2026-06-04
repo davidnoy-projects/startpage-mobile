@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Set up your dashboard — Wizard</title>
+<!--
+  wizard.html — guided first-run setup for index.html (the personal dashboard).
+  Standalone, no build, no shared JS with index.html. Runs at the SAME ORIGIN so
+  it writes the keys/settings into the same localStorage (sp_state, sp_gh_*) that
+  the dashboard reads on boot.
+
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  KEY REGISTRY — single source of truth (see KEYINFO below).                │
+  │  *** MAINTENANCE RULE ***                                                  │
+  │  When you add a NEW API key / credential to index.html (a new *ApiKey in   │
+  │  DEFAULTS or a new settings field), you MUST add it here too: a KEYINFO    │
+  │  entry (label + get-key URL + how it's stored) AND, if it can be checked,  │
+  │  a test in the TESTS map + a step that exercises it. Also update           │
+  │  CLAUDE.md / AGENTS.md. Keeping this in lock-step is required.             │
+  └──────────────────────────────────────────────────────────────────────────┘
+
+  Security rules honored here:
+   • Every user-supplied value reaches the DOM via textContent / element props —
+     never innerHTML string-concat (innerHTML is used ONLY for trusted static
+     markup). An XSS here would steal the dashboard's stored secrets (same origin).
+   • Secrets are sent ONLY to their own provider/worker test endpoint. No analytics,
+     no third parties (Google Identity Services loads only when the user runs the
+     calendar sign-in test).
+   • Error text is built from status code + provider name only — never the request
+     URL (Gemini/FRED/EIA embed the key in the URL), the response body, or the key.
+   • sp_wizard_progress stores ONLY non-secret progress (step + theme/units/location
+     + which steps were tested) — never secret values.
+   • commit() merges into sp_state and never overwrites an existing key with a blank.
+-->
+<style>
+  :root{
+    --bg:#0b1120; --bg2:#111a2e; --surface:#16213a; --surface2:#1d2b48;
+    --border:#2b3a5b; --text:#e6edf7; --muted:#93a4c3; --primary:#3b82f6;
+    --primary2:#60a5fa; --ok:#22c55e; --warn:#eab308; --bad:#ef4444;
+    --radius:12px; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 70% -10%,#16223f 0,var(--bg) 60%);
+    color:var(--text); min-height:100vh;
+  }
+  a{color:var(--primary2)}
+  .wrap{max-width:980px;margin:0 auto;padding:22px 18px 60px}
+  header.top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  header.top h1{font-size:18px;margin:0;font-weight:700}
+  header.top .sub{color:var(--muted);font-size:12px}
+  .bar{height:7px;background:var(--surface);border-radius:99px;overflow:hidden;margin:10px 0 4px}
+  .bar > div{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));width:0;transition:width .35s ease}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:14px}
+  .layout{display:grid;grid-template-columns:218px 1fr;gap:18px;align-items:start}
+  @media(max-width:760px){ .layout{grid-template-columns:1fr} .rail{display:none} }
+  .rail{position:sticky;top:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:8px}
+  .rail button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:none;color:var(--muted);
+    font:inherit;font-size:13px;padding:8px 10px;border-radius:8px;cursor:pointer}
+  .rail button:hover{background:rgba(255,255,255,.05)}
+  .rail button.active{background:rgba(59,130,246,.16);color:var(--text);font-weight:600}
+  .rail button[disabled]{opacity:.45;cursor:not-allowed}
+  .rail .dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+  .rail .dot.done{background:var(--ok);border-color:var(--ok);color:#04210f}
+  .rail .dot.active{border-color:var(--primary)}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;min-height:340px}
+  .card h2{margin:0 0 4px;font-size:21px}
+  .card h2:focus{outline:none}
+  .card .lead{color:var(--muted);margin:0 0 16px;font-size:14px}
+  .opt{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;vertical-align:middle;margin-left:8px}
+  .opt.rec{background:rgba(34,197,94,.16);color:#7ee2a3}
+  .opt.optl{background:rgba(147,164,195,.16);color:var(--muted)}
+  .why{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:8px;padding:11px 13px;margin:0 0 16px;font-size:13.5px;color:#cdd9ee}
+  .skipnote{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+  ol.steps{margin:0 0 14px;padding-left:22px} ol.steps li{margin:5px 0}
+  .field{margin:14px 0}
+  .field label{display:block;font-weight:600;margin-bottom:6px;font-size:13.5px}
+  .field .hint{color:var(--muted);font-size:12.5px;margin:-2px 0 7px}
+  .inrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  input[type=text],input[type=password],input[type=url],select,textarea{
+    background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);
+    font:inherit;padding:9px 11px;flex:1;min-width:180px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:0;border-color:var(--primary)}
+  textarea{width:100%;font-family:var(--mono);font-size:12px;min-height:120px;resize:vertical}
+  .btn{background:var(--primary);color:#fff;border:none;border-radius:8px;font:inherit;font-weight:600;padding:9px 16px;cursor:pointer}
+  .btn:hover{background:#2f6fe0}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+  .btn.ghost{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn.ghost:hover{background:rgba(255,255,255,.06)}
+  .btn.sm{padding:7px 12px;font-size:13px}
+  .btn.test{background:rgba(59,130,246,.15);border:1px solid var(--primary);color:var(--primary2)}
+  .btn.test:hover{background:rgba(59,130,246,.28)}
+  .iconbtn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:7px 9px;cursor:pointer;font-size:12px}
+  .iconbtn:hover{color:var(--text);background:rgba(255,255,255,.05)}
+  .result{margin-top:10px;border-radius:8px;padding:10px 12px;font-size:13px;display:none}
+  .result.show{display:block}
+  .result.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.5);color:#9af0bb}
+  .result.bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.5);color:#f7a7a7}
+  .result.busy{background:rgba(147,164,195,.1);border:1px solid var(--border);color:var(--muted)}
+  .result .fix{display:block;margin-top:6px;color:var(--text);opacity:.92}
+  .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .footer{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px}
+  .footer .right{display:flex;gap:8px}
+  .privacy{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
+  .privacy svg{flex:0 0 auto}
+  details.adv{margin-top:14px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;background:var(--bg2)}
+  details.adv summary{cursor:pointer;color:var(--primary2);font-weight:600;font-size:13.5px}
+  /* "What if I skip this?" — quieter than the real config collapsibles above. */
+  details.adv.skip{margin-top:8px;border-color:transparent;background:transparent;padding:4px 0}
+  details.adv.skip summary{color:var(--muted);font-weight:500;font-size:12.5px}
+  details.adv.skip .hint{margin-top:6px}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--surface2);color:var(--muted);margin-left:6px}
+  .reviewrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+  .reviewrow .st{font-size:16px;width:22px;text-align:center;flex:0 0 auto}
+  .reviewrow .nm{font-weight:600;flex:1}
+  .reviewrow .dt{color:var(--muted);font-size:12.5px}
+  .tag{font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  code.mono{font-family:var(--mono);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:12.5px;word-break:break-all}
+  .filebanner{background:rgba(234,179,8,.12);border:1px solid rgba(234,179,8,.5);color:#f3d774;border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <span style="font-size:24px">🧭</span>
+    <div>
+      <h1>Dashboard Setup</h1>
+      <div class="sub" id="subline">A friendly, step-by-step guide — most of it is optional.</div>
+    </div>
+  </header>
+  <div class="bar"><div id="progbar"></div></div>
+  <div class="meta"><span id="stepcount"></span><span id="timehint"></span></div>
+  <div class="layout">
+    <nav class="rail" id="rail" aria-label="Steps"></nav>
+    <main>
+      <section class="card" id="card" aria-live="polite"></section>
+      <div class="footer">
+        <button class="btn ghost" id="backBtn">← Back</button>
+        <div class="right">
+          <button class="btn ghost" id="skipBtn">Skip</button>
+          <button class="btn" id="nextBtn">Next →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+"use strict";
+/* ───────────────────────── helpers ───────────────────────── */
+// Safe DOM builder. `text` → textContent (safe for user values). `html` → innerHTML
+// (ONLY pass trusted static strings). Attributes via setAttribute; on*→listener.
+function el(tag, attrs){
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs){
+    const v = attrs[k];
+    if (v == null) continue;
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k === 'html') n.innerHTML = v;            // trusted static only
+    else if (k === 'for') n.htmlFor = v;
+    else if (k.slice(0,2) === 'on' && typeof v === 'function') n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v);
+  }
+  for (let i=2;i<arguments.length;i++){
+    let c = arguments[i];
+    if (c == null || c === false) continue;
+    if (Array.isArray(c)) { c.forEach(x=>{ if(x!=null) n.append(x.nodeType?x:document.createTextNode(String(x))); }); continue; }
+    n.append(c.nodeType ? c : document.createTextNode(String(c)));
+  }
+  return n;
+}
+function $(id){ return document.getElementById(id); }
+function isHttpOrigin(){ return location.protocol === 'http:' || location.protocol === 'https:'; }
+
+async function tfetch(url, opts, ms){
+  const ctl = new AbortController();
+  const t = setTimeout(()=>ctl.abort(), ms || 12000);
+  try { return await fetch(url, Object.assign({ signal: ctl.signal }, opts || {})); }
+  finally { clearTimeout(t); }
+}
+function classifyErr(e){
+  if (e && e.name === 'AbortError') return 'timeout';
+  if (e && /failed to fetch|networkerror|load failed|fetch event/i.test(e.message || '')) return 'network';
+  return 'error';
+}
+function proxyBase(){
+  let b = (cfg.stockProxyUrl || '').trim().replace(/\/+$/, '');
+  if (!b) return '';
+  try { return new URL(b).origin; } catch(_){ return b; }   // drop any stray path/query
+}
+function normRepo(r){
+  return String(r || '').trim()
+    .replace(/^https?:\/\/(www\.)?github\.com\//i, '')   // a pasted full URL
+    .replace(/\.git$/i, '')
+    .replace(/^\/+|\/+$/g, '');
+}
+function viaProxy(target){ return proxyBase() + '/?url=' + encodeURIComponent(target); }
+function workerReady(){ return !!(results.stockProxyUrl && results.stockProxyUrl.ok && proxyBase()); }
+
+let _gsiPromise = null;
+function loadGsi(){
+  if (_gsiPromise) return _gsiPromise;
+  _gsiPromise = new Promise((res, rej)=>{
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client'; s.async = true; s.defer = true;
+    s.onload = ()=>res(); s.onerror = ()=>rej(new Error('Could not load Google sign-in'));
+    document.head.appendChild(s);
+  });
+  return _gsiPromise;
+}
+
+/* ───────────────────────── state ───────────────────────── */
+const PROGRESS_KEY = 'sp_wizard_progress';
+const cfg = {};       // user inputs (secrets kept ONLY here + sp_state on commit)
+const results = {};   // { id: {ok, detail, fix} }
+let stepIdx = 0;
+const visited = new Set([0]);
+
+// Non-secret progress only. NEVER persist secret values here.
+function saveProgress(){
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify({
+      v:1, step: stepIdx,
+      theme: cfg.theme, tempUnit: cfg.tempUnit, weatherLocation: cfg.weatherLocation,
+      ghRepo: cfg.ghRepo, ghPath: cfg.ghPath,
+      // The Cloudflare Worker URL is a PUBLIC *.workers.dev origin (no auth, non-secret)
+      // and is the only credential field we can safely restore. Persist it ONLY when the
+      // worker test currently passes, so the resumed badge always reflects a validated URL.
+      workerUrl: (results.stockProxyUrl && results.stockProxyUrl.ok && cfg.stockProxyUrl) || undefined
+      // NOTE: secret values (keys/tokens/key-bearing URLs) are intentionally NEVER persisted here.
+    }));
+  } catch(_){}
+}
+function loadProgress(){
+  try {
+    const p = JSON.parse(localStorage.getItem(PROGRESS_KEY) || 'null');
+    if (p && p.v === 1){
+      if (p.theme) cfg.theme = p.theme;
+      if (p.tempUnit) cfg.tempUnit = p.tempUnit;
+      if (p.weatherLocation) cfg.weatherLocation = p.weatherLocation;
+      if (p.ghRepo) cfg.ghRepo = p.ghRepo;
+      if (p.ghPath) cfg.ghPath = p.ghPath;
+      if (p.workerUrl){
+        // Restore the validated (non-secret) worker origin and reconstruct the passing
+        // result, so the badge + rail dot light up and workerReady() stays true on resume
+        // (FRED/EIA gating and the LLM "route through worker" path behave correctly at once).
+        cfg.stockProxyUrl = p.workerUrl;
+        results.stockProxyUrl = { ok:true, detail:'Relay verified earlier — ready.', fix:null };
+      }
+      if (typeof p.step === 'number') { stepIdx = Math.min(Math.max(0,p.step), 0); } // restored after STEPS defined
+      return p;
+    }
+  } catch(_){}
+  return null;
+}
+
+/* ───────────────────────── live tests ─────────────────────────
+   Each returns { ok, detail, fix } with NO secret/URL/body in the text. */
+const TESTS = {
+  async stockProxyUrl(url){
+    let base = (url || '').trim();
+    if (!/^https?:\/\//i.test(base)) return { ok:false, detail:'That doesn’t look like a web address.', fix:'Paste the full address Cloudflare gave you — it ends in .workers.dev' };
+    // Keep only the origin (drop any path/query the user may have pasted, e.g. the edit URL).
+    try { base = new URL(base).origin; } catch(_){ base = base.replace(/\/+$/, ''); }
+    cfg.stockProxyUrl = base;   // store the cleaned origin so commit() saves a clean URL
+    try {
+      const p = await tfetch(base + '/ping', {}, 10000);
+      const txt = (await p.text()).trim();
+      if (txt !== 'pong') return { ok:false, detail:'Reached the address, but this looks like Cloudflare’s default sample code, not ours.', fix:'Scroll up to the “Worker code” box here, click Copy, paste it over everything in Cloudflare’s editor, and Deploy again.' };
+    } catch(e){
+      const k = classifyErr(e);
+      return { ok:false, detail: k==='timeout' ? 'Timed out reaching the relay.' : 'Couldn’t reach that address.',
+        fix:'Double-check the full https://…workers.dev address, and that you clicked Deploy (a saved-but-not-deployed worker won’t answer).' };
+    }
+    try {
+      const r = await tfetch(base + '/?url=' + encodeURIComponent('https://query1.finance.yahoo.com/v8/finance/spark?symbols=AAPL&range=1d&interval=1d'), {}, 12000);
+      if (r.status === 403) return { ok:false, detail:'The relay is up but rejected the request (403) — this looks like Cloudflare’s default sample code, not ours.', fix:'Scroll up to the “Worker code” box here, click Copy, paste it over everything in Cloudflare’s editor, and Deploy again.' };
+      if (!r.ok) return { ok:false, detail:'Relay is up, but a test data request failed ('+r.status+').', fix:'Click Deploy again; if it keeps failing, re-copy the worker code.' };
+      const j = await r.json().catch(()=>null);
+      if (!j || !j.spark) return { ok:false, detail:'Relay returned something unexpected.', fix:'Re-copy the worker code above and Deploy again.' };
+    } catch(e){ return { ok:false, detail:'Relay is up but the test data request failed.', fix:'Re-copy the worker code and Deploy again.' }; }
+    return { ok:true, detail:'Relay is working — live data will flow through it.', fix:null };
+  },
+
+  groqApiKey(k){ return _testLLM('groq', k); },
+  mistralApiKey(k){ return _testLLM('mistral', k); },
+  geminiApiKey(k){ return _testLLM('gemini', k); },
+
+  async fredApiKey(k){
+    k = (k||'').trim();
+    if (!k) return { ok:false, detail:'No key entered.', fix:'Paste your FRED key (it’s in the confirmation email).' };
+    if (!workerReady()) return { ok:false, detail:'This needs the Cloudflare Worker first.', fix:'Finish the “Data relay” step — FRED data goes through it.' };
+    const target = 'https://api.stlouisfed.org/fred/series/observations?series_id=T10Y2Y&limit=1&sort_order=desc&file_type=json&api_key=' + encodeURIComponent(k);
+    try {
+      const r = await tfetch(viaProxy(target), {}, 12000);
+      const j = await r.json().catch(()=>null);
+      if (j && Array.isArray(j.observations) && j.observations.length) return { ok:true, detail:'Working — FRED data received.', fix:null };
+      if ((j && (j.error_code || j.error_message)) || r.status === 400) return { ok:false, detail:'FRED rejected the key.', fix:'Confirm the 32-character key from your FRED confirmation email (not the sign-up page).' };
+      return { ok:false, detail:'Unexpected response from FRED.', fix:'Double-check the key, then try again.' };
+    } catch(e){ return { ok:false, detail:'Couldn’t reach FRED through your relay.', fix:'Confirm the Worker step is green, then retry.' }; }
+  },
+
+  async eiaApiKey(k){
+    k = (k||'').trim();
+    if (!k) return { ok:false, detail:'No key entered.', fix:'Paste your EIA key.' };
+    if (!workerReady()) return { ok:false, detail:'This needs the Cloudflare Worker first.', fix:'Finish the “Data relay” step — EIA data goes through it.' };
+    const target = 'https://api.eia.gov/v2/petroleum/stoc/wstk/data/?api_key=' + encodeURIComponent(k) + '&frequency=weekly&data[0]=value&facets[series][]=WCRSTUS1&sort[0][column]=period&sort[0][direction]=desc&length=1';
+    try {
+      const r = await tfetch(viaProxy(target), {}, 12000);
+      const j = await r.json().catch(()=>null);
+      if (j && j.response && Array.isArray(j.response.data) && j.response.data.length) return { ok:true, detail:'Working — EIA data received.', fix:null };
+      if ((j && j.error) || r.status === 403 || r.status === 400) return { ok:false, detail:'EIA rejected the key.', fix:'Re-copy the key from the EIA registration email.' };
+      return { ok:false, detail:'Unexpected response from EIA.', fix:'Double-check the key, then try again.' };
+    } catch(e){ return { ok:false, detail:'Couldn’t reach EIA through your relay.', fix:'Confirm the Worker step is green, then retry.' }; }
+  },
+
+  async stockApiKey(k){
+    k = (k||'').trim();
+    if (!k) return { ok:false, detail:'No key entered.', fix:'Paste your Twelve Data key.' };
+    try {
+      const r = await tfetch('https://api.twelvedata.com/quote?symbol=AAPL&apikey=' + encodeURIComponent(k), {}, 12000);
+      const j = await r.json().catch(()=>null);
+      if (j && j.status === 'error') return { ok:false, detail:'Twelve Data rejected the key.', fix:'Re-copy the key from your Twelve Data dashboard.' };
+      if (j && j.close) return { ok:true, detail:'Working — Twelve Data accepted the key.', fix:null };
+      return { ok:false, detail:'Unexpected response from Twelve Data.', fix:'Double-check the key, then try again.' };
+    } catch(e){ return { ok:false, detail:'Couldn’t reach Twelve Data from your browser.', fix:'Try again in a moment.' }; }
+  },
+
+  async ghSync(){
+    const pat = (cfg.ghPat||'').trim(); const repo = normRepo(cfg.ghRepo);
+    if (!pat || !repo) return { ok:false, detail:'Enter both a token and a repository.', fix:'You need a GitHub token and the repo to sync to (e.g. yourname/dashboard-config).' };
+    if ((repo.match(/\//g)||[]).length !== 1) return { ok:false, detail:'That repository doesn’t look like owner/repo.', fix:'Enter just the owner and name, e.g. yourname/dashboard-config (not a full link).' };
+    cfg.ghRepo = repo;   // store the normalized owner/repo
+    try {
+      const r = await tfetch('https://api.github.com/repos/' + repo, { headers:{ 'Authorization':'token '+pat, 'Accept':'application/vnd.github.v3+json' } }, 12000);
+      if (r.status === 200){
+        let writable = false; try { const j = await r.json(); writable = !!(j && j.permissions && j.permissions.push); } catch(_){}
+        return { ok:true, detail: writable ? 'Connected — repo reachable and writable.' : 'Connected — repo reachable. (Couldn’t confirm write access; sync needs a token with Contents: read/write.)', fix:null };
+      }
+      if (r.status === 401) return { ok:false, detail:'GitHub rejected the token (401).', fix:'Re-create the token and make sure you copied it fully (you can only see it once).' };
+      if (r.status === 404) return { ok:false, detail:'Repo not found, or the token can’t see it (404).', fix:'Check the owner/repo spelling, and that the token has access to that repo.' };
+      return { ok:false, detail:'Unexpected response ('+r.status+').', fix:'Try again in a moment.' };
+    } catch(e){ return { ok:false, detail:'Couldn’t reach GitHub.', fix:'Check your connection and retry.' }; }
+  },
+
+  async icsUrl(u){
+    u = (u||'').trim();
+    if (!/^https?:\/\//i.test(u)) return { ok:false, detail:'That doesn’t look like a calendar link.', fix:'Paste the “Secret address in iCal format” from Google Calendar settings (ends in .ics).' };
+    // The worker only allowlists calendar.google.com — route Google links through it
+    // (avoids CORS), but fetch other providers (iCloud/Outlook) directly.
+    let host = ''; try { host = new URL(u).hostname; } catch(_){}
+    try {
+      const target = (workerReady() && host === 'calendar.google.com') ? viaProxy(u) : u;
+      const r = await tfetch(target, {}, 12000);
+      const t = await r.text();
+      if (/BEGIN:VCALENDAR/.test(t)) return { ok:true, detail:'Working — your calendar feed loaded.', fix:null };
+      return { ok:false, detail:'That link didn’t return a calendar.', fix:'Make sure it’s the secret iCal (.ics) URL, not the share page.' };
+    } catch(e){
+      return { ok:false, detail:'Couldn’t load that calendar link.',
+        fix: (host === 'calendar.google.com' && !workerReady())
+          ? 'Set up the Data relay (Worker) first — Google calendar links need it.'
+          : 'Double-check it’s the secret .ics link (not the share page). Some calendar providers block this from a browser.' };
+    }
+  },
+
+  async gcalOauthClientId(id){
+    id = (id||'').trim();
+    if (!id) return { ok:false, detail:'No Client ID entered.', fix:'Paste the OAuth Client ID from Google Cloud Console.' };
+    if (!isHttpOrigin()) return { ok:false, detail:'Google sign-in needs the page served over http (not a file:// page).', fix:'Use the “Run it on a local server” option, then open the wizard at http://localhost:8080/wizard.html and try again.' };
+    try { await loadGsi(); } catch(e){ return { ok:false, detail:'Couldn’t load Google sign-in.', fix:'Check your connection and retry.' }; }
+    if (!(window.google && google.accounts && google.accounts.oauth2)) return { ok:false, detail:'Google sign-in library didn’t initialize.', fix:'Reload the page and try again.' };
+    return await new Promise((resolve)=>{
+      let done = false; const finish = (r)=>{ if(!done){ done=true; resolve(r); } };
+      try {
+        const tc = google.accounts.oauth2.initTokenClient({
+          client_id: id, scope: 'https://www.googleapis.com/auth/calendar.readonly',
+          callback: (resp)=>{
+            if (resp && resp.access_token){ try { google.accounts.oauth2.revoke(resp.access_token, ()=>{}); } catch(_){}
+              finish({ ok:true, detail:'Signed in — calendar access works. (We immediately revoked this test sign-in.)', fix:null });
+            } else finish({ ok:false, detail:'Sign-in didn’t return access.', fix:'Add this exact web address to “Authorized JavaScript origins” in Google Cloud Console, save, wait ~1 min, retry.' });
+          },
+          error_callback: ()=> finish({ ok:false, detail:'Google blocked or cancelled the sign-in.', fix:'Add this exact web address to “Authorized JavaScript origins” for this OAuth client, then retry. (Also add yourself as a test user if the app is unpublished.)' })
+        });
+        tc.requestAccessToken();
+        setTimeout(()=>finish({ ok:false, detail:'No response from the sign-in popup.', fix:'Allow popups for this page and retry — and finish (or close) the Google popup. If you closed it, just click Test again.' }), 25000);
+      } catch(e){ finish({ ok:false, detail:'Couldn’t start Google sign-in.', fix:'Make sure the Client ID is an OAuth client of type “Web application”.' }); }
+    });
+  }
+};
+
+async function _testLLM(id, key){
+  key = (key||'').trim();
+  if (!key) return { ok:false, detail:'No key entered.', fix:'Paste the key from the provider’s site.' };
+  const name = id==='groq' ? 'Groq' : id==='mistral' ? 'Mistral' : 'Gemini';
+  let target, opts;
+  if (id === 'gemini'){
+    target = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key);
+    opts = { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ contents:[{ role:'user', parts:[{ text:'ping' }] }], generationConfig:{ maxOutputTokens:1 } }) };
+  } else {
+    target = id==='groq' ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.mistral.ai/v1/chat/completions';
+    const model = id==='groq' ? 'llama-3.1-8b-instant' : 'mistral-small-latest';
+    opts = { method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key }, body: JSON.stringify({ model, messages:[{ role:'user', content:'ping' }], max_tokens:1 }) };
+  }
+  const useProxy = workerReady();
+  const url = useProxy ? viaProxy(target) : target;
+  try {
+    const r = await tfetch(url, opts, 15000);
+    if (r.status === 200) return { ok:true, detail:'Working — '+name+' accepted the key.', fix:null };
+    if (r.status === 429) return { ok:false, detail:name+' is rate-limiting right now (429) — the key itself looks fine.', fix:'Wait a minute and test again. This won’t affect normal use.' };
+    if (r.status === 400 || r.status === 401 || r.status === 403) return { ok:false, detail:name+' rejected the key ('+r.status+').', fix:'Re-copy the key (watch for a trailing space) and make sure you copied the whole thing.' };
+    return { ok:false, detail:name+' gave an unexpected response ('+r.status+').', fix:'Try again in a moment.' };
+  } catch(e){
+    const k = classifyErr(e);
+    if (k === 'timeout') return { ok:false, detail:'Timed out talking to '+name+'.', fix:'Try again in a moment.' };
+    return { ok:false, detail:'Couldn’t reach '+name+' from your browser.',
+      fix: useProxy ? 'Even through your relay it failed — wait a moment and retry.' : 'Your network may block this site. Set up the Data relay (a later step) and it will route around the block.' };
+  }
+}
+
+/* ───────────────────── KEY REGISTRY ─────────────────────
+   Source of truth for credentials. store: how it lands in localStorage. */
+const KEYINFO = {
+  stockProxyUrl:     { label:'Cloudflare Worker URL', store:'sp_state', paid:false },
+  groqApiKey:        { label:'Groq API key',          store:'sp_state', paid:false, get:'https://console.groq.com/keys' },
+  geminiApiKey:      { label:'Gemini API key',        store:'sp_state', paid:false, get:'https://aistudio.google.com/apikey' },
+  mistralApiKey:     { label:'Mistral API key',       store:'sp_state', paid:false, get:'https://console.mistral.ai/api-keys' },
+  fredApiKey:        { label:'FRED API key',          store:'sp_state', paid:false, get:'https://fred.stlouisfed.org/docs/api/api_key.html' },
+  eiaApiKey:         { label:'EIA API key',           store:'sp_state', paid:false, get:'https://www.eia.gov/opendata/register.php' },
+  stockApiKey:       { label:'Twelve Data key',       store:'sp_state', paid:false, get:'https://twelvedata.com/register' },
+  quiverApiKey:      { label:'Quiver API key',        store:'sp_state', paid:true,  get:'https://api.quiverquant.com/pricing' },
+  gcalOauthClientId: { label:'Google OAuth Client ID',store:'sp_state', paid:false, get:'https://console.cloud.google.com/apis/credentials' },
+  icsUrl:            { label:'Calendar iCal URL',     store:'sp_state', paid:false },
+  ghPat:             { label:'GitHub token',          store:'sp_gh_pat', paid:false, get:'https://github.com/settings/tokens?type=beta' }
+};
+
+/* ───────────────────── reusable UI bits ───────────────────── */
+function privacyFooter(){
+  return el('div', { class:'privacy' },
+    el('span', { html:'🔒' }),
+    el('span', { text:'Everything you paste stays on this computer, in your browser. A key is only ever sent to the company that issued it (or, if you set one up, your own relay) to check it works — never to your friend, to us, or to anyone else.' })
+  );
+}
+// A credential input row with show/hide + a Test button + result panel.
+function keyField(id, opts){
+  opts = opts || {};
+  const info = KEYINFO[id] || {};
+  const wrap = el('div', { class:'field' });
+  const label = el('label', { text: opts.label || info.label || id });
+  if (info.get) label.append(' ', el('a', { href: info.get, target:'_blank', rel:'noopener noreferrer', text:'— get a free key →' }));
+  wrap.append(label);
+  if (opts.hint) wrap.append(el('div', { class:'hint', text: opts.hint }));
+  const input = el('input', { type:'password', id:'in-'+id, placeholder: opts.placeholder || 'Paste here', autocomplete:'off', spellcheck:'false', value: cfg[id] || '' });
+  input.addEventListener('input', ()=>{ cfg[id] = input.value; });
+  const show = el('button', { class:'iconbtn', type:'button', title:'Show/hide', text:'👁', onclick:()=>{ input.type = input.type==='password'?'text':'password'; } });
+  const res = el('div', { class:'result', id:'res-'+id });
+  // opts.suppressResult: don't pre-paint the prior ✅ (the Worker badge already shows it —
+  // one green signal, not two). A fresh Test still paints here normally.
+  if (results[id] && !opts.suppressResult) paintResult(res, results[id]);
+  const testBtn = el('button', { class:'btn test', type:'button', text:'Test', onclick: async ()=>{
+    cfg[id] = input.value;
+    const fn = (opts.test) || TESTS[id];
+    if (!fn) return;
+    res.className = 'result show busy'; res.replaceChildren(el('span',{class:'spin'}), 'Testing…');
+    testBtn.disabled = true;
+    let r; try { r = await fn(input.value); } catch(e){ r = { ok:false, detail:'Test crashed unexpectedly.', fix:'Try again.' }; }
+    testBtn.disabled = false;
+    results[id] = r; paintResult(res, r); refreshRail(); saveProgress();
+  }});
+  wrap.append(el('div', { class:'inrow' }, input, show, testBtn), res);
+  return wrap;
+}
+function paintResult(node, r){
+  node.className = 'result show ' + (r.ok ? 'ok' : 'bad');
+  node.replaceChildren(
+    el('span', { text: (r.ok ? '✅ ' : '⚠️ ') + r.detail }),
+    r.fix ? el('span', { class:'fix', text: '→ ' + r.fix }) : null
+  );
+}
+// Collapsed-by-default "What if I skip this?" disclosure (pure UI; no state/persistence).
+// Quieter than the real config .adv collapsibles via the .skip modifier. Optional steps
+// pass their skipConsequence copy; non-optional steps pass nothing → renders nothing.
+function skipDisclosure(text){
+  if (!text) return null;
+  return el('details', { class:'adv skip' },
+    el('summary', { text:'What if I skip this?' }),
+    el('p', { class:'hint', text }));
+}
+// Subtle in-card "✓ Worker ready at <url>" badge for the Worker step on resume / after a
+// pass. Reuses the green .result.ok styling. The URL is user-supplied → rendered via
+// textContent (el()). "replace it" clears the validated state so a stale badge can't survive.
+function workerReadyBadge(){
+  const url = cfg.stockProxyUrl || '';
+  const node = el('div', { class:'result show ok' });
+  node.append(
+    el('span', { text:'✅ Worker ready at ' + url }),
+    document.createTextNode('  ·  '),
+    el('button', { class:'iconbtn', type:'button', text:'replace it',
+      style:'border:none;background:none;padding:0;color:var(--primary2);font-size:12px;cursor:pointer',
+      onclick:()=>{
+        delete results.stockProxyUrl;   // drop the validated/green status
+        saveProgress();                  // workerUrl now omitted (test no longer ok)
+        go(stepIdx);                     // re-render this step → input editable, badge gone
+      }})
+  );
+  return node;
+}
+function copyButton(getText, labelEl){
+  return el('button', { class:'iconbtn', type:'button', text:'Copy', onclick: async (e)=>{
+    try { await navigator.clipboard.writeText(getText()); const b=e.target; const o=b.textContent; b.textContent='Copied!'; setTimeout(()=>b.textContent=o,1400); }
+    catch(_){ alert('Copy failed — select the text and copy manually.'); }
+  }});
+}
+
+/* ───────────────────────── STEPS ───────────────────────── */
+const STEPS = [
+  /* 0 — Welcome */
+  { id:'welcome', title:'Welcome', optional:false, render(c){
+    c.append(
+      el('h2', { text:'Let’s set up your dashboard 👋' }),
+      el('p', { class:'lead', text:'This guide gets your personal dashboard working — live stock prices, news, weather, AI market reads, and more. Most steps are optional and free (no credit card). About 10–15 minutes, and we’ll test each thing as we go.' }),
+      el('div', { class:'why' }, el('b',{text:'How it works: '}), 'You’ll grab a few free keys and paste them here. Each one gets a ✅ when it works (or a plain-English fix if it doesn’t). When you’re done, click Launch and your dashboard opens — already set up.'),
+      el('div', { class:'inrow', style:'margin-top:6px' },
+        el('button', { class:'btn', text:'Start setup →', onclick:()=>go(1) }),
+        el('button', { class:'btn ghost', title:'Open the dashboard now; you can run this wizard again any time.', text:'Just show me the dashboard', onclick:()=>{ launch(); } })
+      ),
+      el('details', { class:'adv' },
+        el('summary', { text:'I already have a settings file' }),
+        el('p', { class:'hint', text:'If a friend sent you a startpage-settings…json export, open the dashboard and use ⇅ Sync → Import instead — that restores everything at once.' })
+      ),
+      el('div',{class:'skipnote', text: isHttpOrigin() ? ('Running at: '+location.origin) : 'You opened this by double-clicking the file — everything works except the advanced Google sign-in (the simple calendar link still works fine).'}),
+      privacyFooter()
+    );
+  }},
+
+  /* 1 — Customize (fast wins) */
+  { id:'customize', title:'Make it yours', optional:true,
+    skipConsequence:'Nothing breaks — the dashboard just opens with the default dark theme and °F, and asks for your location the first time it needs weather. You can set theme, units and location any time in the dashboard’s Settings → Appearance / Weather.',
+    render(c){
+    c.append(el('h2', {}, 'Make it yours ', el('span',{class:'opt optl',text:'optional'})),
+      el('p', { class:'lead', text:'Quick wins first — no sign-ups. Set these and your dashboard already feels personal.' }));
+    // theme — these values must match index.html's THEME_ORDER exactly.
+    const THEMES = [['dark','Dark'],['light','Light'],['hicontrast','High contrast'],['amoled','AMOLED black'],['solarized','Solarized'],['nord','Nord'],['dracula','Dracula'],['synthwave','Synthwave'],['matrix','Matrix'],['sepia','Sepia']];
+    const theme = el('select', { id:'in-theme', onchange:e=>{ cfg.theme=e.target.value; saveProgress(); } },
+      ...THEMES.map(t=>el('option',{value:t[0],text:t[1], selected:(cfg.theme||'dark')===t[0]?'selected':null})));
+    // units
+    const unit = el('select', { id:'in-unit', onchange:e=>{ cfg.tempUnit=e.target.value; saveProgress(); } },
+      el('option',{value:'F',text:'Fahrenheit °F', selected:(cfg.tempUnit||'F')==='F'?'selected':null}),
+      el('option',{value:'C',text:'Celsius °C', selected:cfg.tempUnit==='C'?'selected':null}));
+    // weather city
+    const cityIn = el('input', { type:'text', id:'in-city', placeholder:'e.g. Seattle, or London, UK', value: cfg.weatherLocation ? cfg.weatherLocation.city : '' });
+    const cityRes = el('div', { class:'result', id:'res-city' });
+    if (cfg.weatherLocation) paintResult(cityRes, { ok:true, detail:'Weather location set: '+cfg.weatherLocation.city, fix:null });
+    const cityBtn = el('button', { class:'btn test', type:'button', text:'Find', onclick: async ()=>{
+      const q = cityIn.value.trim(); if(!q){ return; }
+      cityRes.className='result show busy'; cityRes.replaceChildren(el('span',{class:'spin'}),'Searching…');
+      try {
+        const r = await tfetch('https://geocoding-api.open-meteo.com/v1/search?count=1&language=en&format=json&name='+encodeURIComponent(q), {}, 10000);
+        const j = await r.json().catch(()=>null);
+        const hit = j && j.results && j.results[0];
+        if (hit){
+          cfg.weatherLocation = { lat:Number(hit.latitude), lon:Number(hit.longitude), city:hit.name + (hit.admin1?(', '+hit.admin1):'') + (hit.country_code?(', '+hit.country_code):''), region:hit.admin1||'', source:'manual' };
+          paintResult(cityRes, { ok:true, detail:'Found: '+cfg.weatherLocation.city, fix:null }); saveProgress();
+        } else paintResult(cityRes, { ok:false, detail:'No match for that place.', fix:'Try “City, Country” (e.g. Paris, FR).' });
+      } catch(e){ paintResult(cityRes, { ok:false, detail:'Couldn’t search right now.', fix:'You can also just set the location later inside the dashboard.' }); }
+    }});
+    c.append(
+      el('div',{class:'grid2'},
+        el('div',{class:'field'}, el('label',{text:'Theme'}), theme),
+        el('div',{class:'field'}, el('label',{text:'Temperature units'}), unit)
+      ),
+      el('div',{class:'field'}, el('label',{text:'Weather location'}), el('div',{class:'hint',text:'Type a city; we’ll look up the coordinates (no key needed).'}),
+        el('div',{class:'inrow'}, cityIn, cityBtn), cityRes),
+      el('div',{class:'skipnote', text:'Skip this and the dashboard still works — it’ll just ask for your location later.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+  }},
+
+  /* 2 — AI keys */
+  { id:'ai', title:'Smart analysis (AI)', optional:true,
+    skipConsequence:'The dashboard still shows prices, news and charts — it just won’t write the AI market summary or suggest stock picks (those panels stay empty with an “add an AI key” note). Nothing else is affected. Add a free key later in Settings → AI / API keys; even one is enough.',
+    render(c){
+    c.append(el('h2', {}, 'Smart market analysis ', el('span',{class:'opt rec',text:'recommended'})),
+      el('p',{class:'lead', text:'These free AI keys power the market read and the stock picker. Add at least one to start — add more later for a stronger second opinion.'}),
+      el('div',{class:'why'}, el('b',{text:'Easiest first: '}), 'Click a “get a free key” link, sign in, click “Create key”, copy it, paste below, and hit Test. A ✅ means you’re good.'),
+      keyField('geminiApiKey', { hint:'Google AI Studio — usually the quickest to get.' }),
+      keyField('groqApiKey',   { hint:'Groq — very fast, generous free tier.' }),
+      keyField('mistralApiKey',{ hint:'Mistral — European models.' }),
+      el('div',{class:'skipnote', text:'Skip this and the dashboard still works — you just won’t get the AI market read or AI stock picks.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+  }},
+
+  /* 3 — Cloudflare Worker */
+  { id:'worker', title:'Data relay (Cloudflare)', optional:true,
+    skipConsequence:'The dashboard falls back to slower shared public relays, so stock prices may load late or intermittently, and the FRED and EIA economic signals can’t work at all (they require your own relay). Everything else keeps working. You can add your relay later in Settings → Data / Proxy and it takes effect immediately — no need to redo anything.',
+    render(c){
+    const badge = !!(results.stockProxyUrl && results.stockProxyUrl.ok && cfg.stockProxyUrl);
+    c.append(el('h2', {}, 'The data relay ', el('span',{class:'opt rec',text:'recommended'})),
+      el('p',{class:'lead', text:'This is the trickiest step — about 5 minutes, completely free, no credit card, and you can’t break anything. Take a breath; here’s exactly what to do.'}),
+      el('div',{class:'why'}, el('b',{text:'Why: '}), 'For security reasons your browser blocks websites from pulling in stock and economic data directly (and some office networks block those sites too). This tiny free relay you run on Cloudflare passes the data through for you. It powers live stock prices and the economic signals.'),
+      el('ol',{class:'steps'},
+        el('li',{}, 'Create a free account at ', el('a',{href:'https://dash.cloudflare.com/sign-up',target:'_blank',rel:'noopener noreferrer',text:'dash.cloudflare.com'}), ' — no credit card needed.'),
+        el('li',{text:'In the left-hand menu click “Workers & Pages”, then the “Create” button, then “Create Worker”. Cloudflare gives it a random name and shows a “Deploy” button — just click Deploy (you’ll replace the sample code in a moment).'}),
+        el('li',{text:'Once it’s deployed, click “Edit code” (sometimes shown as “< > Edit Code”) to open the big code editor.'}),
+        el('li',{}, 'Click inside the code box, press ', el('b',{text:'Ctrl/Cmd + A'}), ' to select everything, then paste OUR code over it (use the Copy button below). Don’t worry about deleting the old code — paste replaces it.'),
+        el('li',{text:'Click “Deploy” (or “Save and deploy”). Copy the address it shows — it ends in .workers.dev — and paste it below.'})
+      ),
+      el('div',{class:'why',style:'border-left-color:var(--ok)'}, el('b',{text:'Don’t panic: '}), 'You can’t break anything, and it’s free with no credit card. Cloudflare occasionally renames buttons — as long as you end up on a page with a big code editor and a Deploy button, you’re in the right place.'),
+      badge ? workerReadyBadge() : null,
+      el('div',{id:'workercode'}),
+      keyField('stockProxyUrl', { label:'Your Worker address', placeholder:'https://your-worker.workers.dev', hint:'Paste the .workers.dev address, then Test.', suppressResult: badge }),
+      el('div',{class:'skipnote', text:'You can skip this — the dashboard falls back to slower public relays. Stocks may be flaky and FRED/EIA won’t work, but you can add this any time.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+    // make the proxy field a normal (visible) text input — it isn't a secret
+    const pin = $('in-stockProxyUrl'); if (pin) pin.type = 'text';
+    renderWorkerCode($('workercode'));
+  }},
+
+  /* 4 — Extra signals */
+  { id:'extras', title:'Extra signals', optional:true,
+    skipConsequence:'These are bonus data feeds, so skipping them changes nothing you can already see — you just won’t get the interest-rate / recession regime (FRED), oil-inventory energy signal (EIA), or the alternative price source (Twelve Data). The dashboard’s normal prices and analysis are unaffected. Add any of these later in Settings → API keys.',
+    render(c){
+    c.append(el('h2', {}, 'Extra economic signals ', el('span',{class:'opt optl',text:'optional · nerdy'})),
+      el('p',{class:'lead', text:'Free government & market data the dashboard can fold into its analysis. All optional — most people skip these. FRED and EIA need the Data relay from the previous step.'}));
+    if (!workerReady()) c.append(el('div',{class:'filebanner', text:'Set up the Data relay first (previous step) — FRED and EIA flow through it. You can still skip everything here.'}));
+    c.append(
+      el('details',{class:'adv'}, el('summary',{text:'FRED — interest-rate & recession signals (free)'}),
+        keyField('fredApiKey', { hint:'A 32-character key arrives by email after you request one.' })),
+      el('details',{class:'adv'}, el('summary',{text:'EIA — oil inventories / energy (free)'}),
+        keyField('eiaApiKey', { hint:'Free registration; key emailed instantly.' })),
+      el('details',{class:'adv'}, el('summary',{text:'Twelve Data — alternative stock prices (free tier)'}),
+        keyField('stockApiKey', { hint:'Optional. The relay already gives free prices, so most people don’t need this.' })),
+      el('details',{class:'adv'}, el('summary',{text:'Quiver — congressional trades (paid)'}),
+        el('p',{class:'hint'}, 'This one is a paid service, so the wizard skips it. If you want it later, see ', el('a',{href:KEYINFO.quiverApiKey.get,target:'_blank',rel:'noopener noreferrer',text:'Quiver pricing'}), ' and paste the key in the dashboard’s Settings.')),
+      el('div',{class:'skipnote', text:'Skip all of these and the dashboard still works — you just won’t see the macro-regime / energy signals.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+  }},
+
+  /* 5 — Calendar */
+  { id:'calendar', title:'Calendar', optional:true,
+    skipConsequence:'The calendar widget simply stays empty — nothing else changes, and the widget is still there waiting whenever you add a feed. Paste your private iCal link (or set up Google sign-in) later in Settings → Calendar.',
+    render(c){
+    c.append(el('h2', {}, 'Your calendar ', el('span',{class:'opt optl',text:'optional'})),
+      el('p',{class:'lead', text:'Show your Google Calendar events on the dashboard. The simple way (a private link) works everywhere and needs no setup project.'}),
+      el('div',{class:'why'}, el('b',{text:'Simple way: '}), 'In Google Calendar → Settings → your calendar → “Integrate calendar”, copy the “Secret address in iCal format” (it ends in .ics) and paste it below.'),
+      keyField('icsUrl', { label:'Secret iCal URL', placeholder:'https://calendar.google.com/calendar/ical/…/basic.ics', hint:'This is a private link — treat it like a password.' }),
+      el('details',{class:'adv'},
+        el('summary',{text:'Advanced: full Google sign-in (OAuth)'}),
+        el('p',{class:'hint', text: isHttpOrigin() ? 'Lets you sign in instead of using a link. Requires creating an OAuth Client ID in Google Cloud Console and adding this exact web address to “Authorized JavaScript origins”:' : 'Google sign-in needs the page served over http. Use the local-server option, then reopen the wizard at http://localhost:8080/wizard.html.'}),
+        isHttpOrigin() ? el('div',{class:'inrow',style:'margin:6px 0'}, el('code',{class:'mono',text:location.origin}), copyButton(()=>location.origin)) : null,
+        el('ol',{class:'steps'},
+          el('li',{}, 'Open ', el('a',{href:'https://console.cloud.google.com/apis/credentials',target:'_blank',rel:'noopener noreferrer',text:'Google Cloud Console → Credentials'}), '.'),
+          el('li',{text:'Create “OAuth client ID” → type “Web application”.'}),
+          el('li',{text:'Under “Authorized JavaScript origins”, add the exact address shown above.'}),
+          el('li',{text:'Copy the Client ID, paste it below, and Test (a Google popup will appear).'})
+        ),
+        keyField('gcalOauthClientId', { label:'OAuth Client ID', placeholder:'…apps.googleusercontent.com', hint:'Type: Web application.' })
+      ),
+      el('div',{class:'skipnote', text:'Skip this and the dashboard still works — the calendar widget just stays empty.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+    const i = $('in-icsUrl'); if (i) i.type = 'text';
+  }},
+
+  /* 6 — Cloud Sync */
+  { id:'sync', title:'Sync (optional)', optional:true,
+    skipConsequence:'Your settings still save normally on this computer — you just won’t have them mirror to your other machines automatically. This is the easiest one to add later: turn it on any time in Settings → Cloud Sync with a GitHub token, no re-setup required.',
+    render(c){
+    c.append(el('h2', {}, 'Sync across computers ', el('span',{class:'opt optl',text:'optional'})),
+      el('p',{class:'lead', text:'Keep your settings in sync between machines using your own private GitHub repo. Totally optional, and you can turn it on later in Settings.'}),
+      el('div',{class:'why'}, el('b',{text:'What you need: '}), 'a free GitHub account, an empty private repository to hold the settings, and an access token. Everything stays on this computer and you can delete the token any time.'),
+      el('ol',{class:'steps'},
+        el('li',{}, 'On GitHub, create a new ', el('b',{text:'private'}), ' repository (any name, e.g. ', el('code',{class:'mono',text:'dashboard-config'}), '). It can be empty.'),
+        el('li',{}, 'Open ', el('a',{href:KEYINFO.ghPat.get,target:'_blank',rel:'noopener noreferrer',text:'GitHub → Fine-grained tokens'}), ' and click “Generate new token”. Give it a name and an expiry.'),
+        el('li',{text:'Under “Repository access”, choose “Only select repositories” and pick the repo you just made.'}),
+        el('li',{text:'Under “Permissions → Repository permissions”, set “Contents” to “Read and write”.'}),
+        el('li',{text:'Click “Generate token”, copy it (you only see it once), and paste it below.'})
+      ),
+      keyField('ghPat', { label:'GitHub access token', test:TESTS.ghSync, hint:'The token you just created (starts with github_pat_…).' }),
+      (function(){ const f=el('div',{class:'field'}, el('label',{text:'Which repository? (your-username/repo-name)'}),
+        el('div',{class:'hint',text:'e.g. if your username is pat and the repo is dashboard-config, type pat/dashboard-config'}),
+        el('input',{type:'text',id:'in-ghRepo',placeholder:'yourname/dashboard-config',value:cfg.ghRepo||'', oninput:e=>{cfg.ghRepo=e.target.value;}})); return f; })(),
+      (function(){ const f=el('div',{class:'field'}, el('label',{text:'File name'}),
+        el('div',{class:'hint',text:'Leave this as config.json unless you have a reason to change it.'}),
+        el('input',{type:'text',id:'in-ghPath',placeholder:'config.json',value:cfg.ghPath||'config.json', oninput:e=>{cfg.ghPath=e.target.value;}})); return f; })(),
+      el('div',{class:'skipnote', text:'Skip this and the dashboard still works — you just won’t sync settings between computers.'}),
+      skipDisclosure(this.skipConsequence),
+      privacyFooter()
+    );
+  }},
+
+  /* 7 — Review & launch */
+  { id:'review', title:'Review & launch', optional:false, render(c){
+    c.append(el('h2',{text:'You’re ready 🎉'}),
+      el('p',{class:'lead', text:'Here’s what’s set up. ✅ was tested and works; ⚠️ is saved but we couldn’t confirm it; ⏭️ was skipped. Anything can be added or fixed later in the dashboard’s Settings.'}));
+    const rows = [
+      ['Theme', cfg.theme ? ('Set: '+cfg.theme) : 'Default', cfg.theme?'done':'skip'],
+      ['Weather', cfg.weatherLocation ? cfg.weatherLocation.city : 'Ask later', cfg.weatherLocation?'done':'skip'],
+      ['AI (Gemini)', rstat('geminiApiKey'), rk('geminiApiKey')],
+      ['AI (Groq)', rstat('groqApiKey'), rk('groqApiKey')],
+      ['AI (Mistral)', rstat('mistralApiKey'), rk('mistralApiKey')],
+      ['Data relay (Worker)', rstat('stockProxyUrl'), rk('stockProxyUrl')],
+      ['FRED', rstat('fredApiKey'), rk('fredApiKey')],
+      ['EIA', rstat('eiaApiKey'), rk('eiaApiKey')],
+      ['Twelve Data', rstat('stockApiKey'), rk('stockApiKey')],
+      ['Calendar (iCal)', cfg.icsUrl?'Set':'—', cfg.icsUrl?'done':'skip'],
+      ['Calendar (Google)', rstat('gcalOauthClientId'), rk('gcalOauthClientId')],
+      ['Cloud Sync', (cfg.ghPat&&cfg.ghRepo)?rstat('ghPat'):'—', (cfg.ghPat&&cfg.ghRepo)?rk('ghPat'):'skip']
+    ];
+    const list = el('div',{});
+    rows.forEach(([nm,dt,state])=>{
+      const icon = state==='done'?'✅':state==='warn'?'⚠️':'⏭️';
+      list.append(el('div',{class:'reviewrow'}, el('span',{class:'st',text:icon}), el('span',{class:'nm',text:nm}), el('span',{class:'dt',text:dt})));
+    });
+    c.append(list,
+      el('div',{class:'inrow',style:'margin-top:18px'},
+        el('button',{class:'btn',style:'font-size:16px;padding:12px 22px',text:'🚀 Launch dashboard',onclick:()=>launch()}),
+        copyBackupButton()
+      ),
+      el('div',{class:'skipnote', text:'Launch saves everything to this browser and opens your dashboard.'}),
+      privacyFooter()
+    );
+  }}
+];
+function rk(id){ const r=results[id]; if(!r) return cfg[id]?'warn':'skip'; return r.ok?'done':'warn'; }
+function rstat(id){ const r=results[id]; if(r) return r.ok?'Tested ✓':'Set, but test failed'; return cfg[id]?'Set (untested)':'—'; }
+
+function copyBackupButton(){
+  return el('button',{class:'btn ghost',text:'Copy a backup of these settings',onclick:async()=>{
+    const s = collectStateForCommit();
+    const payload = { kind:'startpage-settings', wizard:true, exportedAt:new Date().toISOString(), state:s, theme:cfg.theme||'dark' };
+    try { await navigator.clipboard.writeText(JSON.stringify(payload,null,2)); alert('A backup of your settings is on your clipboard — paste it somewhere safe.'); }
+    catch(_){ alert('Copy failed.'); }
+  }});
+}
+
+function renderWorkerCode(host){
+  host.replaceChildren(el('div',{class:'hint',text:'Loading the worker code…'}));
+  fetch('worker.js').then(r=>{ if(!r.ok) throw new Error('x'); return r.text(); }).then(txt=>{
+    const ta = el('textarea',{readonly:'readonly'}); ta.value = txt;
+    host.replaceChildren(
+      el('div',{class:'inrow',style:'margin:4px 0'}, el('b',{text:'Worker code'}), copyButton(()=>ta.value)),
+      ta
+    );
+  }).catch(()=>{
+    host.replaceChildren(el('div',{class:'filebanner'},
+      'Couldn’t auto-load the code (that’s normal on a file:// page). Open the file ',
+      el('a',{href:'worker.js',target:'_blank',rel:'noopener noreferrer',text:'worker.js'}),
+      ' in this same folder, select all (Ctrl/Cmd+A), and copy it.'));
+  });
+}
+
+/* ───────────────────────── commit / launch ───────────────────────── */
+const SECRET_FIELDS = ['stockProxyUrl','groqApiKey','geminiApiKey','mistralApiKey','fredApiKey','eiaApiKey','stockApiKey','gcalOauthClientId','icsUrl'];
+let _existingUnreadable = false;
+// Read the existing dashboard state, mirroring index.html (sp_state, then the
+// sp_state.bak recovery mirror). If BOTH exist but are unparseable, flag it so
+// commit() can warn before replacing — never silently wipe a real config.
+function _readExistingState(){
+  _existingUnreadable = false;
+  for (const k of ['sp_state','sp_state.bak']){
+    const raw = localStorage.getItem(k);
+    if (!raw) continue;
+    try { const o = JSON.parse(raw); if (o && typeof o === 'object') return o; } catch(_){}
+  }
+  _existingUnreadable = !!localStorage.getItem('sp_state');
+  return {};
+}
+function collectStateForCommit(){
+  const s = _readExistingState();
+  // Only write non-empty user values — never clobber an existing key with a blank.
+  // Cap length defensively (a real key/URL is well under this).
+  SECRET_FIELDS.forEach(f=>{ const v=(cfg[f]||'').trim(); if(v) s[f]=v.slice(0,4000); });
+  if (cfg.theme) s.theme = cfg.theme;             // harmless extra; theme also stored standalone below
+  if (cfg.tempUnit) s.tempUnit = cfg.tempUnit;
+  if (cfg.weatherLocation && cfg.weatherLocation.lat!=null) s.weatherLocation = {
+    lat:Number(cfg.weatherLocation.lat), lon:Number(cfg.weatherLocation.lon),
+    city:cfg.weatherLocation.city||'', region:cfg.weatherLocation.region||'', source:'manual'
+  };
+  return s;
+}
+function commit(){
+  const s = collectStateForCommit();
+  if (_existingUnreadable && !confirm('Your existing dashboard settings in this browser couldn’t be read (they may be corrupted) and will be replaced by what you set here. Continue?')) return false;
+  try {
+    const str = JSON.stringify(s);
+    localStorage.setItem('sp_state', str);
+    localStorage.setItem('sp_state.bak', str);
+  } catch(e){ alert('Could not save settings to this browser: ' + (e && e.message || e)); return false; }
+  // GitHub sync keys (standalone)
+  try {
+    if ((cfg.ghPat||'').trim())  localStorage.setItem('sp_gh_pat',  cfg.ghPat.trim());
+    if ((cfg.ghRepo||'').trim()) localStorage.setItem('sp_gh_repo', cfg.ghRepo.trim());
+    if ((cfg.ghPath||'').trim()) localStorage.setItem('sp_gh_path', cfg.ghPath.trim());
+  } catch(_){}
+  // Theme is a standalone key in the app
+  try { if (cfg.theme) localStorage.setItem('sp_theme', cfg.theme); } catch(_){}
+  // Clear wizard progress (also removes the (non-secret) resume record)
+  try { localStorage.removeItem(PROGRESS_KEY); } catch(_){}
+  return true;
+}
+function launch(){
+  // Always commit — harmless (writes only non-empty values) and means the escape
+  // hatch ("just show me") still keeps any theme/location you set.
+  if (!commit()) return;
+  location.href = 'index.html';
+}
+
+/* ───────────────────────── navigation / render ───────────────────────── */
+function go(i){
+  stepIdx = Math.max(0, Math.min(STEPS.length-1, i));
+  visited.add(stepIdx);
+  render();
+  saveProgress();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+function render(){
+  const step = STEPS[stepIdx];
+  const card = $('card'); card.replaceChildren();
+  step.render(card);
+  // progress + meta
+  $('progbar').style.width = Math.round((stepIdx)/(STEPS.length-1)*100) + '%';
+  $('stepcount').textContent = 'Step ' + (stepIdx+1) + ' of ' + STEPS.length;
+  const remain = STEPS.length-1-stepIdx;
+  $('timehint').textContent = remain<=0 ? 'Last step' : ('~' + Math.max(1, remain*2) + ' min left · most steps optional');
+  // footer buttons
+  $('backBtn').style.visibility = stepIdx===0 ? 'hidden' : 'visible';
+  const last = stepIdx===STEPS.length-1;
+  $('nextBtn').style.display = last ? 'none' : '';
+  $('skipBtn').style.display = (last || !step.optional) ? 'none' : '';
+  $('nextBtn').textContent = (stepIdx===STEPS.length-2) ? 'Review →' : 'Next →';
+  refreshRail();
+  // focus heading for a11y
+  const h = card.querySelector('h2'); if (h){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); }
+}
+function refreshRail(){
+  const rail = $('rail'); rail.replaceChildren();
+  STEPS.forEach((s, i)=>{
+    const done = isStepDone(s, i);
+    const dot = el('span',{class:'dot'+(i===stepIdx?' active':'')+(done?' done':''), text: done?'✓':String(i+1)});
+    const b = el('button',{class:(i===stepIdx?'active':''), onclick:()=>{ if(visited.has(i)) go(i); }}, dot, el('span',{text:s.title}));
+    if (!visited.has(i)) b.disabled = true;
+    rail.append(b);
+  });
+}
+function isStepDone(s, i){
+  if (s.id==='ai') return !!(results.geminiApiKey||results.groqApiKey||results.mistralApiKey);
+  if (s.id==='worker') return !!(results.stockProxyUrl && results.stockProxyUrl.ok);
+  if (s.id==='customize') return !!(cfg.theme||cfg.weatherLocation);
+  if (s.id==='extras') return !!(results.fredApiKey||results.eiaApiKey||results.stockApiKey);
+  if (s.id==='calendar') return !!(cfg.icsUrl||results.gcalOauthClientId);
+  if (s.id==='sync') return !!(results.ghPat && results.ghPat.ok);
+  // welcome/review: done once visited & past
+  return i < stepIdx;
+}
+
+$('nextBtn').addEventListener('click', ()=>go(stepIdx+1));
+$('backBtn').addEventListener('click', ()=>go(stepIdx-1));
+$('skipBtn').addEventListener('click', ()=>go(stepIdx+1));
+document.addEventListener('keydown', (e)=>{
+  if (e.key !== 'Enter') return;
+  const tag = (e.target && e.target.tagName) || '';
+  if (/TEXTAREA|INPUT|BUTTON|A|SELECT/.test(tag)) return;   // let buttons/links/fields handle Enter themselves
+  if (stepIdx < STEPS.length-1) go(stepIdx+1);
+});
+
+/* ───────────────────────── boot ───────────────────────── */
+(function boot(){
+  const p = loadProgress();
+  if (p && typeof p.step==='number') stepIdx = Math.max(0, Math.min(STEPS.length-1, p.step));
+  for (let i=0;i<=stepIdx;i++) visited.add(i);   // resume: prior steps are reachable in the rail
+  render();
+})();
+window.__wizard = { STEPS, TESTS, cfg, results, commit, collectStateForCommit, go, KEYINFO }; // test hook
+</script>
+</body>
+</html>

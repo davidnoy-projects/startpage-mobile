@@ -1,0 +1,742 @@
+{
+  "kind": "startpage-settings",
+  "version": 4,
+  "exportedAt": "2026-06-04T03:49:41.829Z",
+  "keysIncluded": false,
+  "theme": "dark",
+  "widgetLayout": null,
+  "flightTracker": [],
+  "hotelTracker": [],
+  "caches": {
+    "sp_event_calendar": "{\"t\":1780541582498,\"events\":[{\"type\":\"nfp\",\"label\":\"NFP Release\",\"ticker\":null,\"date\":\"2026-06-05\",\"ts\":1780617600000,\"daysAway\":1},{\"type\":\"cpi\",\"label\":\"CPI Release\",\"ticker\":null,\"date\":\"2026-06-10\",\"ts\":1781049600000,\"daysAway\":6},{\"type\":\"fomc\",\"label\":\"FOMC Meeting\",\"ticker\":null,\"date\":\"2026-06-17\",\"ts\":1781654400000,\"daysAway\":13}]}",
+    "sp_wizard_progress": "{\"v\":1,\"step\":0}",
+    "sp_picker_cache": "{\"ts\":1780437967706,\"picks\":[],\"rationales\":{}}",
+    "sp_mai_briefing": "{\"day\":\"20260603\",\"text\":[\"Macro: Tech selloff deepens as AI hype cools; futures -1.8% after NVDA’s post-earnings drop.\",\"High-conviction shorts: NTAP down 3% premarket on weak guidance; target $55.\",\"High-conviction longs: DELL up 2% premarket on AI server demand; target $120.\",\"Shifts: DIS +1.5% premarket after Disney+ subscriber beat; NVDA underperforms peers despite AI tailwinds.\"]}",
+    "sp_congressional_cache": "{\"DELL\":{\"ts\":1780541584284,\"data\":[]},\"NVDA\":{\"ts\":1780541584284,\"data\":[]},\"LGLFX\":{\"ts\":1780541584284,\"data\":[]},\"PINS\":{\"ts\":1780541584284,\"data\":[]},\"FKAIX\":{\"ts\":1780541584284,\"data\":[]},\"DIS\":{\"ts\":1780541584284,\"data\":[]},\"BABA\":{\"ts\":1780541584284,\"data\":[]},\"QQQ\":{\"ts\":1780541584284,\"data\":[]},\"USO\":{\"ts\":1780541584284,\"data\":[]},\"AAPL\":{\"ts\":1780541584284,\"data\":[]},\"NTAP\":{\"ts\":1780541584284,\"data\":[]},\"MSFT\":{\"ts\":1780541584284,\"data\":[]},\"SPY\":{\"ts\":1780541584284,\"data\":[]},\"AMZN\":{\"ts\":1780541584284,\"data\":[]},\"GOOG\":{\"ts\":1780541584284,\"data\":[]},\"TSLA\":{\"ts\":1780541584284,\"data\":[]},\"VMW\":{\"ts\":1780541584284,\"data\":[]},\"NFLX\":{\"ts\":1780541584284,\"data\":[]},\"SQ\":{\"ts\":1780541584284,\"data\":[]},\"COST\":{\"ts\":1780541584284,\"data\":[]}}",
+    "sp_mistral_seeded_v1": "1",
+    "sp_news_cache": "{\"t\":1780544902741,\"d\":{\"nyt\":[{\"title\":\"House Passes Iran War Powers Resolution in Bipartisan Rebuke to Trump\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/house-vote-trump-iran-war-powers.html\",\"pubDate\":\"Wed, 03 Jun 2026 23:21:59 +0000\",\"description\":\"A measure to direct an end to U.S. engagement in Iran was adopted with a handful of Republicans in support, sending a signal of opposition to the president’s handling of the war.\"},{\"title\":\"Republicans Begin to Test the Limits of Trump’s Power by Flexing Their Own\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/republicans-trump-fund-iran-war-elections.html\",\"pubDate\":\"Thu, 04 Jun 2026 01:43:12 +0000\",\"description\":\"The president’s unilateral and retributive style of governing is starting to hit a wall in both chambers of Congress.\"},{\"title\":\"Massie, 3 Other House Republicans Broke From Trump on Iran War Powers Vote\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/iran-war-powers-trump-republicans.html\",\"pubDate\":\"Thu, 04 Jun 2026 00:42:07 +0000\",\"description\":\"Four Republicans from different ideological factions crossed party lines to vote with Democrats in favor of reining in the president’s power to wage war unilaterally.\"},{\"title\":\"House Advances New Sanctions on Russia and Aid to Ukraine\",\"link\":\"https://www.nytimes.com/2026/06/03/us/house-russia-ukraine-sanctions-aid.html\",\"pubDate\":\"Thu, 04 Jun 2026 00:55:49 +0000\",\"description\":\"After G.O.P. leaders blocked additional aid to Ukraine, six Republicans and an independent joined Democrats to force the measure to the floor against the wishes of the speaker.\"},{\"title\":\"‘I Love It’: Trump Is Still in Favor of $1.8 Billion Payout Fund\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/trump-fund.html\",\"pubDate\":\"Wed, 03 Jun 2026 22:32:16 +0000\",\"description\":\"Todd Blanche, the acting attorney general, said on Tuesday that the administration was “not moving forward with the fund, period,” after the plan drew bipartisan backlash.\"},{\"title\":\"‘Infuriated’ Former Judges Take on Trump\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/the-docket-former-judges-filings.html\",\"pubDate\":\"Wed, 03 Jun 2026 20:19:10 +0000\",\"description\":\"Critics say it is unseemly for retired judges to trade on the prestige of their former positions.\"},{\"title\":\"Park Service Awards No-Bid Contract to Cover Bridge Statues in Gold\",\"link\":\"https://www.nytimes.com/2026/06/03/us/politics/park-service-bridge-statues-gold.html\",\"pubDate\":\"Wed, 03 Jun 2026 21:21:51 +0000\",\"description\":\"Originally estimated to cost $2.4 million, the government will now spend $5 million to restore the bronzes in time for Independence Day.\"},{\"title\":\"We Interrupt This Knicks Victory for a Political Ad Starring Mamdani\",\"link\":\"https://www.nytimes.com/2026/06/03/nyregion/mamdani-knicks-ad-campaign.html\",\"pubDate\":\"Thu, 04 Jun 2026 03:19:42 +0000\",\"description\":\"Mayor Zohran Mamdani lent his political star power to an unusual TV ad promoting three Democrats running for House seats in New York City.\"}],\"wsj\":[{\"title\":\"The Hormuz Squeeze Is Redrawing the Oil Map for Good\",\"link\":\"https://www.wsj.com/world/middle-east/the-hormuz-squeeze-is-redrawing-the-oil-map-for-good-cf33d8c0\",\"pubDate\":\"2026-06-04 03:00:00\",\"description\":\"Saudi Arabia, the U.A.E. and Iraq are pouring money into pipelines, rail and storage to keep oil flowing even when the Strait of Hormuz isn’t.\"},{\"title\":\"Russia’s Elite Is Souring on the War. Putin Doesn’t Seem to Care.\",\"link\":\"https://www.wsj.com/world/russia/russias-elite-is-souring-on-the-war-putin-doesnt-seem-to-care-2430f3ff\",\"pubDate\":\"2026-06-04 02:00:00\",\"description\":\"Some of Russia’s best known hawks have become more open in expressing a belief that Moscow simply doesn’t have the capacity to achieve an outright victory against Ukraine.\"},{\"title\":\"Trump Tells Aides He Won’t Resume All-Out War With Iran Unless U.S. Troops Are Killed\",\"link\":\"https://www.wsj.com/world/middle-east/trump-iran-ceasefire-strait-of-hormuz-14d0d265\",\"pubDate\":\"2026-06-04 01:20:00\",\"description\":\"Repeated strikes by Tehran have ratcheted up pressure on the president and cast doubt over the ceasefire’s long-term viability, officials said.\"},{\"title\":\"U.S.-Iran Skirmish Spurs Deadly Drone Attack on Kuwait Airport\",\"link\":\"https://www.wsj.com/world/middle-east/u-s-iran-trade-heavy-fire-in-persian-gulf-testing-fragile-ceasefire-d4787573\",\"pubDate\":\"2026-06-03 15:44:00\",\"description\":\"The fresh fighting was among the most intense since an April ceasefire, and came as diplomatic efforts have stalled.\"},{\"title\":\"The Venezuelan Left That Fought U.S. Influence Is Now at War With Itself\",\"link\":\"https://www.wsj.com/world/americas/the-venezuelan-left-that-fought-u-s-influence-is-now-at-war-with-itself-9a5174da\",\"pubDate\":\"2026-06-03 15:30:00\",\"description\":\"Acting President Delcy Rodriguez’s cooperation with Washington is exposing rare divisions inside the socialist movement that she rode to power.\"},{\"title\":\"Congo’s Ebola Outbreak Reaches Territory Held by Islamic State\",\"link\":\"https://www.wsj.com/world/africa/congos-ebola-outbreak-reaches-territory-held-by-islamic-state-7c3d1141\",\"pubDate\":\"2026-06-03 15:16:00\",\"description\":\"The deadly strain has spread to a forested area where health workers, who are already coping with short supplies and local suspicions, dare not venture.\"},{\"title\":\"Trump and Netanyahu Are Clashing Over How to End the Iran War\",\"link\":\"https://www.wsj.com/world/middle-east/trump-netanyahu-iran-war-lebanon-8fdba5cb\",\"pubDate\":\"2026-06-03 13:47:00\",\"description\":\"The two leaders launched the conflict with unprecedented coordination. Now disagreements over Lebanon and negotiations with Tehran are straining the partnership.\"},{\"title\":\"The Three Mideast Ceasefires That Look Like War Right Now\",\"link\":\"https://www.wsj.com/world/middle-east/see-how-the-middle-easts-ceasefires-remain-plagued-by-violence-b7505ddf\",\"pubDate\":\"2026-06-03 08:52:00\",\"description\":\"In Gaza, Lebanon and the Persian Gulf, strikes, skirmishes and military operations are keeping the region on edge.\"},{\"title\":\"U.S. Presses Neutral Oman to Pick a Side and Cut Ties With Iran\",\"link\":\"https://www.wsj.com/world/middle-east/us-oman-iran-ties-3e056744\",\"pubDate\":\"2026-06-02 01:00:00\",\"description\":\"The country, which has walked a fine line between Washington and Tehran, is losing its footing as an Arab state trusted by both sides.\"},{\"title\":\"Trump Pushes to End Lebanon Conflict in Hope of Unlocking a Deal With Iran\",\"link\":\"https://www.wsj.com/world/middle-east/u-s-strikes-iranian-air-defenses-drone-site-in-new-hormuz-skirmish-727b9193\",\"pubDate\":\"2026-06-01 23:54:00\",\"description\":\"The president has been briefed that an end to the fighting between Israel and Hezbollah is key to finding a lasting settlement with Tehran.\"}],\"techai\":[{\"title\":\"Most teams approach AI adoption backwards (Sponsor)\",\"link\":\"https://info.notion.so/download-ultimate-ai-buyers-guide?utm_source=tldr&amp;utm_medium=newsletter&amp;utm_campaign=2026Q2_ai-buyers-guide&amp;utm_content=ai-buyers-guide_header_most_teams_approach\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"The question isn't “which tool has the best model?” It's “which solution will our team actually use?” This Notion guide breaks down the 5 critical jobs AI should solve at work and how to evaluate tools for adoption and integration, not just capabilities. Get the guide →\"},{\"title\":\"Building a hill-climbing machine: Launching seven new MAI models (5 minute read)\",\"link\":\"https://microsoft.ai/news/building-a-hillclimbing-machine-launching-seven-new-mai-models/?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"Microsoft released seven new MAI models, enabling developers to tune model weights themselves and integrate these into everyday products. The models leverage Frontier Tuning, an approach where AI adapts to specific workflows through reinforcement learning environments. Microsoft also announced a collaboration with Mayo Clinic to develop an advanced AI healthcare model, combining clinical expertise with AI capabilities, initially deploying within Mayo before wider distribution through Azure Foundry.\"},{\"title\":\"MiniMax promises M3 weights after 1M-context model launch (2 minute read)\",\"link\":\"https://www.implicator.ai/minimax-promises-m3-weights-after-1m-context-model-launch/?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"MiniMax will release the model weights and a technical report for its M3 model within the next 10 days. The new model is currently available through MiniMax Code, token plans, and an API. It has a 1M-token context window and a guaranteed 512,000-token minimum for API use. The model is the first open-weight model to combine frontier coding, native multimodality, and a 1M-token context window. MiniMax lists standard API pricing up to 512,000 input tokens at $0.60 per million input and $2.40 per million output.\"},{\"title\":\"Codex new Capabilities (6 minute read)\",\"link\":\"https://openai.com/index/codex-for-every-role-tool-workflow/?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"OpenAI released new Codex capabilities and six role-specific plug-ins for data analytics, creative production, sales, product design, equity investing, and investment banking.\"},{\"title\":\"The Next Frontier of Visual AI Is Code (11 minute read)\",\"link\":\"https://a16z.com/the-next-frontier-of-visual-ai-is-code/?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"Visual AI is shifting from generating final pixel outputs to creating source code for editable artifacts, transforming workflows in design and 3D modeling by enabling continuous iteration and feedback. Code-native generation produces structured representations such as HTML/CSS or Blender scripts, facilitating precise edits and enhancements post-generation. This approach holds promise for industries requiring consistent 3D structures and interactive assets, with visual AI moving towards creating adaptive, editable digital artifacts rather than just static images.\"},{\"title\":\"Open and closed models are on different exponentials (8 minute read)\",\"link\":\"https://www.interconnects.ai/p/open-and-closed-models-are-on-different?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"A lot of businesses want to switch to open models, but these models aren't yet good enough in out-of-distribution tasks. However, they will eventually catch up. The open model ecosystem will be far more diverse and numerous than the closed lab oligopoly. The total market value of the open model economy will dramatically exceed the cumulative value of OpenAI and Anthropic.\"},{\"title\":\"Memory Is Purpose (15 minute read)\",\"link\":\"https://x.com/ashwingop/status/2061836996541083912?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"Sentra CEO Ashwin Gopinath argues memory is not a sidecar to intelligence but the layer that decides what reality the reasoning operates on, with knowledge being what was present and memory being the subset of the past that should survive because it changes future behavior. The boulder problem illustrates that the same artifact becomes different memory for sales, product, legal, engineering, and CEO views, so freezing ontology at ingestion traps the system inside a frame that is prematurely right.\"},{\"title\":\"Preventing AI Inference Theft at Scale (5 minute read)\",\"link\":\"https://vercel.com/blog/protecting-against-token-theft?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"Vercel outlined how attackers resell stolen AI inference by exploiting exposed endpoints and highlighted why traditional rate limits are often insufficient. The post describes an approach that verifies every AI request using BotID analysis to reduce abuse.\"},{\"title\":\"The Data Center Moves to Your Machine (4 minute read)\",\"link\":\"https://www.perplexity.ai/hub/blog/the-data-center-moves-to-your-machine?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"Perplexity unveiled a hybrid local-cloud inference system at Computex 2026 that intelligently routes queries between on-device models for lightweight tasks and cloud-based models for complex reasoning, building on the company's earlier Personal Computer agent.\"},{\"title\":\"Wall Attention (GitHub Repo)\",\"link\":\"https://github.com/tilde-research/wall-attention-release?utm_source=tldrai\",\"pubDate\":\"2026-06-03 00:00:00\",\"description\":\"An attention mechanism that improves long-context reasoning by organizing information around persistent “wall” memory tokens.\"}],\"economist\":[{\"title\":\"Cover Story newsletter: The new shape of war\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/29/cover-story-newsletter-the-new-shape-of-war\",\"pubDate\":\"2026-05-29 15:56:32\",\"description\":\"How we chose this week’s image\"},{\"title\":\"The weekly cartoon\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/28/the-weekly-cartoon\",\"pubDate\":\"2026-05-28 12:54:14\",\"description\":\"\"},{\"title\":\"Politics\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/28/politics\",\"pubDate\":\"2026-05-28 12:54:14\",\"description\":\"\"},{\"title\":\"Business\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/28/business\",\"pubDate\":\"2026-05-28 12:54:14\",\"description\":\"\"},{\"title\":\"Cover Story newsletter: A Starship enterprise\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/26/cover-story-newsletter-a-starship-enterprise\",\"pubDate\":\"2026-05-26 09:21:11\",\"description\":\"How we chose this week’s images\"},{\"title\":\"Business\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/21/business\",\"pubDate\":\"2026-05-21 12:47:57\",\"description\":\"\"},{\"title\":\"The weekly cartoon\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/21/the-weekly-cartoon\",\"pubDate\":\"2026-05-21 12:47:57\",\"description\":\"\"},{\"title\":\"Politics\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/21/politics\",\"pubDate\":\"2026-05-21 12:47:57\",\"description\":\"\"},{\"title\":\"Cover Story newsletter: The jobs apocalypse\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/16/cover-story-newsletter-the-jobs-apocalypse\",\"pubDate\":\"2026-05-16 10:21:21\",\"description\":\"How we chose this week’s images\"},{\"title\":\"The weekly cartoon\",\"link\":\"https://www.economist.com/the-world-this-week/2026/05/14/the-weekly-cartoon\",\"pubDate\":\"2026-05-14 12:55:15\",\"description\":\"\"}]}}",
+    "sp_overnight_cache": "{\"ts\":1780437968399,\"day\":\"2026-06-02\",\"model\":{\"futures\":[{\"sym\":\"ES=F\",\"label\":\"S&P fut\",\"pct\":null,\"dir\":\"flat\",\"missing\":true},{\"sym\":\"NQ=F\",\"label\":\"Nasdaq fut\",\"pct\":null,\"dir\":\"flat\",\"missing\":true}],\"asia\":[{\"sym\":\"^N225\",\"label\":\"Nikkei\",\"pct\":null,\"dir\":\"flat\",\"missing\":true},{\"sym\":\"^HSI\",\"label\":\"Hang Seng\",\"pct\":null,\"dir\":\"flat\",\"missing\":true},{\"sym\":\"000001.SS\",\"label\":\"Shanghai\",\"pct\":null,\"dir\":\"flat\",\"missing\":true}],\"gaps\":[],\"headlines\":[{\"feed\":\"nyt\",\"title\":\"‘Did I Have a Choice?’ In New Jersey, Kean Voters Explain Themselves.\",\"link\":\"https://www.nytimes.com/2026/06/02/nyregion/thomas-kean-voters-new-jersey.html\",\"pubDate\":\"Tue, 02 Jun 2026 21:20:04 +0000\",\"ts\":1780435204000},{\"feed\":\"nyt\",\"title\":\"Trump Names Bill Pulte as Acting Director of National Intelligence\",\"link\":\"https://www.nytimes.com/2026/06/02/us/politics/bill-pulte-acting-director-national-intelligence.html\",\"pubDate\":\"Tue, 02 Jun 2026 20:57:46 +0000\",\"ts\":1780433866000},{\"feed\":\"nyt\",\"title\":\"Polls of California Governor’s Race Show a Clear Top 3\",\"link\":\"https://www.nytimes.com/2026/06/02/us/elections/california-governor-primary-election-polls.html\",\"pubDate\":\"Tue, 02 Jun 2026 20:43:58 +0000\",\"ts\":1780433038000}],\"asOf\":1780437968399,\"sessionPhase\":\"closed\"}}",
+    "sp_sector_heatmap": "{\"ts\":1780544910247,\"etfs\":{\"XLK\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLC\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLY\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLP\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLE\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLF\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLV\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLI\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLB\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLU\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"XLRE\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"IWM\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"MDY\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null},\"SPY\":{\"pct1w\":null,\"pct1m\":null,\"pct3m\":null,\"sparkline\":[],\"lastPrice\":null}}}",
+    "sp_feed_src_cache": "{\"nyt\":\"https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml\",\"wsj\":\"https://feeds.content.dowjones.io/public/rss/RSSWorldNews\",\"techai\":\"https://bullrich.dev/tldr-rss/ai.rss\",\"economist\":\"https://api.codetabs.com/v1/proxy?quest=https%3A%2F%2Fwww.economist.com%2Fthe-world-this-week%2Frss.xml\"}",
+    "sp_insider_cache": "{\"DELL\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"NVDA\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"LGLFX\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"PINS\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"FKAIX\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"DIS\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"BABA\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"QQQ\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"USO\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"AAPL\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"NTAP\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"MSFT\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"SPY\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"AMZN\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"GOOG\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"TSLA\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"VMW\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"NFLX\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"SQ\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"},\"COST\":{\"ts\":1780541584284,\"data\":[],\"source\":\"edgar\"}}",
+    "sp_market_ai_cache": "{\"ts\":1780544918043,\"predictions\":[{\"ticker\":\"DELL\",\"sentiment\":\"bearish\",\"confidence\":75,\"rationale\":\"Silver Lake block sales + Form 144 pressure\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0},{\"ticker\":\"DIS\",\"sentiment\":\"bullish\",\"confidence\":70,\"rationale\":\"Streaming/experiences growth narrative dominates\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0},{\"ticker\":\"USO\",\"sentiment\":\"bullish\",\"confidence\":65,\"rationale\":\"Oil inventory decline + $160 crude target outweigh stale news\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0},{\"ticker\":\"PINS\",\"sentiment\":\"neutral\",\"confidence\":50,\"rationale\":\"Mixed insider flow vs. bullish dip-buying headlines\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0},{\"ticker\":\"NTAP\",\"sentiment\":\"neutral\",\"confidence\":45,\"rationale\":\"Insider sale + SEC filing; no strong momentum\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0},{\"ticker\":\"MSFT\",\"sentiment\":\"neutral\",\"confidence\":40,\"rationale\":\"AI deal offset by earnings beat skepticism\",\"agreeCount\":1,\"totalModels\":1,\"ensembleEntropy\":0}],\"attemptedModels\":[\"mistral\"],\"succeededModels\":[\"mistral\"],\"arbiter\":null,\"models\":[\"mistral\"],\"tickerCount\":6,\"headlinesByTicker\":{\"USO\":[{\"title\":\"BATL, USO, UCO Edge Higher As Oil Gains: Exxon Executive Warns Shrinking Inventories Could Send Crude To $160\",\"pubDate\":\"2026-06-02 19:47:15\",\"ts\":1780454835000,\"link\":\"https://news.google.com/rss/articles/CBMiygFBVV95cUxNOEJOLXVtbUFqVG5pWmIyX056Qi00Z0dONUJ4b19feGpjdGZNcGlGMnlqc2pOT0ljV0pEc0wwU21hSHRYc0NwX2czVGxiOHlQLVZaMUFTWFZKX2s0djAwdGdpLTliZi1tRUtrMGxjVDVRbjhiSGZObTh1ckhXTW52UW82NUtObU5BcTZpVVFINldwdmhRMHVtb2lSNVltbDJYTFNrVDJQMDZOTmFJVUsyeGJoYUV4ZFVXNlFqNHZwM3NCNHk1aGNhSXRR?oc=5\",\"freshness\":\"stale\"},{\"title\":\"Stock Market Recap 3-9-18 SPY IWM QQQ GLD USO SMH XBI XLE Wrongful Death Attorney (gQOkwI9585)\",\"pubDate\":\"2026-05-31 03:27:50\",\"ts\":1780223270000,\"link\":\"https://news.google.com/rss/articles/CBMiW0FVX3lxTFAtSEpsMEY5dkhwa3JtN3ZYaEFjcWVJeXlxcWxSM3kzWU1hazVyR2tlQTZVcWplVXRsaVlqdkVHZ0NEUlg4TTJXOWlQZ1VORnNwTTFhTXRKU2VWYTg?oc=5\",\"freshness\":\"stale\"},{\"title\":\"Crude Inventory Decline Impacts USO Stock\",\"pubDate\":\"2026-05-28 00:56:15\",\"ts\":1779954975000,\"link\":\"https://news.google.com/rss/articles/CBMilwFBVV95cUxQZmNNMDVwMDJBekozV2tnMF90ei0tMFBjLU1MMU1CUUtnNm9vMTJoWUoxZGVIZ2R3TEdSTVA0ZzEzamZXMTlfQ1ppSEtUQ2tOZVZmWUxFanh4ajNEb0dRYVctVFdpdV9sdHotVExJYnNNdUlDSjl3Nkc4ejBfem5yM1k2eXJocUptZUxGSzRaa0lFOU5yeHgw?oc=5\",\"freshness\":\"stale\"}],\"DELL\":[{\"title\":\"Silver Lake entities sell large blocks of DELL stock (DELL) in March–June 2026\",\"pubDate\":\"2026-06-04 01:45:03\",\"ts\":1780562703000,\"link\":\"https://news.google.com/rss/articles/CBMinwFBVV95cUxPQkc4cTRJQVVhdHIyZEIxZnp4RzFydDc3al90UU5OVlk4bjJQVllxVHE0QWJYTHhsYXdpM1lKbkxsTXRPUGVDajliVkcyNFFsZjhPRzNzMDRWRkhReUtoTGFuN3locm43MnFheFl6RzF5Mk1relZfTHpGNFRJdS05NVB6NjJxRHVQR3hKZnA3T1N5b1N0Vmo4WDItM3B3NGs?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Silver Lake sells large blocks of DELL Class C stock (DELL) in Form 144 notices\",\"pubDate\":\"2026-06-04 01:45:02\",\"ts\":1780562702000,\"link\":\"https://news.google.com/rss/articles/CBMinwFBVV95cUxOR0FRMmYtcnFocUY0NGNLWm9lM2ZlRHRjeUFRek4xU1ljOWRGOEVvcmNjYlQ0Ykt3a1VSenUwNFZ1dS1LQ1R6VDdSZ0xZeEo4TkxocjVwZktrOVJWU3BFLWxESDF2YjFTS3ZES2ltaTNDVGJ3dkJKUGNaYTZvdUVxdHNvRGs2TjZHNWNoQTFVWEVjSzJnNi1GV19VelpCLTg?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"DELL (NYSE) Form 144: Silver Lake affiliates list large March–June 2026 sales\",\"pubDate\":\"2026-06-04 01:45:02\",\"ts\":1780562702000,\"link\":\"https://news.google.com/rss/articles/CBMinwFBVV95cUxObXBkMnBpT1JlUm1uTktSek5ISndXcWlSRlB4aVE1LU1teFFyMlRuSEJ3M2ZnX1hhdDg1ODMzUnVuSVJnNTlqSnpMWC1kR0F4YjQ0U3FqZGZfT19sem9aX3RPeXJHalBhTXI0NGluYnZCTGoxMFRCenhaY1pfM2ZpWVM5QzJsTGU4ZS1Sd1hfZlQ4ajUwUW9IWUtwRktSVmc?oc=5\",\"freshness\":\"fresh\"}],\"PINS\":[{\"title\":\"Peak Retirement Planning Inc. Has $2.76 Million Position in Pinterest, Inc. $PINS\",\"pubDate\":\"2026-06-03 10:15:16\",\"ts\":1780506916000,\"link\":\"https://news.google.com/rss/articles/CBMi0gFBVV95cUxPV3UxQVRORC13Vl9pblNiTzN3NnU4MUVhVzJ4Q0dXWWUwcUx0RXFvZS0xRXdpT1lZQnduWUZmelVsa0MySUFCU3FBSDlKMHM1emFkaGp3UVFsMGpOM1FRMVdaUVJJT0V6ZEJLbkFWRHdFeEJOd0tReFpac0MycHFneTdfaE54TVROdjR5Zlo1ZHFvUGJWb25LbTRnMUVmNWhCc3VWdTZYOFE5THBBTXM0eEJONGRHUXF6UEFnMms0MkNWMDUxTTdqb0M1R0R2Z01FOWc?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Rep. Sells Off Shares of Pinterest, Inc. (NYSE:PINS)\",\"pubDate\":\"2026-06-03 06:11:39\",\"ts\":1780492299000,\"link\":\"https://news.google.com/rss/articles/CBMiogFBVV95cUxNVFNQWjhXaGphd3hNZ2JpWmp6UDRKdjAzLW5IRkV0NU9lWmg4TjN6cUFiZmNqRzdvajYtWTNzbzRZS0YzbHRTTlJxN292bW1XaVdlT2NlUW03NHJSa2lESFcwVmctMGYzNjNFZ21fS0o4VE9KY3VsNmFBS243eFU0Tm1jeXJfaTVkVlhsaXBBUFY4bE43TmFRbEJ6WmpGYWVlYmc?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Is Pinterest (PINS) The Best Stock to Buy On The Dip?\",\"pubDate\":\"2026-06-02 21:44:07\",\"ts\":1780461847000,\"link\":\"https://news.google.com/rss/articles/CBMimgFBVV95cUxPLWlDNkJxT1JQUERMejR3N3JOd3B1NWV2TS1KQ0c2R2wzZU5LRDZXcDNmNHRBU3ZHLWVXbmtMS3J5UjJodGF3ZWZsdTBzTDhkZVV4eGlKZ1ZRMzBtSnRDM0hnelZsczN5VERTSXJFN2xHNWxncEdqNHZueHBmM29yYWh4T1ZkazdSbnA4TDlPT2NGYUxUYkdoZjNn?oc=5\",\"freshness\":\"fresh\"}],\"NTAP\":[{\"title\":\"NetApp (NASDAQ:NTAP) CAO Lorenzo Daniel De Sells 225 Shares\",\"pubDate\":\"2026-06-03 21:32:18\",\"ts\":1780547538000,\"link\":\"https://news.google.com/rss/articles/CBMirwFBVV95cUxOWDMyVEVUSnpsMXdwZWhDNFVlU2xxNzFRUWhQSzU3TDUzUTVaSGhvYkt5WFZkakRubmludzBQTHlYM1dDTzNLS2NRaVBmV0lING5lY1lLMUpqMXVwVHE2aHdacjdKdFZNNzVGNGtYdFlyNUlfOG5xTGdoSC0xSk95TnpTUDA1Y0g4aXdwU2lZWVRuX2VabjZURGI1ZzVVTmloZ2ZKM25ETzY2bldGcnJN?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"NetApp (NTAP) VP De Lorenzo sells 225 shares under Rule 10b5-1 plan\",\"pubDate\":\"2026-06-03 20:30:04\",\"ts\":1780543804000,\"link\":\"https://news.google.com/rss/articles/CBMiqAFBVV95cUxPQWhtT25kNGt0cXZMLU9CLWVPUUdtYmU0ZUxram02cFNfa1AyZ1JWaFdLR0tKQjNlSnZtTy1BVEdJV0xCNTRMV2dCSDlSMk04XzhwSk83RkIzcFFMVmhSMXhPbjlWemdVallEelBkdHNaY0hfcEdTdG02MWV6TnI3MWR2LTM2c3R0MjNLMFhFNmlvZVBZTmh1czlocWR0bUUzcmw3dVYyOGE?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"[144] NetApp, Inc. SEC Filing\",\"pubDate\":\"2026-06-03 20:18:36\",\"ts\":1780543116000,\"link\":\"https://news.google.com/rss/articles/CBMikgFBVV95cUxOZUlTRlhyTTFsZGliWFlfLWprd1F3Qkd0cTZpMG9qVDFDN3R1Vzl6bzVRdnhVRnl5MlFWMUN6YW53VjRHUmVTRUt0Z3BxZ3pRR19ZMVh0aldQSlgzNzA4OU5lWGYwNVpUSDViYmZwekh4cnZ5d2ZOMUkxdXpvTUZrT0FtODd2SW83OFF1Qm15bi1VUQ?oc=5\",\"freshness\":\"fresh\"}],\"DIS\":[{\"title\":\"Why Did Oracle Stock Drop Today?\",\"pubDate\":\"2026-06-03 14:32:03\",\"ts\":1780522323000,\"link\":\"https://news.google.com/rss/articles/CBMilAFBVV95cUxOWVJOVjZjaVRYSUZ2RmJ0dmE4THp0U3ZUUUl2MGR2NzYzbkhuOXBmMVFlNnhqY0JGVnNOblN0ZVV0NEQ2UkdzY2xMcVdnbXowZkdzNG56aHpUbE9KelY5RVg5NGdDZ2tlR2hlQmhEZEV1WUJXcVUzT3p2QXpNMlFsTzVZVUU2N2VIQmtWODlpa1BUSkln?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Here's Why Walt Disney (DIS) is a Strong Momentum Stock\",\"pubDate\":\"2026-06-03 13:50:02\",\"ts\":1780519802000,\"link\":\"https://news.google.com/rss/articles/CBMilAFBVV95cUxPbUF5YjM5OE91bWhzMUMxNlBVN2YxODV5ZDlvdkwtLVdFdF9VM0NuX0ozRTFkcVlhQ1BpRzlxV3RwaXFfZ2N4X0VLLVFYQTQwSjBYNGx6Q2M5eERISjBfaWJlcHEyQkdGMElxeTBndHVTNy0yLTZCZVRRTjZQM2Fua1dsdjZodHFRWlFEWmdPYy1zcm9p?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"A Look At Disney (DIS) Valuation As Shares Struggle And Streaming And Experiences Drive New Growth Hopes\",\"pubDate\":\"2026-06-03 03:10:00\",\"ts\":1780481400000,\"link\":\"https://news.google.com/rss/articles/CBMingFBVV95cUxPRGEyUWxnZUhYajY2RHlkZ01pbFNhOHdzLWZkZ3RlcS11MlhBSlhxMWcySS1mSjVYU1ZVeEtiQWFVd2hwTXowaVlIdGhxN21TNVlmUVhqUVlBY3FZNXBOU1VFS1BqOVJxLXhva0E2TUZZSDA2NHRweE9TYTdZd0RGM1F5Tm51WmVzZnc3d2tjaFRtWUxLN2lpLUtaX1Nzdw?oc=5\",\"freshness\":\"fresh\"}],\"MSFT\":[{\"title\":\"“Frontier Medical Intelligence” Deal With Mayo Clinic Does Microsoft Stock (NASDAQ:MSFT) No Favors\",\"pubDate\":\"2026-06-03 18:39:31\",\"ts\":1780537171000,\"link\":\"https://news.google.com/rss/articles/CBMiwAFBVV95cUxNTzU0eWZkSjZsRVdVTWFkZGtSdGtCcVVXSER6YXhScTAwSDNrb3FRRW5wcnlwM2pxbDFGbHZkQWtpQnp0NHVLaTE4OXIwQ1lPSkF4ZkJkanpqSWtaQjRDZEc1WDlMSVgyeVZsTlgxWW5oVkFfOGhRU2w1ZmpVQ05YMl9QaDVFem5WMDNpN1k3VUxTaDJkcFR5YU9BdWx2cXJoa2taanR3QUh5RnhsbFg2b01FaWkwZzJuV0t0ZnRDd0Q?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Microsoft (MSFT) Slid Despite Top and Bottom-Line Beats\",\"pubDate\":\"2026-06-03 13:46:15\",\"ts\":1780519575000,\"link\":\"https://news.google.com/rss/articles/CBMinAFBVV95cUxOZWhzemVSeG5CMzkzLXVPcDVELVlEcXlhdndPamR4RjUxaHpuWnBPS0ZyLU1jdUVQaHg0a1ZscklXSWRWcEwzOWtEeXlyclB0S21xQ1F1NkpiOHlRWVFGUjgxUlprbnZ0MmhyMzVVWk9fVTE0VTFpM1BLeWt6TXc3aHFGdEtnTFYyeWVGRkk0YURlMV9ob2pqTFhVZnI?oc=5\",\"freshness\":\"fresh\"},{\"title\":\"Better AI Stock to Buy: Alphabet vs. Microsoft. (The Winner Might Surprise You)\",\"pubDate\":\"2026-06-03 12:15:00\",\"ts\":1780514100000,\"link\":\"https://news.google.com/rss/articles/CBMimAFBVV95cUxOQkpoZ0YwdHFVTWtWT2pEUVFvaDRWVUF3Z0ZmTHBLZ0ZRZERUd1pLQTR0Wk0zeWcwdTdJNTMtUkhtblJQOUhOVUJ1TXR2cFhLMkJ4SzlIQVh5NFlicVUyaEpYMWdGNmZTMjd5WlFPTFBIWTZueThZRzdYR2F2ekoySWZkSEpuQ0dNTVJobi1PZzB1dVlzN2QzLQ?oc=5\",\"freshness\":\"fresh\"}]},\"optionsByTicker\":{},\"movingAveragesByTicker\":{},\"enhancedSignalsByTicker\":{},\"futuresSig\":null,\"macroSig\":null,\"quantBaselineByTicker\":{\"USO\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0},\"DELL\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0},\"PINS\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0},\"NTAP\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0},\"DIS\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0},\"MSFT\":{\"sentiment\":\"neutral\",\"probability\":0.5,\"logOdds\":0,\"contributions\":[],\"confidence\":0,\"earningsDamp\":0,\"volAdj\":0,\"fomcAdj\":0}},\"volRegime\":null,\"fomcProximity\":null,\"modelDiagnostics\":{\"mistral\":{\"ok\":true,\"durationMs\":1835,\"predictionCount\":6}},\"perTickerVotes\":{\"USO\":[{\"model\":\"mistral\",\"sentiment\":\"bullish\",\"confidence\":65,\"rationale\":\"Oil inventory decline + $160 crude target outweigh stale news\"}],\"DELL\":[{\"model\":\"mistral\",\"sentiment\":\"bearish\",\"confidence\":75,\"rationale\":\"Silver Lake block sales + Form 144 pressure\"}],\"PINS\":[{\"model\":\"mistral\",\"sentiment\":\"neutral\",\"confidence\":50,\"rationale\":\"Mixed insider flow vs. bullish dip-buying headlines\"}],\"NTAP\":[{\"model\":\"mistral\",\"sentiment\":\"neutral\",\"confidence\":45,\"rationale\":\"Insider sale + SEC filing; no strong momentum\"}],\"DIS\":[{\"model\":\"mistral\",\"sentiment\":\"bullish\",\"confidence\":70,\"rationale\":\"Streaming/experiences growth narrative dominates\"}],\"MSFT\":[{\"model\":\"mistral\",\"sentiment\":\"neutral\",\"confidence\":40,\"rationale\":\"AI deal offset by earnings beat skepticism\"}]},\"context\":{\"horizon\":\"swing\"}}"
+  },
+  "state": {
+    "stocksVersion": 3,
+    "feedVersion": 7,
+    "stocks": [
+      "DELL",
+      "NVDA",
+      "LGLFX",
+      "PINS",
+      "FKAIX",
+      "DIS",
+      "BABA",
+      "QQQ",
+      "USO",
+      "AAPL",
+      "NTAP",
+      "MSFT",
+      "SPY",
+      "AMZN",
+      "GOOG",
+      "TSLA",
+      "VMW",
+      "NFLX",
+      "SQ",
+      "COST"
+    ],
+    "feeds": [
+      {
+        "badge": "b-wsj",
+        "id": "wsj",
+        "name": "WSJ",
+        "url": "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
+        "activeSection": 0
+      },
+      {
+        "badge": "b-nyt",
+        "id": "nyt",
+        "name": "NYT",
+        "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+        "activeSection": 0
+      },
+      {
+        "badge": "b-custom",
+        "id": "techai",
+        "name": "Tech + AI",
+        "url": "https://hnrss.org/newest?q=ai",
+        "activeSection": 0
+      },
+      {
+        "badge": "b-economist",
+        "id": "economist",
+        "name": "Economist",
+        "url": "https://www.economist.com/the-world-this-week/rss.xml",
+        "activeSection": 0
+      }
+    ],
+    "clocks": [
+      {
+        "city": "New York",
+        "tz": "America/New_York"
+      },
+      {
+        "city": "London",
+        "tz": "Europe/London"
+      },
+      {
+        "city": "Tokyo",
+        "tz": "Asia/Tokyo"
+      },
+      {
+        "city": "Los Angeles",
+        "tz": "America/Los_Angeles"
+      }
+    ],
+    "tempUnit": "F",
+    "yahooCookies": "",
+    "weatherLocation": null,
+    "browserLocation": null,
+    "predHorizonDays": 5,
+    "icsUrl": "",
+    "newsTopics": "",
+    "maiJournal": {
+      "20260602": {
+        "byTicker": {
+          "NTAP": {
+            "sentiment": "bearish",
+            "confidence": 75,
+            "rationale": "Rejection-zone DFH + strong uptrend → mean-reversion",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bearish",
+                "confidence": 75
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 46,
+            "quantProbability": 0.459,
+            "quantLogOdds": -0.165
+          },
+          "DELL": {
+            "sentiment": "bullish",
+            "confidence": 70,
+            "rationale": "Strong uptrend + shallow-pullback DFH",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 70
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 45,
+            "quantProbability": 0.549,
+            "quantLogOdds": 0.198
+          },
+          "NVDA": {
+            "sentiment": "bullish",
+            "confidence": 65,
+            "rationale": "Strong uptrend + shallow-pullback DFH",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 65
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 48,
+            "quantProbability": 0.519,
+            "quantLogOdds": 0.075
+          },
+          "DIS": {
+            "sentiment": "bullish",
+            "confidence": 60,
+            "rationale": "Oversold-bounce DFH + neutral trend",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 60
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "bullish",
+            "quantConfidence": 56,
+            "quantProbability": 0.557,
+            "quantLogOdds": 0.229
+          },
+          "USO": {
+            "sentiment": "bullish",
+            "confidence": 60,
+            "rationale": "Oversold-bounce DFH + neutral trend",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 60
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "bullish",
+            "quantConfidence": 56,
+            "quantProbability": 0.557,
+            "quantLogOdds": 0.229
+          },
+          "BABA": {
+            "sentiment": "bullish",
+            "confidence": 55,
+            "rationale": "Deep-drawdown DFH + neutral trend",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 55
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "bullish",
+            "quantConfidence": 60,
+            "quantProbability": 0.605,
+            "quantLogOdds": 0.426
+          },
+          "LGLFX": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "Trend acceleration + at-high DFH → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 50,
+            "quantProbability": 0.504,
+            "quantLogOdds": 0.015
+          },
+          "QQQ": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "At-high DFH + strong uptrend → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 47,
+            "quantProbability": 0.53,
+            "quantLogOdds": 0.12
+          },
+          "AAPL": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "At-high DFH + strong uptrend → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 47,
+            "quantProbability": 0.534,
+            "quantLogOdds": 0.135
+          },
+          "FKAIX": {
+            "sentiment": "neutral",
+            "confidence": 40,
+            "rationale": "Trend acceleration + shallow-pullback DFH → weak",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 40
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 49,
+            "quantProbability": 0.494,
+            "quantLogOdds": -0.024
+          },
+          "PINS": {
+            "sentiment": "neutral",
+            "confidence": 46,
+            "rationale": "Deep-drawdown DFH + extreme acceleration → fade",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 35
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260602",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "bullish",
+            "quantConfidence": 58,
+            "quantProbability": 0.58,
+            "quantLogOdds": 0.325
+          }
+        },
+        "ts": 1780437989792,
+        "arbiter": null,
+        "predHorizonDays": 5
+      },
+      "20260603": {
+        "byTicker": {
+          "NTAP": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "Insider sale + SEC filing; no strong momentum",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          },
+          "DELL": {
+            "sentiment": "bearish",
+            "confidence": 75,
+            "rationale": "Silver Lake block sales + Form 144 pressure",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bearish",
+                "confidence": 75
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          },
+          "NVDA": {
+            "sentiment": "bullish",
+            "confidence": 65,
+            "rationale": "Strong uptrend + shallow-pullback DFH",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 65
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 48,
+            "quantProbability": 0.519,
+            "quantLogOdds": 0.075
+          },
+          "DIS": {
+            "sentiment": "bullish",
+            "confidence": 70,
+            "rationale": "Streaming/experiences growth narrative dominates",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 70
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          },
+          "USO": {
+            "sentiment": "bullish",
+            "confidence": 65,
+            "rationale": "Oil inventory decline + $160 crude target outweigh stale news",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 65
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          },
+          "BABA": {
+            "sentiment": "bullish",
+            "confidence": 55,
+            "rationale": "Deep-drawdown DFH + neutral trend",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "bullish",
+                "confidence": 55
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "bullish",
+            "quantConfidence": 60,
+            "quantProbability": 0.605,
+            "quantLogOdds": 0.426
+          },
+          "LGLFX": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "Trend acceleration + at-high DFH → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 50,
+            "quantProbability": 0.504,
+            "quantLogOdds": 0.015
+          },
+          "QQQ": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "At-high DFH + strong uptrend → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 47,
+            "quantProbability": 0.53,
+            "quantLogOdds": 0.12
+          },
+          "AAPL": {
+            "sentiment": "neutral",
+            "confidence": 45,
+            "rationale": "At-high DFH + strong uptrend → mixed signals",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 45
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 47,
+            "quantProbability": 0.534,
+            "quantLogOdds": 0.135
+          },
+          "FKAIX": {
+            "sentiment": "neutral",
+            "confidence": 40,
+            "rationale": "Trend acceleration + shallow-pullback DFH → weak",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 40
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 49,
+            "quantProbability": 0.494,
+            "quantLogOdds": -0.024
+          },
+          "PINS": {
+            "sentiment": "neutral",
+            "confidence": 50,
+            "rationale": "Mixed insider flow vs. bullish dip-buying headlines",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 50
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          },
+          "MSFT": {
+            "sentiment": "neutral",
+            "confidence": 40,
+            "rationale": "AI deal offset by earnings beat skepticism",
+            "votes": [
+              {
+                "model": "mistral",
+                "sentiment": "neutral",
+                "confidence": 40
+              }
+            ],
+            "refPrev": null,
+            "refPrice": null,
+            "predKey": "20260603",
+            "gradeMode": "5d",
+            "futuresSig": null,
+            "optionsSig": null,
+            "movingAverages": null,
+            "signalSnapshot": null,
+            "quantSentiment": "neutral",
+            "quantConfidence": 0,
+            "quantProbability": 0.5,
+            "quantLogOdds": 0
+          }
+        },
+        "ts": 1780544918043,
+        "arbiter": null,
+        "predHorizonDays": 5,
+        "context": {
+          "horizon": "swing"
+        }
+      }
+    },
+    "maiLearnedWeights": null,
+    "maiBriefDismiss": "",
+    "bgImageUrl": "",
+    "bgImageOpacity": 0.6,
+    "bgImageDim": 0.35,
+    "widgetBgAlpha": 84,
+    "widgetPeek": false,
+    "weatherCollapsed": false,
+    "earningsReactions": {},
+    "earningsReactionEnabled": true,
+    "sentimentDivergence": false,
+    "wildMode": false,
+    "wildTheme": "vaporwave",
+    "quickLinks": [
+      {
+        "name": "Amazon",
+        "url": "https://www.amazon.com"
+      },
+      {
+        "name": "Gmail",
+        "url": "https://mail.google.com"
+      },
+      {
+        "name": "YouTube",
+        "url": "https://www.youtube.com"
+      },
+      {
+        "name": "Drive",
+        "url": "https://drive.google.com"
+      },
+      {
+        "name": "Maps",
+        "url": "https://maps.google.com"
+      },
+      {
+        "name": "Calendar",
+        "url": "https://calendar.google.com"
+      },
+      {
+        "name": "Concur",
+        "url": "https://www.concursolutions.com"
+      },
+      {
+        "name": "United",
+        "url": "https://www.united.com"
+      },
+      {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com"
+      },
+      {
+        "name": "Yelp",
+        "url": "https://www.yelp.com"
+      }
+    ],
+    "lastMacroEvents": {},
+    "kalshiMarkets": [
+      "KXFED-25JUL",
+      "KXFED-25SEP",
+      "KXCPI-25JUN",
+      "KXOIL-90",
+      "KXRECESSION-25"
+    ],
+    "kalshiAlertThreshold": 5,
+    "kalshiEnabled": true,
+    "pickerSettings": {}
+  }
+}
