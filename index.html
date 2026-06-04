@@ -2754,6 +2754,9 @@
           <button onclick="closeSyncMenu(); exportSettings();">&#11123; Export</button>
           <button onclick="closeSyncMenu(); openImportSettings();">&#11122; Import</button>
           <hr>
+          <button onclick="closeSyncMenu(); showKeysQR();" title="Show a QR of your keys to scan from another device (e.g. your phone)">&#9783; Show keys QR</button>
+          <button onclick="closeSyncMenu(); scanKeysQR();" title="Scan a keys QR shown on another device (camera)">&#128247; Scan keys QR</button>
+          <hr>
           <button onclick="closeSyncMenu(); openGhSync();">&#9729; Cloud Sync</button>
         </div>
       </div>
@@ -3709,6 +3712,38 @@
     <div class="mactions">
       <button class="btn btn-ghost" onclick="closeModal('exportModal')">Cancel</button>
       <button class="btn btn-primary" onclick="doExportSettings({ includeKeys: !!document.getElementById('exportIncludeKeys').checked })">Download</button>
+    </div>
+  </div>
+</div>
+
+<!-- KEYS QR (SHOW) MODAL — display this device's keys as a QR to scan from another device -->
+<div class="overlay" id="keysQrModal">
+  <div class="modal" style="width:340px;text-align:center;">
+    <div class="modal-title">&#9783; Your keys QR</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px;">
+      On your phone: open StartPage &rarr; <b>&#8645; Sync</b> &rarr; <b>Scan keys QR</b>, then point the camera at this code.
+    </div>
+    <div id="keysQrCanvasWrap" style="display:flex;justify-content:center;min-height:200px;align-items:center;margin-bottom:10px;"></div>
+    <div style="font-size:11px;color:var(--danger);line-height:1.45;margin-bottom:12px;">
+      &#9888; This QR contains your API keys in the clear. Don't photograph or screen-share it; close it when done.
+    </div>
+    <div class="mactions" style="justify-content:center;">
+      <button class="btn btn-primary" onclick="closeKeysQR()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- KEYS QR (SCAN) MODAL — camera scanner that imports keys from a QR shown elsewhere -->
+<div class="overlay" id="keysScanModal">
+  <div class="modal" style="width:340px;text-align:center;">
+    <div class="modal-title">&#128247; Scan keys QR</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px;">
+      Point the camera at the keys QR on your other device (Sync &rarr; Show keys QR).
+    </div>
+    <video id="keysScanVideo" playsinline muted style="width:100%;max-height:300px;background:#000;border-radius:8px;display:block;"></video>
+    <div id="keysScanStatus" style="font-size:11px;color:var(--muted);margin-top:8px;min-height:16px;">Starting camera&hellip;</div>
+    <div class="mactions" style="justify-content:center;">
+      <button class="btn btn-ghost" onclick="closeKeysScan()">Cancel</button>
     </div>
   </div>
 </div>
@@ -5621,6 +5656,139 @@ function importSettingsFile(evt) {
   };
   reader.onerror = () => alert('Could not read file.');
   reader.readAsText(file);
+}
+
+// ── QR key handoff ───────────────────────────────────────────────────────────
+// Move keys between devices (e.g. PC → iPhone) without typing or files: one
+// device SHOWS a QR of its keys, the other SCANS it with the camera. The QR
+// payload is keys-only and never touches the public repo / Cloud Sync. Uses
+// vendored, lazy-loaded libs (qrcode.js to encode, jsQR.js to decode) so the
+// heavy decoder only loads when you actually scan.
+const KEYS_QR_FIELDS = ['stockApiKey','stockProxyUrl','groqApiKey','geminiApiKey',
+  'mistralApiKey','fredApiKey','eiaApiKey','quiverApiKey','gcalOauthClientId',
+  'icsUrl','yahooCookies'];
+
+function _buildKeysPayload() {
+  const keys = {};
+  for (const k of KEYS_QR_FIELDS) { const v = (typeof S !== 'undefined') ? S[k] : ''; if (v) keys[k] = v; }
+  const gh = {};
+  try { const p = localStorage.getItem('sp_gh_pat'); if (p) gh.pat = p;
+        const r = localStorage.getItem('sp_gh_repo'); if (r) gh.repo = r;
+        const a = localStorage.getItem('sp_gh_path'); if (a) gh.path = a; } catch (_) {}
+  return { kind: 'startpage-keys', v: 1, keys, gh };
+}
+// Apply a scanned keys payload. WHITELISTED fields only — a scanned QR can never
+// inject arbitrary state. Returns the count of credentials applied.
+function _applyKeysPayload(obj) {
+  if (!obj || obj.kind !== 'startpage-keys' || !obj.keys || typeof obj.keys !== 'object') return 0;
+  let n = 0;
+  for (const k of KEYS_QR_FIELDS) {
+    const v = obj.keys[k];
+    if (typeof v === 'string' && v) { S[k] = v; n++; }
+  }
+  if (obj.gh && typeof obj.gh === 'object') {
+    try {
+      if (typeof obj.gh.pat  === 'string' && obj.gh.pat)  { localStorage.setItem('sp_gh_pat',  obj.gh.pat);  n++; }
+      if (typeof obj.gh.repo === 'string' && obj.gh.repo)   localStorage.setItem('sp_gh_repo', obj.gh.repo);
+      if (typeof obj.gh.path === 'string' && obj.gh.path)   localStorage.setItem('sp_gh_path', obj.gh.path);
+    } catch (_) {}
+  }
+  try { save({ mirror: true }); } catch (_) {}
+  return n;
+}
+// Lazy-load a same-origin script exactly once; resolves when ready.
+const _qrScriptCache = {};
+function _loadScriptOnce(src) {
+  if (_qrScriptCache[src]) return _qrScriptCache[src];
+  _qrScriptCache[src] = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = () => resolve();
+    s.onerror = () => { delete _qrScriptCache[src]; reject(new Error('failed to load ' + src)); };
+    document.head.appendChild(s);
+  });
+  return _qrScriptCache[src];
+}
+
+let _keysQrTimer = 0;
+async function showKeysQR() {
+  const payload = _buildKeysPayload();
+  const n = Object.keys(payload.keys).length + (payload.gh && payload.gh.pat ? 1 : 0);
+  if (!n) { alert('No keys are configured on this device yet — nothing to share.'); return; }
+  try { await _loadScriptOnce('./qrcode.js'); } catch (_) { alert('Could not load the QR generator (qrcode.js missing).'); return; }
+  if (typeof qrcode !== 'function') { alert('QR generator unavailable.'); return; }
+  const data = JSON.stringify(payload);
+  let qr;
+  try { qr = qrcode(0, 'M'); qr.addData(data); qr.make(); }
+  catch (_) { alert('Too many keys to fit in one QR (payload ' + data.length + ' bytes). Use Export/Import instead.'); return; }
+  const count = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(260 / (count + quiet * 2)));
+  const dim = (count + quiet * 2) * cell;
+  const cv = document.createElement('canvas'); cv.width = dim; cv.height = dim;
+  cv.style.width = dim + 'px'; cv.style.height = dim + 'px';
+  const ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, dim, dim); ctx.fillStyle = '#000';
+  for (let r = 0; r < count; r++) for (let c = 0; c < count; c++)
+    if (qr.isDark(r, c)) ctx.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+  const wrap = document.getElementById('keysQrCanvasWrap');
+  if (wrap) { wrap.innerHTML = ''; wrap.appendChild(cv); }
+  openModal('keysQrModal');
+  if (_keysQrTimer) clearTimeout(_keysQrTimer);
+  _keysQrTimer = setTimeout(closeKeysQR, 120000);  // auto-hide after 2 min for safety
+}
+function closeKeysQR() {
+  if (_keysQrTimer) { clearTimeout(_keysQrTimer); _keysQrTimer = 0; }
+  const wrap = document.getElementById('keysQrCanvasWrap'); if (wrap) wrap.innerHTML = '';
+  closeModal('keysQrModal');
+}
+
+let _ksStream = null, _ksRaf = 0, _ksCanvas = null;
+function _stopKeysScan() {
+  if (_ksRaf) { cancelAnimationFrame(_ksRaf); _ksRaf = 0; }
+  if (_ksStream) { try { _ksStream.getTracks().forEach(t => t.stop()); } catch (_) {} _ksStream = null; }
+}
+function closeKeysScan() { _stopKeysScan(); closeModal('keysScanModal'); }
+async function scanKeysQR() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { alert('Camera not available in this browser.'); return; }
+  openModal('keysScanModal');
+  const status = document.getElementById('keysScanStatus');
+  const video = document.getElementById('keysScanVideo');
+  const setStatus = (t) => { if (status) status.textContent = t; };
+  setStatus('Loading scanner…');
+  try { await _loadScriptOnce('./jsQR.js'); } catch (_) { setStatus('Could not load the scanner (jsQR.js missing).'); return; }
+  if (typeof jsQR !== 'function') { setStatus('Scanner unavailable.'); return; }
+  try { _ksStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); }
+  catch (_) { setStatus('Camera permission denied or unavailable.'); return; }
+  if (video) { video.srcObject = _ksStream; try { await video.play(); } catch (_) {} }
+  setStatus('Point the camera at the keys QR…');
+  _ksCanvas = document.createElement('canvas');
+  const tick = () => {
+    if (!_ksStream || !video) return;
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      const w = video.videoWidth, h = video.videoHeight;
+      if (w && h) {
+        _ksCanvas.width = w; _ksCanvas.height = h;
+        const cx = _ksCanvas.getContext('2d', { willReadFrequently: true });
+        cx.drawImage(video, 0, 0, w, h);
+        let img = null; try { img = cx.getImageData(0, 0, w, h); } catch (_) {}
+        if (img) {
+          let res = null; try { res = jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' }); } catch (_) {}
+          if (res && res.data) {
+            let obj = null; try { obj = JSON.parse(res.data); } catch (_) {}
+            if (obj && obj.kind === 'startpage-keys') {
+              const n = _applyKeysPayload(obj);
+              _stopKeysScan();
+              alert('Imported ' + n + ' credential' + (n === 1 ? '' : 's') + ' from QR. Reloading.');
+              location.reload();
+              return;
+            }
+            setStatus('That QR isn’t a StartPage keys code — still scanning…');
+          }
+        }
+      }
+    }
+    _ksRaf = requestAnimationFrame(tick);
+  };
+  _ksRaf = requestAnimationFrame(tick);
 }
 
 // ── GitHub Sync ──────────────────────────────────────────────────────────────

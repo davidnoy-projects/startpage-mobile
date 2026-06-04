@@ -7,12 +7,14 @@
  *
  * Bump CACHE when the shell changes so old caches are evicted on activate.
  */
-const CACHE = 'startpage-shell-v2';
+const CACHE = 'startpage-shell-v3';
 const SHELL = [
   './',
   './index.html',
   './wizard.html',
   './config.json',
+  './qrcode.js',
+  './jsQR.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
