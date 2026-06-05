@@ -3725,7 +3725,7 @@
     </div>
     <div id="keysQrCanvasWrap" style="display:flex;justify-content:center;min-height:200px;align-items:center;margin-bottom:10px;"></div>
     <div style="font-size:11px;color:var(--danger);line-height:1.45;margin-bottom:12px;">
-      &#9888; This QR contains your API keys in the clear. Don't photograph or screen-share it; close it when done.
+      &#9888; This QR contains your API keys (plus flights/hotels) in the clear. Don't photograph or screen-share it; close it when done.
     </div>
     <div class="mactions" style="justify-content:center;">
       <button class="btn btn-primary" onclick="closeKeysQR()">Done</button>
@@ -5675,7 +5675,14 @@ function _buildKeysPayload() {
   try { const p = localStorage.getItem('sp_gh_pat'); if (p) gh.pat = p;
         const r = localStorage.getItem('sp_gh_repo'); if (r) gh.repo = r;
         const a = localStorage.getItem('sp_gh_path'); if (a) gh.path = a; } catch (_) {}
-  return { kind: 'startpage-keys', v: 1, keys, gh };
+  // Small personal extras worth carrying device-to-device (NOT in the public seed):
+  // flight/hotel trackers + weather location. Large data (journals) is intentionally
+  // excluded — it won't fit a QR and refreshes on its own; use Cloud Sync for that.
+  const extra = {};
+  try { const f = JSON.parse(localStorage.getItem('sp_flight_tracker') || 'null'); if (Array.isArray(f) && f.length) extra.flightTracker = f; } catch (_) {}
+  try { const h = JSON.parse(localStorage.getItem('sp_hotel_tracker')  || 'null'); if (Array.isArray(h) && h.length) extra.hotelTracker  = h; } catch (_) {}
+  try { if (S && S.weatherLocation && typeof S.weatherLocation === 'object') extra.weatherLocation = S.weatherLocation; } catch (_) {}
+  return { kind: 'startpage-keys', v: 2, keys, gh, extra };
 }
 // Apply a scanned keys payload. WHITELISTED fields only — a scanned QR can never
 // inject arbitrary state. Returns the count of credentials applied.
@@ -5692,6 +5699,24 @@ function _applyKeysPayload(obj) {
       if (typeof obj.gh.repo === 'string' && obj.gh.repo)   localStorage.setItem('sp_gh_repo', obj.gh.repo);
       if (typeof obj.gh.path === 'string' && obj.gh.path)   localStorage.setItem('sp_gh_path', obj.gh.path);
     } catch (_) {}
+  }
+  // Personal extras (flights / hotels / weather location), validated like an import.
+  if (obj.extra && typeof obj.extra === 'object') {
+    try {
+      if ('flightTracker' in obj.extra) {
+        const f = (typeof _safeFlightTracker === 'function') ? _safeFlightTracker(obj.extra.flightTracker)
+                : (Array.isArray(obj.extra.flightTracker) ? obj.extra.flightTracker : null);
+        if (Array.isArray(f)) { localStorage.setItem('sp_flight_tracker', JSON.stringify(f)); n++; }
+      }
+    } catch (_) {}
+    try {
+      if ('hotelTracker' in obj.extra) {
+        const h = (typeof _safeHotelTracker === 'function') ? _safeHotelTracker(obj.extra.hotelTracker)
+                : (Array.isArray(obj.extra.hotelTracker) ? obj.extra.hotelTracker : null);
+        if (Array.isArray(h)) { localStorage.setItem('sp_hotel_tracker', JSON.stringify(h)); n++; }
+      }
+    } catch (_) {}
+    try { if (obj.extra.weatherLocation && typeof obj.extra.weatherLocation === 'object') S.weatherLocation = obj.extra.weatherLocation; } catch (_) {}
   }
   try { save({ mirror: true }); } catch (_) {}
   return n;
@@ -5777,7 +5802,7 @@ async function scanKeysQR() {
             if (obj && obj.kind === 'startpage-keys') {
               const n = _applyKeysPayload(obj);
               _stopKeysScan();
-              alert('Imported ' + n + ' credential' + (n === 1 ? '' : 's') + ' from QR. Reloading.');
+              alert('Imported ' + n + ' item' + (n === 1 ? '' : 's') + ' (keys + flights/hotels) from QR. Reloading.');
               location.reload();
               return;
             }
