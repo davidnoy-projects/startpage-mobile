@@ -40,6 +40,7 @@ try {
 
 const headBlock = `
   <!-- PWA (StartPage Mobile) -->
+  <meta name="robots" content="noindex, nofollow">
   <link rel="manifest" href="./manifest.webmanifest">
   <meta name="theme-color" content="#0b1220">
   <meta name="apple-mobile-web-app-capable" content="yes">
