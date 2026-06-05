@@ -1074,7 +1074,9 @@
     .briefing-card {
       margin: 0 18px 14px;
       padding: 12px 16px;
-      background: linear-gradient(135deg, var(--primary-light), transparent);
+      background: color-mix(in srgb, var(--surface-solid) calc(var(--w-bg-a, 0.84) * 100%), transparent);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
       border: 1px solid var(--border-strong);
       border-radius: 10px;
       box-shadow: var(--glow-ring);
@@ -2597,7 +2599,9 @@
     .daily-brief {
       margin: 0 18px 14px;
       padding: 10px 14px;
-      background: linear-gradient(135deg, var(--primary-light), transparent);
+      background: color-mix(in srgb, var(--surface-solid) calc(var(--w-bg-a, 0.84) * 100%), transparent);
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
       border: 1px solid var(--border-strong);
       border-radius: 10px;
       position: relative;
@@ -5701,9 +5705,12 @@ function _buildKeysPayload() {
   // Small personal extras worth carrying device-to-device (NOT in the public seed):
   // flight/hotel trackers + weather location. Large data (journals) is intentionally
   // excluded — it won't fit a QR and refreshes on its own; use Cloud Sync for that.
+  // Trackers are included whenever they EXIST (even if empty) so a QR scan MIRRORS
+  // the source device — applying REPLACES the phone's list wholesale (no merge, no
+  // duplicates), and an emptied list on the laptop clears it on the phone too.
   const extra = {};
-  try { const f = JSON.parse(localStorage.getItem('sp_flight_tracker') || 'null'); if (Array.isArray(f) && f.length) extra.flightTracker = f; } catch (_) {}
-  try { const h = JSON.parse(localStorage.getItem('sp_hotel_tracker')  || 'null'); if (Array.isArray(h) && h.length) extra.hotelTracker  = h; } catch (_) {}
+  try { const f = JSON.parse(localStorage.getItem('sp_flight_tracker') || 'null'); if (Array.isArray(f)) extra.flightTracker = f; } catch (_) {}
+  try { const h = JSON.parse(localStorage.getItem('sp_hotel_tracker')  || 'null'); if (Array.isArray(h)) extra.hotelTracker  = h; } catch (_) {}
   try { if (S && S.weatherLocation && typeof S.weatherLocation === 'object') extra.weatherLocation = S.weatherLocation; } catch (_) {}
   return { kind: 'startpage-keys', v: 2, keys, gh, extra };
 }
@@ -11727,6 +11734,9 @@ function prefillWbg() {
 }
 function applyWidgetBackgroundAlphas() {
   const p = getWidgetBgAlphaPct() / 100;
+  // Publish on :root so non-widget panels that reuse the widget fill (the daily
+  // brief / morning briefing / news digest cards) track the same glass setting.
+  try { document.documentElement.style.setProperty('--w-bg-a', String(p)); } catch (_) {}
   document.querySelectorAll('.widget').forEach(el => {
     el.style.setProperty('--w-bg-a', String(p));
   });
