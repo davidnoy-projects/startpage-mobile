@@ -1876,6 +1876,28 @@
       .right-col, .col4 { display: flex; }
     }
 
+    /* ── Phone tuning (≤520px) ──────────────────────────────────────────────
+       On a narrow phone the single column must be allowed to SHRINK to the
+       viewport. Grid/flex items default to min-width:auto, so a wide child can
+       push the column past the screen edge (horizontal scroll → everything
+       looks too wide). Force min-width:0, clamp children to 100%, hide stray
+       horizontal overflow, tighten the outer padding, and let the header button
+       row wrap instead of overflowing. */
+    @media (max-width: 520px) {
+      html, body { overflow-x: hidden; }
+      .main { padding: 8px; gap: 10px; }
+      .main, .col { min-width: 0; }
+      .col > * { max-width: 100%; box-sizing: border-box; }
+      /* Header: let the whole bar + the action-button cluster wrap onto multiple
+         rows instead of running off-screen (every control stays reachable).
+         flex-basis:100% forces each cluster onto its own full-width row so the
+         buttons inside then wrap to the viewport instead of sizing to content. */
+      .header { flex-wrap: wrap; }
+      .header > * { min-width: 0; }
+      .header-clock { flex-wrap: wrap; min-width: 0; flex: 1 1 100%; }
+      .settings-actions { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; flex: 1 1 100%; max-width: 100%; }
+    }
+
     /* ════════════════════════════════════════════════════════════════════
        WILD MODE — over-the-top visual themes layered on top of any base
        theme via `data-wild` on <html>. Activated by the radio toggle in
@@ -3718,7 +3740,7 @@
 
 <!-- KEYS QR (SHOW) MODAL — display this device's keys as a QR to scan from another device -->
 <div class="overlay" id="keysQrModal">
-  <div class="modal" style="width:340px;text-align:center;">
+  <div class="modal" style="width:auto;max-width:min(92vw,520px);text-align:center;">
     <div class="modal-title">&#9783; Your keys QR</div>
     <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px;">
       On your phone: open StartPage &rarr; <b>&#8645; Sync</b> &rarr; <b>Scan keys QR</b>, then point the camera at this code.
@@ -5734,6 +5756,22 @@ function _loadScriptOnce(src) {
   });
   return _qrScriptCache[src];
 }
+// gzip+base64 (native CompressionStream) so a fuller payload (keys + flights/hotels)
+// still fits one QR — and a smaller payload makes a lower-density, easier-to-scan code.
+async function _gzipB64(str) {
+  const cs = new CompressionStream('gzip');
+  const ab = await new Response(new Blob([new TextEncoder().encode(str)]).stream().pipeThrough(cs)).arrayBuffer();
+  const b = new Uint8Array(ab); let s = '';
+  for (let i = 0; i < b.length; i++) s += String.fromCharCode(b[i]);
+  return btoa(s);
+}
+async function _gunzipB64(b64) {
+  const bin = atob(b64); const b = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i);
+  const ds = new DecompressionStream('gzip');
+  const ab = await new Response(new Blob([b]).stream().pipeThrough(ds)).arrayBuffer();
+  return new TextDecoder().decode(ab);
+}
 
 let _keysQrTimer = 0;
 async function showKeysQR() {
@@ -5742,11 +5780,19 @@ async function showKeysQR() {
   if (!n) { alert('No keys are configured on this device yet — nothing to share.'); return; }
   try { await _loadScriptOnce('./qrcode.js'); } catch (_) { alert('Could not load the QR generator (qrcode.js missing).'); return; }
   if (typeof qrcode !== 'function') { alert('QR generator unavailable.'); return; }
-  const data = JSON.stringify(payload);
+  const json = JSON.stringify(payload);
+  let data = json;
+  if (typeof CompressionStream === 'function') { try { data = 'SPKZ1:' + await _gzipB64(json); } catch (_) { data = json; } }
   let qr;
-  try { qr = qrcode(0, 'M'); qr.addData(data); qr.make(); }
-  catch (_) { alert('Too many keys to fit in one QR (payload ' + data.length + ' bytes). Use Export/Import instead.'); return; }
-  const count = qr.getModuleCount(), quiet = 4, cell = Math.max(2, Math.floor(260 / (count + quiet * 2)));
+  try { qr = qrcode(0, 'L'); qr.addData(data); qr.make(); }
+  catch (_) {
+    alert('Too much data for a single QR (' + data.length + ' chars even compressed).\n\nMove everything via ⇅ Sync → Cloud Sync instead (your phone already has the GitHub login), or Export/Import a file.');
+    return;
+  }
+  // Render big enough that each module is scannable off a screen even for a dense
+  // (compressed) payload: aim ~480px total but never below 3px / module.
+  const count = qr.getModuleCount(), quiet = 4;
+  const cell = Math.max(3, Math.min(8, Math.floor(480 / (count + quiet * 2))));
   const dim = (count + quiet * 2) * cell;
   const cv = document.createElement('canvas'); cv.width = dim; cv.height = dim;
   cv.style.width = dim + 'px'; cv.style.height = dim + 'px';
@@ -5766,7 +5812,7 @@ function closeKeysQR() {
   closeModal('keysQrModal');
 }
 
-let _ksStream = null, _ksRaf = 0, _ksCanvas = null;
+let _ksStream = null, _ksRaf = 0, _ksCanvas = null, _ksProcessing = false;
 function _stopKeysScan() {
   if (_ksRaf) { cancelAnimationFrame(_ksRaf); _ksRaf = 0; }
   if (_ksStream) { try { _ksStream.getTracks().forEach(t => t.stop()); } catch (_) {} _ksStream = null; }
@@ -5785,6 +5831,7 @@ async function scanKeysQR() {
   catch (_) { setStatus('Camera permission denied or unavailable.'); return; }
   if (video) { video.srcObject = _ksStream; try { await video.play(); } catch (_) {} }
   setStatus('Point the camera at the keys QR…');
+  _ksProcessing = false;
   _ksCanvas = document.createElement('canvas');
   const tick = () => {
     if (!_ksStream || !video) return;
@@ -5795,18 +5842,29 @@ async function scanKeysQR() {
         const cx = _ksCanvas.getContext('2d', { willReadFrequently: true });
         cx.drawImage(video, 0, 0, w, h);
         let img = null; try { img = cx.getImageData(0, 0, w, h); } catch (_) {}
-        if (img) {
+        if (img && !_ksProcessing) {
           let res = null; try { res = jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' }); } catch (_) {}
           if (res && res.data) {
-            let obj = null; try { obj = JSON.parse(res.data); } catch (_) {}
-            if (obj && obj.kind === 'startpage-keys') {
-              const n = _applyKeysPayload(obj);
-              _stopKeysScan();
-              alert('Imported ' + n + ' item' + (n === 1 ? '' : 's') + ' (keys + flights/hotels) from QR. Reloading.');
-              location.reload();
-              return;
+            const d = res.data;
+            if (d.indexOf('SPKZ1:') === 0 || d.indexOf('startpage-keys') >= 0) {
+              _ksProcessing = true;  // hold while we (async) decompress/parse
+              (async () => {
+                let txt = d;
+                try { if (txt.indexOf('SPKZ1:') === 0) txt = await _gunzipB64(txt.slice(6)); } catch (_) {}
+                let obj = null; try { obj = JSON.parse(txt); } catch (_) {}
+                if (obj && obj.kind === 'startpage-keys') {
+                  const n = _applyKeysPayload(obj);
+                  _stopKeysScan();
+                  alert('Imported ' + n + ' item' + (n === 1 ? '' : 's') + ' (keys + flights/hotels) from QR. Reloading.');
+                  location.reload();
+                } else {
+                  setStatus('Couldn’t read that keys QR — hold steady…');
+                  _ksProcessing = false;
+                }
+              })();
+            } else {
+              setStatus('That QR isn’t a StartPage keys code — still scanning…');
             }
-            setStatus('That QR isn’t a StartPage keys code — still scanning…');
           }
         }
       }
