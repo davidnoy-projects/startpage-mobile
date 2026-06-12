@@ -27,7 +27,7 @@ scripts/inject-pwa.mjs       re-injects the PWA tags after dropping in a fresh e
 ## Install on your iPhone (once it's published)
 
 1. Open **Safari** (must be Safari on iOS) and go to the published URL:
-   `https://davidnoy-projects.github.io/startpage-mobile/`
+   `https://davidnoy-projects.github.io/app-35dd4c622d35/`
 2. Tap the **Share** button → **Add to Home Screen** → **Add**.
 3. Launch it from the new icon. First run: complete the **setup wizard** to enter your keys + Worker URL.
 4. Done. It now runs from the home screen, offline-capable. Pull down to refresh.
