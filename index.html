@@ -56,6 +56,9 @@
       }
     })();
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=JetBrains+Mono:wght@400..700&display=swap">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -63,6 +66,16 @@
        Dark is the default (Iron-Man feel). `[data-theme="light"]` overrides
        tokens for a clean daylight variant. Accent hue (cyan) is shared. */
     :root {
+      /* Radius scale (WS-B). --radius/--radius-sm below remain as aliases. */
+      --radius-xs:       4px;
+      --radius-md:       8px;
+      --radius-lg:       12px;
+      --radius-full:     999px;
+      /* Semantic status tokens (WS-B): amber "warn" / positive "good", plus
+         the modal scrim. Overridden per-theme below. */
+      --warn:            #f59e0b;
+      --good:            #22c55e;
+      --scrim:           rgba(3,6,15,.7);
       --bg:              #03060f;
       --bg-grad-a:       #05101f;
       --bg-grad-b:       #02040a;
@@ -91,10 +104,14 @@
       --shadow:          0 2px 14px rgba(0,0,0,.55), 0 0 0 1px rgba(56,189,248,.05);
       --shadow-md:       0 10px 40px rgba(2,6,23,.7), 0 0 0 1px rgba(56,189,248,.07);
       --glow-ring:       0 0 0 1px rgba(56,189,248,.28), 0 0 22px -6px rgba(56,189,248,.55);
-      --radius:          12px;
-      --radius-sm:       8px;
+      --radius:          var(--radius-lg);
+      --radius-sm:       var(--radius-md);
       --font:            'Inter','SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
       --font-mono:       'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+      /* Motion tokens (WS-A): shared durations + easing for micro-interactions. */
+      --dur-fast:        120ms;
+      --dur-base:        200ms;
+      --ease-out:        cubic-bezier(.2,.8,.2,1);
     }
 
     [data-theme="light"] {
@@ -119,6 +136,9 @@
       --shadow:          0 1px 3px rgba(15,23,42,.09), 0 1px 2px rgba(15,23,42,.05);
       --shadow-md:       0 10px 30px rgba(15,23,42,.12);
       --glow-ring:       0 0 0 1px rgba(2,132,199,.22), 0 0 18px -8px rgba(2,132,199,.4);
+      --warn:            #b45309;
+      --good:            #15803d;
+      --scrim:           rgba(15,23,42,.35);
     }
 
     /* High-contrast theme: maximum legibility, sharp edges, no glassy translucency */
@@ -150,6 +170,9 @@
       --shadow:          none;
       --shadow-md:       0 0 0 2px #ffffff inset;
       --glow-ring:       0 0 0 2px var(--primary);
+      --warn:            #ffb800;
+      --good:            #00ff7f;
+      --scrim:           rgba(0,0,0,.85);
     }
     [data-theme="hicontrast"] .widget,
     [data-theme="hicontrast"] .modal,
@@ -178,6 +201,9 @@
       --shadow:          0 0 0 1px rgba(56,189,248,.05);
       --shadow-md:       0 0 0 1px rgba(56,189,248,.07);
       --glow-ring:       0 0 0 1px rgba(56,189,248,.18);
+      --warn:            #f59e0b;
+      --good:            #22c55e;
+      --scrim:           rgba(0,0,0,.78);
     }
     [data-theme="amoled"] body { background: #000000 !important; }
 
@@ -207,6 +233,9 @@
       --shadow:          0 2px 14px rgba(0,0,0,.55), 0 0 0 1px rgba(42,161,152,.05);
       --shadow-md:       0 10px 40px rgba(0,20,25,.6), 0 0 0 1px rgba(42,161,152,.08);
       --glow-ring:       0 0 0 1px rgba(42,161,152,.28), 0 0 22px -6px rgba(42,161,152,.55);
+      --warn:            #b58900;
+      --good:            #859900;
+      --scrim:           rgba(0,20,25,.7);
     }
 
     /* Nord — Arctic polar night + frost. Cool grey-blue with aurora pops. */
@@ -235,6 +264,9 @@
       --shadow:          0 2px 14px rgba(0,0,0,.45), 0 0 0 1px rgba(136,192,208,.05);
       --shadow-md:       0 10px 40px rgba(16,20,28,.55), 0 0 0 1px rgba(136,192,208,.07);
       --glow-ring:       0 0 0 1px rgba(136,192,208,.30), 0 0 22px -6px rgba(136,192,208,.55);
+      --warn:            #ebcb8b;
+      --good:            #a3be8c;
+      --scrim:           rgba(16,20,28,.7);
     }
 
     /* Dracula — the dev favourite; purple primary + pink accent + cyan/green pops. */
@@ -263,6 +295,9 @@
       --shadow:          0 2px 14px rgba(0,0,0,.55), 0 0 0 1px rgba(189,147,249,.05);
       --shadow-md:       0 10px 40px rgba(15,16,28,.65), 0 0 0 1px rgba(189,147,249,.08);
       --glow-ring:       0 0 0 1px rgba(189,147,249,.30), 0 0 22px -6px rgba(255,121,198,.45);
+      --warn:            #f1fa8c;
+      --good:            #50fa7b;
+      --scrim:           rgba(15,16,28,.7);
     }
 
     /* Synthwave — 80s retro-future neon. Hot pink on deep violet with cyan accent. */
@@ -291,6 +326,9 @@
       --shadow:          0 2px 14px rgba(0,0,0,.55), 0 0 0 1px rgba(255,46,166,.08);
       --shadow-md:       0 10px 40px rgba(10,0,22,.75), 0 0 0 1px rgba(0,229,255,.10);
       --glow-ring:       0 0 0 1px rgba(255,46,166,.35), 0 0 24px -6px rgba(0,229,255,.55);
+      --warn:            #ffbb00;
+      --good:            #00ffaa;
+      --scrim:           rgba(10,0,22,.75);
     }
 
     /* Matrix — pure terminal green on black. Phosphor CRT energy. */
@@ -319,6 +357,9 @@
       --shadow:          0 2px 14px rgba(0,0,0,.70), 0 0 0 1px rgba(0,255,102,.08);
       --shadow-md:       0 10px 40px rgba(0,0,0,.85), 0 0 0 1px rgba(0,255,102,.12);
       --glow-ring:       0 0 0 1px rgba(0,255,102,.35), 0 0 22px -6px rgba(0,255,102,.60);
+      --warn:            #f0ff00;
+      --good:            #00ff66;
+      --scrim:           rgba(0,0,0,.8);
     }
     [data-theme="matrix"] body { background: #000000 !important; }
 
@@ -348,6 +389,9 @@
       --shadow:          0 1px 3px rgba(58,36,12,.14), 0 1px 2px rgba(58,36,12,.08);
       --shadow-md:       0 10px 30px rgba(58,36,12,.18);
       --glow-ring:       0 0 0 1px rgba(139,94,42,.25), 0 0 18px -8px rgba(139,94,42,.4);
+      --warn:            #b8770f;
+      --good:            #4a7c2f;
+      --scrim:           rgba(58,36,12,.35);
     }
 
     html, body { min-height: 100%; }
@@ -491,7 +535,7 @@
       width: 100%;
       padding: 7px 14px 7px 34px;
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: var(--radius-full);
       background: var(--surface2);
       font-size: 14px;
       color: var(--text);
@@ -510,7 +554,7 @@
       width: 100%;
       padding: 7px 10px;
       border: 1px solid var(--border);
-      border-radius: 18px;
+      border-radius: var(--radius-full);
       background: var(--surface2);
       font-size: 12px;
       color: var(--text);
@@ -522,12 +566,12 @@
       border: 1px solid var(--border);
       background: var(--surface2);
       color: var(--muted);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       padding: 5px 8px;
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .15s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       white-space: nowrap;
       line-height: 1.2;
     }
@@ -537,12 +581,12 @@
       border: 1px solid var(--border);
       background: var(--surface2);
       color: var(--muted);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       padding: 5px 8px;
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .15s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       white-space: nowrap;
       line-height: 1.2;
       flex-shrink: 0;
@@ -566,12 +610,12 @@
       border: 1px solid var(--border);
       background: var(--surface2);
       color: var(--muted);
-      border-radius: 6px;
+      border-radius: var(--radius-md);
       padding: 2px 7px;
       font-size: 10px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .15s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       line-height: 1.35;
     }
     .mini-btn:hover { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
@@ -580,7 +624,7 @@
     .sync-menu-wrap { position: relative; display: inline-block; }
     .sync-dropdown {
       display: none; position: absolute; right: 0; top: calc(100% + 4px);
-      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-md);
       box-shadow: 0 4px 16px rgba(0,0,0,.35); z-index: 9999; min-width: 140px; overflow: hidden;
     }
     .sync-dropdown.open { display: block; }
@@ -611,7 +655,7 @@
       align-items: center;
       text-decoration: none;
       color: var(--text);
-      border-radius: 7px;
+      border-radius: var(--radius-md);
       padding: 4px 7px 3px;
       transition: background .12s;
       flex-shrink: 0;
@@ -628,7 +672,7 @@
     .ql-item img {
       width: 20px;
       height: 20px;
-      border-radius: 4px;
+      border-radius: var(--radius-xs);
       display: block;
       pointer-events: none;
     }
@@ -668,7 +712,7 @@
       flex-shrink: 0;
       width: 28px;
       height: 28px;
-      border-radius: 7px;
+      border-radius: var(--radius-md);
       border: 1.5px dashed var(--border);
       background: none;
       color: var(--muted);
@@ -677,7 +721,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all .12s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       margin-left: 4px;
       line-height: 1;
     }
@@ -685,10 +729,10 @@
 
     /* ── TICKER ── */
     .ticker-bar {
-      background: linear-gradient(90deg, rgba(3,8,20,.92), rgba(9,18,37,.92));
+      background: color-mix(in srgb, var(--surface-solid) 92%, transparent);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      color: white;
+      color: var(--text);
       height: 34px;
       display: flex;
       align-items: center;
@@ -701,10 +745,10 @@
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 1px;
-      color: #60a5fa;
+      color: var(--primary);
       text-transform: uppercase;
       flex-shrink: 0;
-      border-right: 1px solid rgba(255,255,255,.1);
+      border-right: 1px solid var(--border);
       height: 100%;
       display: flex;
       align-items: center;
@@ -726,28 +770,28 @@
       gap: 5px;
       padding: 0 18px;
       font-size: 12px;
-      border-right: 1px solid rgba(255,255,255,.07);
+      border-right: 1px solid var(--border);
     }
     .t-link { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
     .t-link:hover .t-sym { text-decoration: underline; }
-    .t-sym  { font-weight: 700; color: #93c5fd; }
-    .t-price{ color: #f1f5f9; }
-    .t-chg.up   { color: #4ade80; }
-    .t-chg.down { color: #f87171; }
+    .t-sym  { font-weight: 700; color: var(--primary); }
+    .t-price{ color: var(--text); }
+    .t-chg.up   { color: var(--success); }
+    .t-chg.down { color: var(--danger); }
     .ticker-addbtn {
       flex-shrink: 0;
       margin: 0 8px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.2);
-      color: white;
-      border-radius: 5px;
+      background: var(--surface2);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      border-radius: var(--radius-xs);
       padding: 3px 10px;
       font-size: 11px;
       cursor: pointer;
       font-weight: 600;
       transition: background .15s;
     }
-    .ticker-addbtn:hover { background: rgba(255,255,255,.22); }
+    .ticker-addbtn:hover { background: var(--primary-light); }
 
     /* ── MARKET AI (in-row icon + hover tooltip) ── */
     .sk-pred {
@@ -782,7 +826,7 @@
       overscroll-behavior: contain;
       background: var(--surface-solid);
       border: 1px solid var(--border-strong);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       padding: 10px 12px;
       box-shadow: var(--shadow-md), var(--glow-ring);
       font-size: 12px;
@@ -800,11 +844,11 @@
     #stockPredTooltip.visible { opacity: 1; transform: translateY(0); }
     #stockPredTooltip .spt-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
     #stockPredTooltip .spt-sym  { font-family: var(--font-mono); font-weight: 800; font-size: 14px; color: var(--text-strong); letter-spacing: .5px; }
-    #stockPredTooltip .spt-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; padding: 2px 8px; border-radius: 10px; font-family: var(--font-mono); }
+    #stockPredTooltip .spt-badge { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; padding: 2px 8px; border-radius: var(--radius-md); font-family: var(--font-mono); }
     #stockPredTooltip .spt-badge.bullish { background: rgba(52,211,153,.18); color: var(--success); }
     #stockPredTooltip .spt-badge.bearish { background: rgba(248,113,113,.18); color: var(--danger);  }
     #stockPredTooltip .spt-badge.neutral { background: var(--surface3); color: var(--muted); }
-    #stockPredTooltip .spt-conf { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin: 6px 0; }
+    #stockPredTooltip .spt-conf { height: 3px; background: var(--border); border-radius: var(--radius-xs); overflow: hidden; margin: 6px 0; }
     #stockPredTooltip .spt-conf-fill { height: 100%; background: var(--primary); transition: width .4s; }
     #stockPredTooltip .spt-rationale { color: var(--text); margin-bottom: 6px; }
     #stockPredTooltip .spt-meta { font-size: 10px; color: var(--muted); font-family: var(--font-mono); display: flex; justify-content: space-between; gap: 8px; }
@@ -818,14 +862,14 @@
     #stockPredTooltip .spt-votes .v-arrow.neutral { color: var(--muted);   }
     #stockPredTooltip .spt-votes .v-conf  { color: var(--muted); font-size: 9px; }
     #stockPredTooltip .spt-arbiter { font-size: 9px; color: var(--primary); text-transform: uppercase; letter-spacing: .5px; font-family: var(--font-mono); margin-top: 6px; font-weight: 700; }
-    #stockPredTooltip .spt-votes .v-rec { margin-left: auto; font-size: 9px; padding: 1px 6px; border-radius: 8px; font-family: var(--font-mono); }
+    #stockPredTooltip .spt-votes .v-rec { margin-left: auto; font-size: 9px; padding: 1px 6px; border-radius: var(--radius-md); font-family: var(--font-mono); }
     #stockPredTooltip .spt-votes .v-rec.good { background: rgba(52,211,153,.18); color: var(--success); }
-    #stockPredTooltip .spt-votes .v-rec.mid  { background: rgba(245,158, 11,.18); color: #f59e0b; }
+    #stockPredTooltip .spt-votes .v-rec.mid  { background: rgba(245,158, 11,.18); color: var(--warn); }
     #stockPredTooltip .spt-votes .v-rec.bad  { background: rgba(248,113,113,.18); color: var(--danger);  }
-    #stockPredTooltip .spt-calib { font-size: 10px; font-family: var(--font-mono); margin-top: 4px; padding: 3px 7px; border-radius: 6px; display: inline-block; letter-spacing: .3px; }
+    #stockPredTooltip .spt-calib { font-size: 10px; font-family: var(--font-mono); margin-top: 4px; padding: 3px 7px; border-radius: var(--radius-md); display: inline-block; letter-spacing: .3px; }
     #stockPredTooltip .spt-calib.down { background: rgba(248,113,113,.14); color: var(--danger); }
     #stockPredTooltip .spt-calib.up   { background: rgba(52,211,153,.14); color: var(--success); }
-    #stockPredTooltip .spt-futures { margin-top: 5px; padding: 4px 7px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); font-size: 10px; line-height: 1.5; }
+    #stockPredTooltip .spt-futures { margin-top: 5px; padding: 4px 7px; border-radius: var(--radius-md); background: var(--surface2); border: 1px solid var(--border); font-size: 10px; line-height: 1.5; }
     #stockPredTooltip .spt-futures .sf-head { font-weight: 700; text-transform: uppercase; letter-spacing: .4px; font-size: 9px; color: var(--muted); margin-bottom: 2px; }
     #stockPredTooltip .spt-futures .sf-sig  { font-family: var(--font-mono); font-weight: 700; }
     #stockPredTooltip .spt-futures .sf-sig.up   { color: var(--success); }
@@ -834,11 +878,11 @@
     #stockPredTooltip .spt-futures .sf-acc { font-size: 9px; color: var(--muted); margin-top: 1px; }
     #stockPredTooltip .spt-futures .sf-parts { font-size: 9px; font-family: var(--font-mono); color: var(--muted); }
     /* Multi-signal breakdown: one row per signal source (News, Options, Futures, Models) */
-    #stockPredTooltip .spt-signals { margin-top: 5px; padding: 4px 7px; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); }
+    #stockPredTooltip .spt-signals { margin-top: 5px; padding: 4px 7px; border-radius: var(--radius-md); background: var(--surface2); border: 1px solid var(--border); }
     #stockPredTooltip .spt-signals .ss-head { font-weight: 700; text-transform: uppercase; letter-spacing: .4px; font-size: 9px; color: var(--muted); margin-bottom: 3px; display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
-    #stockPredTooltip .spt-signals .ss-align { font-size: 9px; font-weight: 700; text-transform: none; letter-spacing: 0; padding: 1px 6px; border-radius: 99px; }
+    #stockPredTooltip .spt-signals .ss-align { font-size: 9px; font-weight: 700; text-transform: none; letter-spacing: 0; padding: 1px 6px; border-radius: var(--radius-full); }
     #stockPredTooltip .spt-signals .ss-align.aligned { background: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
-    #stockPredTooltip .spt-signals .ss-align.mixed   { background: color-mix(in srgb, var(--warning, #f5a623) 18%, transparent); color: var(--warning, #f5a623); }
+    #stockPredTooltip .spt-signals .ss-align.mixed   { background: color-mix(in srgb, var(--warning) 18%, transparent); color: var(--warning); }
     #stockPredTooltip .spt-signals .ss-align.diverge { background: color-mix(in srgb, var(--danger) 18%, transparent); color: var(--danger); }
     #stockPredTooltip .spt-signals .ss-row { display: grid; grid-template-columns: 60px 14px 1fr auto; gap: 6px; font-size: 10px; line-height: 1.4; padding: 1px 0; align-items: baseline; }
     #stockPredTooltip .spt-signals .ss-label { color: var(--muted); font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: .3px; }
@@ -847,18 +891,18 @@
     #stockPredTooltip .spt-signals .ss-arrow.down { color: var(--danger); }
     #stockPredTooltip .spt-signals .ss-arrow.flat { color: var(--muted); }
     #stockPredTooltip .spt-signals .ss-detail { font-family: var(--font-mono); font-size: 9px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    #stockPredTooltip .spt-signals .ss-tr { font-size: 9px; padding: 0 5px; border-radius: 99px; font-weight: 700; }
+    #stockPredTooltip .spt-signals .ss-tr { font-size: 9px; padding: 0 5px; border-radius: var(--radius-full); font-weight: 700; }
     #stockPredTooltip .spt-signals .ss-tr.good { background: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
-    #stockPredTooltip .spt-signals .ss-tr.mid  { background: color-mix(in srgb, var(--warning, #f5a623) 18%, transparent); color: var(--warning, #f5a623); }
+    #stockPredTooltip .spt-signals .ss-tr.mid  { background: color-mix(in srgb, var(--warning) 18%, transparent); color: var(--warning); }
     #stockPredTooltip .spt-signals .ss-tr.bad  { background: color-mix(in srgb, var(--danger) 18%, transparent); color: var(--danger); }
     #stockPredTooltip .spt-signals .ss-tr.none { color: var(--muted); }
-    #stockPredTooltip .spt-stale { display: inline-block; padding: 0 5px; border-radius: 99px; font-size: 9px; font-weight: 800; letter-spacing: .3px; background: color-mix(in srgb, var(--warning, #f5a623) 25%, transparent); color: var(--warning, #f5a623); margin-left: 6px; vertical-align: middle; }
+    #stockPredTooltip .spt-stale { display: inline-block; padding: 0 5px; border-radius: var(--radius-full); font-size: 9px; font-weight: 800; letter-spacing: .3px; background: color-mix(in srgb, var(--warning) 25%, transparent); color: var(--warning); margin-left: 6px; vertical-align: middle; }
     #stockPredTooltip .spt-implied { display: block; margin-top: 2px; font-size: 9px; color: var(--muted); font-family: var(--font-mono); }
     #stockPredTooltip .spt-hl { margin-top: 4px; font-size: 11px; line-height: 1.4; }
     #stockPredTooltip .spt-hl-link { color: var(--text); text-decoration: none; }
     #stockPredTooltip .spt-hl-link:hover { color: var(--primary); text-decoration: underline; }
     #stockPredTooltip .spt-hl-age  { color: var(--muted); font-size: 10px; margin-left: 2px; }
-    #stockPredTooltip .spt-grade  { font-size: 10px; line-height: 1.45; margin: 6px 0; padding: 5px 8px; border-radius: 6px; background: var(--surface3); border: 1px solid var(--border); font-family: var(--font-mono); }
+    #stockPredTooltip .spt-grade  { font-size: 10px; line-height: 1.45; margin: 6px 0; padding: 5px 8px; border-radius: var(--radius-md); background: var(--surface3); border: 1px solid var(--border); font-family: var(--font-mono); }
     #stockPredTooltip .spt-grade.ok  { color: var(--success); }
     #stockPredTooltip .spt-grade.miss{ color: var(--danger); }
     #stockPredTooltip .spt-grade .sg-meta { color: var(--muted); font-size: 9px; margin-top: 2px; }
@@ -934,7 +978,7 @@
       width: 22px; height: 22px; margin-right: 8px;
       color: var(--muted); font-size: 14px; line-height: 1;
       letter-spacing: -3px; cursor: grab; user-select: none;
-      border-radius: 5px; transition: background .15s, color .15s, transform .1s;
+      border-radius: var(--radius-xs); transition: background .15s, color .15s, transform .1s;
       flex-shrink: 0; background: var(--surface3);
       border: 1px solid var(--border);
     }
@@ -943,14 +987,14 @@
     .widget.w-dragging { opacity: .55; outline: 2px dashed var(--primary); }
     .widget.w-drop-before { box-shadow: 0 -3px 0 0 var(--primary) inset, var(--shadow); }
     .widget.w-drop-after  { box-shadow: 0  3px 0 0 var(--primary) inset, var(--shadow); }
-    .col.w-drop-into      { box-shadow: 0 0 0 2px var(--primary) inset; border-radius: 8px; }
+    .col.w-drop-into      { box-shadow: 0 0 0 2px var(--primary) inset; border-radius: var(--radius-md); }
     .ibtn {
       background: none;
       border: 1px solid transparent;
       cursor: pointer;
       color: var(--muted);
       padding: 3px 7px;
-      border-radius: 5px;
+      border-radius: var(--radius-xs);
       font-size: 12px;
       font-weight: 600;
       transition: background .15s, color .15s, border-color .15s;
@@ -994,7 +1038,7 @@
       margin: 10px 18px 18px;
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-size: 10px;
       color: var(--muted);
       font-family: var(--font-mono);
@@ -1025,7 +1069,7 @@
     /* AI-relevance badge on news items (AI keyword ranker) */
     .ni-airel {
       position: absolute; top: 6px; right: 8px;
-      font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 8px;
+      font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: var(--radius-md);
       letter-spacing: .4px; font-family: var(--font-mono);
       background: var(--primary-light); color: var(--primary);
       border: 1px solid var(--border-strong);
@@ -1040,7 +1084,7 @@
       min-width: 240px;
       background: var(--surface-solid);
       border: 1px solid var(--border-strong);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       padding: 0;
       box-shadow: var(--shadow-md), var(--glow-ring);
       font-size: 12px;
@@ -1063,7 +1107,7 @@
       cursor: pointer; font-size: 16px; line-height: 1; }
     #aiExplainPopup .ax-close:hover { color: var(--text); }
     #aiExplainPopup .ax-tag {
-      display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: 8px;
+      display: inline-block; font-size: 9px; padding: 1px 6px; border-radius: var(--radius-md);
       font-weight: 700; letter-spacing: .5px; margin-left: 6px;
     }
     #aiExplainPopup .ax-tag.bullish { background: rgba(52,211,153,.18); color: var(--success); }
@@ -1078,7 +1122,7 @@
       backdrop-filter: blur(12px) saturate(140%);
       -webkit-backdrop-filter: blur(12px) saturate(140%);
       border: 1px solid var(--border-strong);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       box-shadow: var(--glow-ring);
       position: relative;
     }
@@ -1092,7 +1136,7 @@
     .briefing-card .bc-body li { margin: 2px 0; }
     .briefing-card .bc-close {
       background: none; border: 1px solid var(--border-strong); color: var(--muted);
-      cursor: pointer; padding: 2px 8px; border-radius: 6px; font-size: 10px;
+      cursor: pointer; padding: 2px 8px; border-radius: var(--radius-md); font-size: 10px;
     }
     .briefing-card .bc-close:hover { color: var(--primary); border-color: var(--primary); }
 
@@ -1105,7 +1149,7 @@
     /* MAI accuracy badge in stocks header */
     .mai-acc {
       font-size: 9px; font-family: var(--font-mono); font-weight: 800;
-      padding: 2px 6px; border-radius: 8px;
+      padding: 2px 6px; border-radius: var(--radius-md);
       background: var(--surface3); color: var(--muted);
       border: 1px solid var(--border);
       margin-left: 4px;
@@ -1129,7 +1173,7 @@
     }
     .cal-evt {
       display: flex; align-items: baseline; gap: 3px;
-      padding: 0 4px; border-radius: 5px; margin-bottom: 0;
+      padding: 0 4px; border-radius: var(--radius-xs); margin-bottom: 0;
       overflow: hidden; min-height: 0; flex: 1; min-width: 0;
     }
     /* When .cal-evt is a direct child of .cal-day-block (not in .cal-day-first), give it indent */
@@ -1158,7 +1202,7 @@
       85%  { transform: translateX(var(--mq-shift, -60%)); }
       100% { transform: translateX(var(--mq-shift, -60%)); }
     }
-    .cal-res { display: inline-block; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; margin-left: 4px; padding: 1px 4px; border-radius: 4px;
+    .cal-res { display: inline-block; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .3px; margin-left: 4px; padding: 1px 4px; border-radius: var(--radius-xs);
       color: var(--warning); background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.4); white-space: nowrap; vertical-align: 1px; }
     .cal-evt.now { background: var(--primary-light); border: 1px solid var(--border-strong); }
     .cal-evt.now .ce-time { color: var(--accent); }
@@ -1198,7 +1242,7 @@
     .calc-wrap { padding: 8px 10px 10px; user-select: none; }
     .calc-display {
       background: var(--surface3); border: 1px solid var(--border);
-      border-radius: 8px; padding: 6px 10px; margin-bottom: 7px; text-align: right;
+      border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 7px; text-align: right;
       min-height: 46px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end;
       cursor: text; outline: none;
     }
@@ -1212,7 +1256,7 @@
     .calc-sci.hidden-sci { display: none; }
     .calc-angle { font-size: 9px; font-family: var(--font-mono); color: var(--muted); text-align: right; margin-bottom: 4px; }
     .cb {
-      padding: 5px 2px; border-radius: 6px; border: 1px solid var(--border);
+      padding: 5px 2px; border-radius: var(--radius-md); border: 1px solid var(--border);
       background: var(--surface2); color: var(--text); cursor: pointer;
       font-size: 11px; font-weight: 600; text-align: center;
       transition: background .1s, color .1s, transform .08s; line-height: 1;
@@ -1236,7 +1280,7 @@
       padding: 8px 10px;
       background: rgba(248,113,113,.12);
       border: 1px solid rgba(248,113,113,.45);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font-size: 11px;
       line-height: 1.4;
       color: var(--text);
@@ -1286,7 +1330,7 @@
     /* Flight status modal results */
     .flt-card {
       background: var(--surface2); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+      border-radius: var(--radius-md); padding: 10px 12px; margin-bottom: 8px;
     }
     .flt-card .ft-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
     .flt-card .ft-title  { flex:1 1 auto; min-width:0; }
@@ -1296,7 +1340,7 @@
     .flt-card .ft-times {
       display:grid; grid-template-columns:1fr 1fr; gap:10px;
       margin:8px 0; padding:8px 10px;
-      background:var(--surface-solid); border-radius:6px;
+      background:var(--surface-solid); border-radius:var(--radius-md);
       border:1px solid var(--border);
     }
     .flt-card .ft-tcol   { font-size:13px; line-height:1.5; min-width:0; }
@@ -1316,15 +1360,15 @@
     .flt-card .ft-tsched.strike span { text-decoration: line-through; color: var(--muted); opacity:.55; }
     .flt-card .ft-ttg    { font-size:14px; font-family:var(--font-mono); color:var(--text); margin-top:3px; padding-top:3px; border-top:1px dashed var(--border); }
     .flt-card .ft-progress { margin:8px 0 2px; }
-    .flt-card .ft-pbar   { height:6px; background:var(--surface-solid); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
-    .flt-card .ft-pfill  { height:100%; background:linear-gradient(90deg, var(--primary), var(--accent)); border-radius:3px; transition:width .3s ease; }
+    .flt-card .ft-pbar   { height:6px; background:var(--surface-solid); border:1px solid var(--border); border-radius:var(--radius-xs); overflow:hidden; }
+    .flt-card .ft-pfill  { height:100%; background:linear-gradient(90deg, var(--primary), var(--accent)); border-radius:var(--radius-xs); transition:width .3s ease; }
     .flt-card .ft-ptxt   { display:flex; justify-content:space-between; gap:10px; margin-top:4px; font-size:12px; font-family:var(--font-mono); }
     .flt-card .ft-prem   { color:var(--text-strong); font-weight:700; }
     .flt-card .ft-pelap  { color:var(--muted); }
     .flt-card .ft-foot   { font-size:11px; color:var(--muted); margin-top:6px; text-align:right; opacity:.7; font-family:var(--font-mono); }
     .flt-card .ft-status {
       display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px;
-      border-radius: 6px; text-transform: uppercase; letter-spacing: .5px; flex-shrink:0;
+      border-radius: var(--radius-md); text-transform: uppercase; letter-spacing: .5px; flex-shrink:0;
     }
     .flt-card .ft-status.on    { background: rgba(52,211,153,.18); color: var(--success); }
     .flt-card .ft-status.delay { background: rgba(251,191,36,.18); color: var(--accent); }
@@ -1336,7 +1380,7 @@
     .wl-row {
       display: flex; align-items: center; gap: 8px;
       padding: 6px 10px; background: var(--surface-solid);
-      border: 1px solid var(--border); border-radius: 8px;
+      border: 1px solid var(--border); border-radius: var(--radius-md);
       cursor: grab; user-select: none;
     }
     .wl-row.dragging  { opacity: .35; }
@@ -1350,7 +1394,7 @@
     /* Theme picker tile (4-up) */
     .theme-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
     .theme-tile {
-      cursor: pointer; padding: 10px 6px; border-radius: 8px;
+      cursor: pointer; padding: 10px 6px; border-radius: var(--radius-md);
       border: 1px solid var(--border);
       background: var(--surface-solid);
       text-align: center; font-size: 11px; font-weight: 700; color: var(--text);
@@ -1371,7 +1415,7 @@
     .wx-desc { color: var(--muted); font-size: 12px; margin-top: 3px; }
     .wx-hilo { color: var(--muted); font-size: 11px; margin-top: 2px; font-weight: 600; }
     .wx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .wx-cell { background: var(--surface2); border-radius: 7px; padding: 7px 10px; }
+    .wx-cell { background: var(--surface2); border-radius: var(--radius-md); padding: 7px 10px; }
     .wx-cell .lbl { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
     .wx-cell .val { font-size: 13px; font-weight: 700; margin-top: 1px; }
     .wx-hourly { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
@@ -1382,7 +1426,7 @@
       flex: 0 0 auto;
       min-width: 43px;
       background: var(--surface2);
-      border-radius: 7px;
+      border-radius: var(--radius-md);
       padding: 5px 6px;
       text-align: center;
     }
@@ -1394,7 +1438,7 @@
       text-align: center;
       font-size: 11px;
       padding: 6px 2px;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       cursor: pointer;
       transition: background .15s, box-shadow .15s, transform .1s;
       border: 1px solid transparent;
@@ -1413,7 +1457,7 @@
     /* ── CALENDAR ── */
     .cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .cal-month { font-size: 13px; font-weight: 700; }
-    .cal-nav { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; padding: 1px 7px; border-radius: 5px; line-height: 1; }
+    .cal-nav { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 18px; padding: 1px 7px; border-radius: var(--radius-xs); line-height: 1; }
     .cal-nav:hover { background: var(--surface2); color: var(--primary); }
     .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 1px; text-align: center; }
     .cal-dh { font-size: 9px; font-weight: 800; color: var(--muted); text-transform: uppercase; padding: 4px 0; }
@@ -1440,7 +1484,7 @@
       justify-content: space-between;
       padding: 8px 10px;
       background: var(--surface2);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
     }
     .ck-city { font-size: 12px; font-weight: 700; }
     .ck-tz   { font-size: 10px; color: var(--muted); }
@@ -1448,7 +1492,7 @@
     .ck-ampm { font-size: 10px; color: var(--muted); margin-left: 2px; }
     .ck-rm {
       background: none; border: none; cursor: pointer;
-      color: var(--muted); padding: 2px 5px; border-radius: 4px; font-size: 11px;
+      color: var(--muted); padding: 2px 5px; border-radius: var(--radius-xs); font-size: 11px;
       opacity: 0; transition: opacity .15s;
     }
     .ck-item:hover .ck-rm { opacity: 1; }
@@ -1456,6 +1500,26 @@
 
     /* ── STOCKS DETAIL ── */
     .stocks-list { display: flex; flex-direction: column; }
+    /* Proxy-setup nudge banner (rendered by the stocks JS template). Warn-family
+       tokens so it reads as a hint on every theme, not a light-only cream box. */
+    .stocks-api-banner {
+      margin: 4px 6px 6px;
+      padding: 6px 8px;
+      background: color-mix(in srgb, var(--warn) 14%, var(--surface-solid));
+      border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent);
+      border-radius: var(--radius-md);
+      font-size: 10px;
+      line-height: 1.35;
+      color: color-mix(in srgb, var(--warn) 55%, var(--text));
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stocks-api-banner button {
+      background: none; border: none; cursor: pointer;
+      color: inherit; font-size: 14px; line-height: 1;
+      padding: 0 2px; opacity: .6;
+    }
     /* 6-col grid: AI-pred · symbol+name · current · previous · open · change
        Sum of fixed cols = 20 + 48 + 48 + 48 + 60 = 224px, + 5 gaps × 3 = 15px
        → ~239px fixed, leaving ~110px for the symbol column in the 360px widget.
@@ -1531,7 +1595,7 @@
       display: block;
       font-size: 8.5px; font-weight: 800; letter-spacing: .4px;
       font-family: var(--font-mono); line-height: 1;
-      padding: 2px 5px; margin-top: 2px; border-radius: 3px;
+      padding: 2px 5px; margin-top: 2px; border-radius: var(--radius-xs);
       background: var(--surface3); color: var(--muted);
       text-transform: uppercase;
       width: fit-content; margin-left: auto;
@@ -1542,7 +1606,7 @@
       display: inline-block;
       font-size: 9px; font-weight: 800; letter-spacing: .6px;
       font-family: var(--font-mono); line-height: 1;
-      padding: 3px 7px; border-radius: 4px;
+      padding: 3px 7px; border-radius: var(--radius-xs);
       text-transform: uppercase;
       margin-right: 8px;
     }
@@ -1550,14 +1614,14 @@
     .sk-market-status.closed { background: rgba(100,116,139,.18); color: var(--muted); }
     .sk-market-status.pre    { background: rgba(251,191,36,.18); color: var(--warning); }
     .sk-market-status.post   { background: rgba(139,92,246,.18); color: #a78bfa; }
-    .t-mkt { font-size: 9px; font-weight: 700; opacity: .85; margin-left: 4px; padding: 0 4px; border-radius: 3px; }
+    .t-mkt { font-size: 9px; font-weight: 700; opacity: .85; margin-left: 4px; padding: 0 4px; border-radius: var(--radius-xs); }
     .t-mkt.up   { color: var(--success); background: rgba(52,211,153,.12); }
     .t-mkt.down { color: var(--danger);  background: rgba(248,113,113,.12); }
     /* col 6 – remove */
     .sk-rm {
       background: none; border: none; cursor: pointer;
       color: var(--muted); font-size: 11px; padding: 0 2px;
-      border-radius: 4px; opacity: 0; transition: opacity .15s;
+      border-radius: var(--radius-xs); opacity: 0; transition: opacity .15s;
       justify-self: end;
     }
     .sk-rm:hover { color: var(--danger); }
@@ -1579,7 +1643,7 @@
     }
     .sk-asof .sk-spin { display: inline-block; }
     .sk-skel {
-      display: inline-block; height: 11px; width: 38px; border-radius: 3px;
+      display: inline-block; height: 11px; width: 38px; border-radius: var(--radius-xs);
       background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 37%, var(--surface2) 63%);
       background-size: 400% 100%; animation: sk-shimmer 1.4s ease infinite;
       vertical-align: middle;
@@ -1591,7 +1655,7 @@
     .sk-updating-pill {
       display: inline-block; font-size: 8.5px; font-weight: 700;
       font-family: var(--font-mono); letter-spacing: .3px;
-      padding: 2px 6px; border-radius: 4px; margin-left: 6px;
+      padding: 2px 6px; border-radius: var(--radius-xs); margin-left: 6px;
       background: rgba(100,116,139,.18); color: var(--muted);
       text-transform: none; vertical-align: middle;
     }
@@ -1666,7 +1730,7 @@
     .nbadge {
       display: inline-block;
       padding: 1px 5px;
-      border-radius: 3px;
+      border-radius: var(--radius-xs);
       font-size: 9px;
       font-weight: 800;
       text-transform: uppercase;
@@ -1679,7 +1743,7 @@
 
     /* ── EMPTY/LOAD/ERROR ── */
     .center-msg { text-align: center; padding: 28px 16px; color: var(--muted); font-size: 13px; }
-    .error-box  { margin: 12px; background: var(--surface2); border-radius: 8px; padding: 14px; text-align: center; font-size: 12px; color: var(--muted); }
+    .error-box  { margin: 12px; background: var(--surface2); border-radius: var(--radius-md); padding: 14px; text-align: center; font-size: 12px; color: var(--muted); }
 
     /* ── SPINNER ── */
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -1695,7 +1759,7 @@
     /* ── MODAL ── */
     .overlay {
       position: fixed; inset: 0;
-      background: rgba(3,6,15,.7);
+      background: var(--scrim);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       z-index: 500;
@@ -1710,7 +1774,7 @@
     .modal {
       background: var(--surface-solid);
       border: 1px solid var(--border-strong);
-      border-radius: 14px;
+      border-radius: var(--radius-lg);
       padding: 24px;
       width: 420px;
       max-width: 95vw;
@@ -1725,17 +1789,17 @@
     .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 18px; }
     /* Settings jump-tab bar */
     .settings-nav { position: sticky; top: -24px; z-index: 2; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 10px; margin: -4px 0 12px; background: var(--surface-solid); border-bottom: 1px solid var(--border); }
-    .settings-nav-tab { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: 999px; font-size: 11px; font-weight: 700; padding: 4px 12px; cursor: pointer; transition: background .15s, color .15s; }
+    .settings-nav-tab { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); border-radius: var(--radius-full); font-size: 11px; font-weight: 700; padding: 4px 12px; cursor: pointer; transition: background .15s, color .15s; }
     .settings-nav-tab:hover { color: var(--text); border-color: var(--primary); }
     @keyframes settingsSectionFlash { 0% { box-shadow: 0 0 0 2px var(--primary); } 100% { box-shadow: 0 0 0 0 transparent; } }
-    .settings-section-flash { animation: settingsSectionFlash 1.2s ease-out; border-radius: 10px; }
+    .settings-section-flash { animation: settingsSectionFlash 1.2s ease-out; border-radius: var(--radius-md); }
     .flabel { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); margin-bottom: 5px; }
     .finput {
       width: 100%;
       padding: 9px 12px;
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font-size: 14px;
       color: var(--text);
       outline: none;
@@ -1748,12 +1812,12 @@
     .mactions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
     .btn {
       padding: 9px 18px;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       border: none;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .15s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       font-family: var(--font);
     }
     .btn-primary   { background: var(--primary); color: var(--on-primary); text-shadow: 0 0 10px var(--primary-glow); box-shadow: 0 0 18px -4px var(--primary-glow); }
@@ -1767,7 +1831,7 @@
       display: inline-flex; align-items: center; gap: 4px;
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: var(--radius-full);
       padding: 3px 10px;
       font-size: 12px;
       font-weight: 600;
@@ -1778,7 +1842,7 @@
     /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-md); }
     ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
     /* ── TABS (removed — keeping selector for any leftover references) ── */
@@ -1798,7 +1862,7 @@
     .feed-sections::-webkit-scrollbar { display: none; }
     .fsec-btn {
       padding: 2px 8px;
-      border-radius: 4px;
+      border-radius: var(--radius-xs);
       border: none;
       background: none;
       color: var(--muted);
@@ -1806,7 +1870,7 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
-      transition: all .12s;
+      transition-property: background-color, border-color, color, box-shadow, transform; transition-duration: var(--dur-fast); transition-timing-function: var(--ease-out);
       text-transform: uppercase;
       letter-spacing: .4px;
     }
@@ -2088,7 +2152,7 @@
     .wild-toast {
       position: fixed; right: 18px; bottom: 56px; z-index: 10000;
       background: var(--surface2); color: var(--text);
-      border: 1px solid var(--border); border-radius: 999px;
+      border: 1px solid var(--border); border-radius: var(--radius-full);
       padding: 8px 14px; font-size: 12px; font-weight: 700;
       box-shadow: 0 4px 18px rgba(0,0,0,.4);
       opacity: 0; transform: translateY(8px);
@@ -2129,22 +2193,22 @@
     .ft-card-col   { display: flex; flex-direction: column; }
     .ft-card-sched { color: var(--text); }
     .ft-card-est   { color: #facc15; }
-    .ft-card-actual{ color: #4ade80; }
+    .ft-card-actual{ color: var(--success); }
     .ft-card-badge {
       display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 5px;
-      border-radius: 3px; margin-top: 3px;
+      border-radius: var(--radius-xs); margin-top: 3px;
     }
-    .ft-card-badge.on-time  { background: #14532d; color: #4ade80; }
+    .ft-card-badge.on-time  { background: #14532d; color: var(--success); }
     .ft-card-badge.delayed  { background: #713f12; color: #facc15; }
-    .ft-card-badge.cancelled{ background: #7f1d1d; color: #f87171; }
+    .ft-card-badge.cancelled{ background: #7f1d1d; color: var(--danger); }
     .ft-card-badge.departed { background: #1e3a5f; color: #93c5fd; }
-    .ft-card-badge.landed   { background: #14532d; color: #4ade80; }
+    .ft-card-badge.landed   { background: #14532d; color: var(--success); }
     .ft-card-badge.scheduled{ background: #1e293b; color: var(--muted); }
     .ft-card-del {
       position: absolute; top: 5px; right: 6px; background: none; border: none;
       color: var(--muted); font-size: 14px; cursor: pointer; padding: 0 3px; line-height: 1;
     }
-    .ft-card-del:hover { color: #f87171; }
+    .ft-card-del:hover { color: var(--danger); }
     .ft-empty { font-size: 12px; color: var(--muted); padding: 6px 0; }
     #ftList   { max-height: 360px; overflow-y: auto; padding-right: 2px; }
 
@@ -2153,49 +2217,49 @@
     /* === CSS: MACRO-EVENT-CALENDAR === */
     #ec-strip { display:flex; flex-wrap:wrap; gap:4px; padding:4px 4px 6px; border-bottom:1px solid var(--border); }
     #ec-strip[hidden] { display:none; }
-    .ec-pill { display:inline-flex; align-items:center; gap:3px; padding:2px 6px 2px 4px; border-radius:10px; font-size:11px; cursor:default; background:var(--card-bg,#1e1e1e); border:1px solid transparent; white-space:nowrap; }
-    .ec-badge { font-weight:700; font-size:10px; letter-spacing:.3px; padding:1px 3px; border-radius:4px; background:rgba(255,255,255,.08); }
+    .ec-pill { display:inline-flex; align-items:center; gap:3px; padding:2px 6px 2px 4px; border-radius:var(--radius-md); font-size:11px; cursor:default; background:var(--surface2); border:1px solid transparent; white-space:nowrap; }
+    .ec-badge { font-weight:700; font-size:10px; letter-spacing:.3px; padding:1px 3px; border-radius:var(--radius-xs); background:rgba(255,255,255,.08); }
     .ec-days { font-size:10px; opacity:.8; }
     /* Compact macro-regime pill wedged into the Stocks event strip; hover the
        MACRO badge for the full signal breakdown (title tooltip). Color-coded
        by regime, matching the standalone card's dot palette. */
     .ec-pill--regime { cursor:help; margin-left:auto; }
-    .ec-pill--regime.regime-expansion   .ec-badge { background:#22c55e; color:#04210f; }
-    .ec-pill--regime.regime-slowdown     .ec-badge { background:#f59e0b; color:#2a1800; }
-    .ec-pill--regime.regime-contraction .ec-badge { background:#ef4444; color:#2a0606; }
-    .ec-pill--regime.regime-recovery     .ec-badge { background:#3b82f6; color:#04132a; }
-    .ec-pill--today { border-color:var(--accent,#60a5fa); animation:ec-pulse 1.4s ease-in-out infinite; }
-    .ec-pill--today .ec-badge { background:var(--accent,#60a5fa); color:#000; }
+    .ec-pill--regime.regime-expansion   .ec-badge { background:var(--success); color:#04210f; }
+    .ec-pill--regime.regime-slowdown     .ec-badge { background:var(--warn); color:#2a1800; }
+    .ec-pill--regime.regime-contraction .ec-badge { background:var(--danger); color:#2a0606; }
+    .ec-pill--regime.regime-recovery     .ec-badge { background:var(--primary); color:#04132a; }
+    .ec-pill--today { border-color:var(--accent); animation:ec-pulse 1.4s ease-in-out infinite; }
+    .ec-pill--today .ec-badge { background:var(--accent); color:#000; }
     .ec-pill--urgent { border-color:#e05252; color:#e05252; }
     .ec-pill--urgent .ec-badge { background:#e05252; color:#fff; }
     .ec-pill--near { border-color:#e0a040; color:#e0a040; }
     .ec-pill--near .ec-badge { background:#e0a040; color:#000; }
     .ec-pill--soon { border-color:#4caf78; color:#4caf78; }
     .ec-pill--soon .ec-badge { background:#4caf78; color:#000; }
-    .ec-pill--far { border-color:var(--muted,#555); color:var(--muted,#888); }
-    .ec-pill--far .ec-badge { background:var(--muted,#555); color:#fff; }
+    .ec-pill--far { border-color:var(--muted); color:var(--muted); }
+    .ec-pill--far .ec-badge { background:var(--muted); color:#fff; }
     .ec-pill--earnings { cursor:pointer; }
     .ec-pill--earnings:hover { opacity:.8; }
     @keyframes ec-pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
     /* === CSS: EARNINGS-COCKPIT === */
-    #earnings-cockpit { margin: 6px 4px 2px; border: 1px solid var(--border,#333); border-radius: 6px; background: var(--card,#1a1a1a); font-size: 12px; }
-    #earnings-cockpit .ecc-header { display:flex; align-items:center; justify-content:space-between; padding: 5px 8px; cursor:pointer; user-select:none; border-radius: 6px 6px 0 0; }
+    #earnings-cockpit { margin: 6px 4px 2px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface2); font-size: 12px; }
+    #earnings-cockpit .ecc-header { display:flex; align-items:center; justify-content:space-between; padding: 5px 8px; cursor:pointer; user-select:none; border-radius: var(--radius-md) var(--radius-md) 0 0; }
     #earnings-cockpit .ecc-header:hover { background: rgba(255,255,255,0.04); }
     .ecc-title { font-weight:600; font-size:12px; }
-    .ecc-count { display:inline-block; min-width:16px; text-align:center; margin-left:4px; padding:0 5px; border-radius:9px; background:var(--accent,#60a5fa); color:#04132a; font-size:10px; font-weight:700; }
-    .ecc-chevron { color: var(--muted,#888); font-size:11px; }
+    .ecc-count { display:inline-block; min-width:16px; text-align:center; margin-left:4px; padding:0 5px; border-radius:var(--radius-md); background:var(--accent); color:#04132a; font-size:10px; font-weight:700; }
+    .ecc-chevron { color: var(--muted); font-size:11px; }
     .ecc-body { padding: 2px 6px 6px; display:flex; flex-direction:column; gap:2px; }
     #earningsCockpitBody { display:flex; flex-direction:column; gap:2px; }
-    .ecc-row { display:flex; align-items:center; gap:8px; padding:3px 4px; border-radius:4px; cursor:pointer; flex-wrap:wrap; font-variant-numeric: tabular-nums; }
+    .ecc-row { display:flex; align-items:center; gap:8px; padding:3px 4px; border-radius:var(--radius-xs); cursor:pointer; flex-wrap:wrap; font-variant-numeric: tabular-nums; }
     .ecc-row:hover { background: rgba(255,255,255,0.05); }
     .ecc-sym { font-weight:700; min-width:46px; }
-    .ecc-days { font-size:10px; padding:1px 6px; border-radius:9px; border:1px solid transparent; }
-    .ecc-im { min-width:52px; color: var(--text,#ddd); }
-    .ecc-drift { color: var(--muted,#aaa); font-size:11px; }
+    .ecc-days { font-size:10px; padding:1px 6px; border-radius:var(--radius-md); border:1px solid transparent; }
+    .ecc-im { min-width:52px; color: var(--text); }
+    .ecc-drift { color: var(--muted); font-size:11px; }
     .ecc-drift .ec-up, .ecc-im .ec-up { color:#4caf78; }
     .ecc-drift .ec-dn, .ecc-im .ec-dn { color:#e05252; }
-    .ecc-drift .ec-n { color: var(--muted,#777); font-size:10px; }
-    .ecc-note { flex-basis:100%; color: var(--muted,#9aa); font-size:10px; font-style:italic; padding-left:54px; line-height:1.3; }
+    .ecc-drift .ec-n { color: var(--muted); font-size:10px; }
+    .ecc-note { flex-basis:100%; color: var(--muted); font-size:10px; font-style:italic; padding-left:54px; line-height:1.3; }
     /* === CSS: SECTOR-ROTATION === */
     #sectorHeatmapBody { padding: 4px 2px 6px; }
     .sh-grid {
@@ -2219,7 +2283,7 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: var(--radius-xs);
     }
     .sh-label:hover { background: var(--surface2); }
     .sh-label .sh-name { font-weight: 500; }
@@ -2227,7 +2291,7 @@
     .sh-cell {
       text-align: center;
       padding: 3px 2px;
-      border-radius: 3px;
+      border-radius: var(--radius-xs);
       cursor: pointer;
       font-size: 10px;
       font-weight: 600;
@@ -2255,7 +2319,7 @@
       padding: 8px 10px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 7px;
+      border-radius: var(--radius-md);
       margin-bottom: 6px;
     }
     .sh-insight-head { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
@@ -2263,7 +2327,7 @@
       display: inline-block;
       color: #fff;
       padding: 3px 10px;
-      border-radius: 5px;
+      border-radius: var(--radius-xs);
       font-weight: 700;
       font-size: 11px;
       letter-spacing: .4px;
@@ -2293,60 +2357,60 @@
     .sh-insight-ll .sh-ll-lag  { color: #e05252; }
     /* === CSS: FRED-MACRO === */
     #fredMacroCard { margin-top:8px; }
-    .fred-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:12px; }
+    .fred-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px; font-size:12px; }
     .fred-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
     .fred-card-title { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--primary); }
-    .fred-card-age { font-size:10px; color:var(--muted,#888); }
-    .fred-regime-badge { display:inline-block; padding:3px 10px; border-radius:5px; font-size:12px; font-weight:700; letter-spacing:.5px; color:#fff; margin-bottom:6px; }
+    .fred-card-age { font-size:10px; color:var(--muted); }
+    .fred-regime-badge { display:inline-block; padding:3px 10px; border-radius:var(--radius-xs); font-size:12px; font-weight:700; letter-spacing:.5px; color:#fff; margin-bottom:6px; }
     .fred-regime-badge.expansion   { background:#166534; }
     .fred-regime-badge.slowdown    { background:#92400e; }
     .fred-regime-badge.contraction { background:#7f1d1d; }
     .fred-regime-badge.recovery    { background:#1e3a5f; }
     .fred-signals { display:grid; grid-template-columns:1fr 1fr; gap:2px 10px; margin:6px 0; }
     .fred-sig-row { display:flex; justify-content:space-between; font-size:11px; }
-    .fred-sig-label { color:var(--muted,#888); }
+    .fred-sig-label { color:var(--muted); }
     .fred-sig-val { font-weight:600; color:var(--text); }
     .fred-sparkline-row { display:flex; align-items:center; gap:6px; margin-top:6px; }
-    .fred-sparkline-label { font-size:10px; color:var(--muted,#888); white-space:nowrap; }
+    .fred-sparkline-label { font-size:10px; color:var(--muted); white-space:nowrap; }
     .fred-sparkline-dots { display:flex; gap:3px; align-items:center; }
     .fred-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-    .fred-dot.expansion   { background:#22c55e; }
-    .fred-dot.slowdown    { background:#f59e0b; }
-    .fred-dot.contraction { background:#ef4444; }
-    .fred-dot.recovery    { background:#3b82f6; }
-    .fred-gray { color:var(--muted,#888); font-size:11px; text-align:center; padding:12px 0; }
-    .fred-partial { font-size:10px; color:#f59e0b; font-weight:600; margin-left:4px; }
+    .fred-dot.expansion   { background:var(--success); }
+    .fred-dot.slowdown    { background:var(--warn); }
+    .fred-dot.contraction { background:var(--danger); }
+    .fred-dot.recovery    { background:var(--primary); }
+    .fred-gray { color:var(--muted); font-size:11px; text-align:center; padding:12px 0; }
+    .fred-partial { font-size:10px; color:var(--warn); font-weight:600; margin-left:4px; }
     /* Regime-change notice — a proper floating popup (uses .overlay/.modal),
        fixed + dimmed backdrop, so it never reflows the page. */
     #fredRegimeOverlay .modal { width:360px; text-align:center; position:relative; }
-    .fred-regime-pop-x { position:absolute; top:10px; right:12px; background:none; border:none; color:var(--muted,#aaa); cursor:pointer; font-size:16px; line-height:1; padding:2px; }
+    .fred-regime-pop-x { position:absolute; top:10px; right:12px; background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; line-height:1; padding:2px; }
     .fred-regime-pop-x:hover { color:var(--text); }
     .fred-regime-pop-icon { font-size:30px; line-height:1; }
     .fred-regime-pop-title { font-size:15px; font-weight:800; margin:8px 0 10px; color:var(--text); }
     .fred-regime-pop-title span { color:var(--primary); }
-    .fred-regime-pop-returns { color:var(--muted,#aaa); font-size:12px; line-height:1.7; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:9px 11px; }
+    .fred-regime-pop-returns { color:var(--muted); font-size:12px; line-height:1.7; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:9px 11px; }
     .fred-regime-pop-actions { margin-top:16px; display:flex; justify-content:center; }
     /* === CSS: OVERNIGHT-BRIEF === */
     #overnightBrief { margin-top:8px; }
-    .ovn-stale { font-size:10px; color:#f59e0b; font-weight:600; }
-    .ovn-asof  { font-size:10px; color:var(--muted,#888); }
-    .ovn-ai    { font-style:italic; font-size:11.5px; color:var(--text); background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:6px 9px; margin-bottom:8px; line-height:1.5; }
+    .ovn-stale { font-size:10px; color:var(--warn); font-weight:600; }
+    .ovn-asof  { font-size:10px; color:var(--muted); }
+    .ovn-ai    { font-style:italic; font-size:11.5px; color:var(--text); background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:6px 9px; margin-bottom:8px; line-height:1.5; }
     .ovn-sec   { margin-bottom:7px; }
     .ovn-sec:last-child { margin-bottom:0; }
-    .ovn-sec-label { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted,#888); margin-bottom:2px; }
+    .ovn-sec-label { font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:2px; }
     .ovn-row   { display:flex; flex-wrap:wrap; gap:4px 10px; font-size:12px; font-variant-numeric:tabular-nums; }
     .ovn-quote { white-space:nowrap; }
     .ovn-quote .ovn-q-label { color:var(--text); }
     .ovn-quote .ovn-q-pct   { font-weight:700; }
-    .ovn-up    { color:#22c55e; }
-    .ovn-down  { color:#ef4444; }
-    .ovn-flat  { color:var(--muted,#888); }
-    .ovn-muted { color:var(--muted,#888); font-size:11px; }
+    .ovn-up    { color:var(--success); }
+    .ovn-down  { color:var(--danger); }
+    .ovn-flat  { color:var(--muted); }
+    .ovn-muted { color:var(--muted); font-size:11px; }
     .ovn-china { border-left:2px solid var(--border); padding-left:7px; margin-left:2px; }
     .ovn-hl    { display:block; padding:3px 0; border-bottom:1px solid var(--border); }
     .ovn-hl:last-child { border-bottom:none; }
     .ovn-hl .ni-title { font-size:11.5px; line-height:1.35; }
-    .ovn-hl .ovn-hl-when { font-size:9.5px; color:var(--muted,#888); }
+    .ovn-hl .ovn-hl-when { font-size:9.5px; color:var(--muted); }
     .ovn-collapsed-summary { font-size:12px; color:var(--text); }
     /* === CSS: PEEK THUMBNAILS (widget-peek-thumbnails HLD) ===
        One muted, single-line, truncating status shown only when a widget is
@@ -2357,7 +2421,7 @@
        A toned-down .empty-config used as a one-time dismissible setup nudge. */
     .empty-config.is-hint { position:relative; opacity:.92; }
     .empty-config.is-hint .empty-config-title { font-weight:600; }
-    .hint-dismiss { position:absolute; top:6px; right:8px; background:none; border:none; color:var(--muted); font-size:13px; line-height:1; cursor:pointer; padding:2px 4px; border-radius:4px; }
+    .hint-dismiss { position:absolute; top:6px; right:8px; background:none; border:none; color:var(--muted); font-size:13px; line-height:1; cursor:pointer; padding:2px 4px; border-radius:var(--radius-xs); }
     .hint-dismiss:hover { color:var(--text); background:var(--surface2); }
     .hint-footnote { font-size:10px; color:var(--muted); opacity:.8; padding:6px 2px 0; line-height:1.4; }
     /* === CSS: CONNECTION DIAGNOSTICS (settings-connection-diagnostics HLD) === */
@@ -2379,12 +2443,12 @@
     .cd-fix { color:var(--warning); margin-top:2px; }
     .cd-skip { color:var(--muted); opacity:.7; }
     /* === CSS: KALSHI === */
-    .kalshi-board { background:var(--card-bg,#1a1a2e); border:1px solid var(--border,#333); border-radius:8px; padding:10px 12px; margin-bottom:10px; }
-    .kalshi-header { display:flex; align-items:center; justify-content:space-between; font-size:.75rem; font-weight:700; letter-spacing:.06em; color:var(--accent,#7eb8f7); margin-bottom:8px; }
-    .kalshi-header span { font-weight:400; font-size:.68rem; color:var(--muted,#888); }
+    .kalshi-board { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px; margin-bottom:10px; }
+    .kalshi-header { display:flex; align-items:center; justify-content:space-between; font-size:.75rem; font-weight:700; letter-spacing:.06em; color:var(--accent); margin-bottom:8px; }
+    .kalshi-header span { font-weight:400; font-size:.68rem; color:var(--muted); }
     #kalshiCards { display:flex; flex-direction:column; gap:6px; }
-    .kalshi-card { background:var(--bg2,#12122a); border:1px solid var(--border,#2a2a3e); border-radius:6px; padding:7px 10px; }
-    .kalshi-card-title { font-size:.72rem; color:var(--fg,#ddd); margin-bottom:4px; line-height:1.3; }
+    .kalshi-card { background:var(--surface3); border:1px solid var(--border); border-radius:var(--radius-md); padding:7px 10px; }
+    .kalshi-card-title { font-size:.72rem; color:var(--text); margin-bottom:4px; line-height:1.3; }
     .kalshi-card-meta { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .kalshi-prob { font-size:1.05rem; font-weight:700; min-width:3ch; }
     .kalshi-prob--high   { color:#ef5350; }
@@ -2394,172 +2458,172 @@
     .kalshi-shift { font-size:.72rem; }
     .kalshi-shift--up   { color:#66bb6a; }
     .kalshi-shift--down { color:#ef5350; }
-    .kalshi-shift--flat { color:var(--muted,#888); }
-    .kalshi-days { font-size:.68rem; color:var(--muted,#888); }
-    .kalshi-vol  { font-size:.68rem; color:var(--muted,#777); }
-    .kalshi-empty { font-size:.72rem; color:var(--muted,#888); text-align:center; padding:8px 0; }
+    .kalshi-shift--flat { color:var(--muted); }
+    .kalshi-days { font-size:.68rem; color:var(--muted); }
+    .kalshi-vol  { font-size:.68rem; color:var(--muted); }
+    .kalshi-empty { font-size:.72rem; color:var(--muted); text-align:center; padding:8px 0; }
     /* === CSS: HORMUZ-ENERGY === */
-    #hormuz-monitor { margin: 6px 4px 2px; border: 1px solid var(--border,#333); border-radius: 6px; background: var(--card,#1a1a1a); font-size: 12px; }
-    #hormuz-monitor .hormuz-header { display:flex; align-items:center; justify-content:space-between; padding: 5px 8px; cursor:pointer; user-select:none; border-radius: 6px 6px 0 0; }
+    #hormuz-monitor { margin: 6px 4px 2px; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface2); font-size: 12px; }
+    #hormuz-monitor .hormuz-header { display:flex; align-items:center; justify-content:space-between; padding: 5px 8px; cursor:pointer; user-select:none; border-radius: var(--radius-md) var(--radius-md) 0 0; }
     #hormuz-monitor .hormuz-header:hover { background: rgba(255,255,255,0.04); }
     #hormuz-monitor .hormuz-title { font-weight:600; font-size:12px; }
-    .hormuz-status-badge { font-size:10px; padding: 2px 6px; border-radius: 10px; font-weight:600; white-space:nowrap; }
+    .hormuz-status-badge { font-size:10px; padding: 2px 6px; border-radius: var(--radius-md); font-weight:600; white-space:nowrap; }
     .hormuz-status-badge.red    { background:#c0392b; color:#fff; }
     .hormuz-status-badge.yellow { background:#f39c12; color:#111; }
     .hormuz-status-badge.green  { background:#27ae60; color:#fff; }
-    #hormuz-body { padding: 5px 8px 7px; border-top: 1px solid var(--border,#333); display:flex; flex-direction:column; gap:4px; }
+    #hormuz-body { padding: 5px 8px 7px; border-top: 1px solid var(--border); display:flex; flex-direction:column; gap:4px; }
     #hormuz-body.hidden { display:none; }
     .hormuz-prices { display:flex; gap:12px; flex-wrap:wrap; }
     .hormuz-prices span { display:flex; align-items:center; gap:4px; }
     .hormuz-prices .hm-chg { font-size:10px; opacity:.75; }
     .hormuz-prices .hm-chg.up { color:#4caf78; }
     .hormuz-prices .hm-chg.dn { color:#e05c5c; }
-    .hormuz-inventory { color: var(--fg,#ccc); }
+    .hormuz-inventory { color: var(--text); }
     .hormuz-inv-pct { font-size:10px; margin-left:4px; }
     .hormuz-inv-pct.low { color:#e05c5c; }
     .hormuz-inv-pct.high { color:#4caf78; }
     .hormuz-tension { display:flex; align-items:center; gap:6px; }
-    .hormuz-tension-label { font-size:10px; padding: 1px 5px; border-radius: 8px; font-weight:600; }
+    .hormuz-tension-label { font-size:10px; padding: 1px 5px; border-radius: var(--radius-md); font-weight:600; }
     .hormuz-tension-label.high   { background: rgba(192,57,43,.35); color:#e07070; }
     .hormuz-tension-label.medium { background: rgba(243,156,18,.25); color:#e0a830; }
     .hormuz-tension-label.low    { background: rgba(39,174,96,.2); color:#4caf78; }
-    .hormuz-notice { font-size:10px; color: var(--muted,#888); font-style:italic; }
-    .hormuz-notice a { color: var(--accent,#5b9bd5); }
+    .hormuz-notice { font-size:10px; color: var(--muted); font-style:italic; }
+    .hormuz-notice a { color: var(--accent); }
     .hormuz-score-row { font-size:10px; opacity:.6; }
     .energy-badge { font-size:.72em; margin-left:3px; vertical-align:middle; cursor:default; }
     /* === CSS: CONGRESSIONAL === */
-    .insider-badge{display:inline-block;font-size:10px;padding:1px 4px;border-radius:4px;cursor:default;margin-left:3px;vertical-align:middle;line-height:1.4;font-style:normal;}
-    .insider-badge.ib-buy{background:rgba(245,158,11,.18);color:#f59e0b;}
-    .insider-badge.ib-sell{background:rgba(239,68,68,.18);color:#ef4444;}
+    .insider-badge{display:inline-block;font-size:10px;padding:1px 4px;border-radius:var(--radius-xs);cursor:default;margin-left:3px;vertical-align:middle;line-height:1.4;font-style:normal;}
+    .insider-badge.ib-buy{background:rgba(245,158,11,.18);color:var(--warn);}
+    .insider-badge.ib-sell{background:rgba(239,68,68,.18);color:var(--danger);}
     .insider-badge.ib-neutral{background:rgba(148,163,184,.18);color:#94a3b8;}
-    #smart-money-panel{background:var(--card-bg,#1e293b);border:1px solid var(--border,#334155);border-radius:8px;margin-top:10px;overflow:hidden;font-size:11px;}
+    #smart-money-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);margin-top:10px;overflow:hidden;font-size:11px;}
     #smart-money-panel.sm-collapsed .sm-body{display:none;}
-    .sm-toggle-btn{width:100%;background:none;border:none;color:var(--text,#e2e8f0);font-size:11px;font-weight:600;padding:7px 12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+    .sm-toggle-btn{width:100%;background:none;border:none;color:var(--text);font-size:11px;font-weight:600;padding:7px 12px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
     .sm-toggle-btn:hover{background:rgba(255,255,255,.04);}
     .sm-body{padding:0 0 6px 0;}
     .sm-table{width:100%;border-collapse:collapse;}
-    .sm-table th{font-size:10px;color:var(--muted,#64748b);font-weight:600;padding:4px 8px;border-bottom:1px solid var(--border,#334155);text-transform:uppercase;letter-spacing:.03em;}
-    .sm-table td{padding:4px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text,#e2e8f0);white-space:nowrap;}
-    .sm-row-buy td:first-child{border-left:2px solid #22c55e;}
-    .sm-row-sell td:first-child{border-left:2px solid #ef4444;}
-    .sm-type-badge{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:600;}
+    .sm-table th{font-size:10px;color:var(--muted);font-weight:600;padding:4px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.03em;}
+    .sm-table td{padding:4px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);white-space:nowrap;}
+    .sm-row-buy td:first-child{border-left:2px solid var(--success);}
+    .sm-row-sell td:first-child{border-left:2px solid var(--danger);}
+    .sm-type-badge{font-size:9px;padding:1px 5px;border-radius:var(--radius-xs);font-weight:600;}
     .sm-type-congress{background:rgba(99,102,241,.2);color:#818cf8;}
     .sm-type-insider{background:rgba(234,179,8,.2);color:#eab308;}
-    .sm-empty{color:var(--muted,#64748b);font-size:11px;padding:10px 12px;}
+    .sm-empty{color:var(--muted);font-size:11px;padding:10px 12px;}
     /* === CSS: STOCK-PICKER === */
-    .picker-section{border-top:1px solid var(--border,#334155);margin-top:4px;}
+    .picker-section{border-top:1px solid var(--border);margin-top:4px;}
     .picker-header{display:flex;align-items:center;gap:6px;padding:5px 8px;cursor:pointer;user-select:none;font-size:11px;}
     .picker-header:hover{background:rgba(255,255,255,.04);}
-    .picker-title{font-weight:700;font-size:11px;color:var(--text,#e2e8f0);}
-    .picker-meta{color:var(--muted,#64748b);font-size:10px;flex:1;}
-    .picker-refresh-btn{background:none;border:none;cursor:pointer;color:var(--muted,#64748b);font-size:13px;padding:0 2px;line-height:1;}
-    .picker-refresh-btn:hover{color:var(--text,#e2e8f0);}
-    .picker-chevron{color:var(--muted,#64748b);font-size:10px;}
+    .picker-title{font-weight:700;font-size:11px;color:var(--text);}
+    .picker-meta{color:var(--muted);font-size:10px;flex:1;}
+    .picker-refresh-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;padding:0 2px;line-height:1;}
+    .picker-refresh-btn:hover{color:var(--text);}
+    .picker-chevron{color:var(--muted);font-size:10px;}
     .picker-body{padding:4px 6px 8px;}
-    .picker-loading{color:var(--muted,#64748b);font-size:11px;padding:8px 4px;text-align:center;}
-    .picker-empty{color:var(--muted,#64748b);font-size:11px;padding:8px 4px;}
+    .picker-loading{color:var(--muted);font-size:11px;padding:8px 4px;text-align:center;}
+    .picker-empty{color:var(--muted);font-size:11px;padding:8px 4px;}
     .picker-cards{display:flex;flex-direction:column;gap:6px;margin-bottom:6px;}
-    .picker-card{background:rgba(255,255,255,.04);border:1px solid var(--border,#334155);border-radius:6px;padding:7px 10px;}
-    .picker-card-bull{border-left:3px solid #22c55e;}
-    .picker-card-bear{border-left:3px solid #ef4444;}
+    .picker-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--radius-md);padding:7px 10px;}
+    .picker-card-bull{border-left:3px solid var(--success);}
+    .picker-card-bear{border-left:3px solid var(--danger);}
     .picker-card-header{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px;}
-    .picker-ticker-chip{font-family:var(--font-mono,monospace);font-weight:700;font-size:12px;background:rgba(255,255,255,.08);border-radius:4px;padding:1px 6px;}
-    a.picker-ticker-chip{color:var(--text,#e2e8f0);text-decoration:none;cursor:pointer;}
-    a.picker-ticker-chip:hover{background:rgba(59,130,246,.22);color:var(--primary,#3b82f6);text-decoration:underline;}
-    .picker-company{display:block;font-size:9px;color:var(--muted,#64748b);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:-2px 0 5px 1px;}
+    .picker-ticker-chip{font-family:var(--font-mono,monospace);font-weight:700;font-size:12px;background:rgba(255,255,255,.08);border-radius:var(--radius-xs);padding:1px 6px;}
+    a.picker-ticker-chip{color:var(--text);text-decoration:none;cursor:pointer;}
+    a.picker-ticker-chip:hover{background:rgba(59,130,246,.22);color:var(--primary);text-decoration:underline;}
+    .picker-company{display:block;font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:-2px 0 5px 1px;}
     .picker-company:empty{display:none;}
-    .picker-direction-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;}
-    .picker-direction-badge.bull{background:rgba(34,197,94,.15);color:#4ade80;}
-    .picker-direction-badge.bear{background:rgba(239,68,68,.15);color:#f87171;}
-    .picker-horizon-label{font-size:10px;color:var(--muted,#64748b);border:1px solid var(--border,#334155);border-radius:3px;padding:1px 4px;}
+    .picker-direction-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:var(--radius-xs);}
+    .picker-direction-badge.bull{background:rgba(34,197,94,.15);color:var(--success);}
+    .picker-direction-badge.bear{background:rgba(239,68,68,.15);color:var(--danger);}
+    .picker-horizon-label{font-size:10px;color:var(--muted);border:1px solid var(--border);border-radius:var(--radius-xs);padding:1px 4px;}
     .picker-confidence-bar{display:flex;align-items:center;gap:4px;flex:1 1 44px;min-width:44px;}
-    .picker-confidence-fill{height:4px;border-radius:2px;background:linear-gradient(90deg,#3b82f6,#8b5cf6);min-width:2px;}
-    .picker-confidence-pct{font-size:10px;color:var(--muted,#64748b);white-space:nowrap;}
+    .picker-confidence-fill{height:4px;border-radius:var(--radius-xs);background:linear-gradient(90deg,var(--primary),#8b5cf6);min-width:2px;}
+    .picker-confidence-pct{font-size:10px;color:var(--muted);white-space:nowrap;}
     .picker-signals{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;}
-    .picker-signal-bullet{font-size:10px;color:var(--muted,#64748b);background:rgba(255,255,255,.04);border-radius:3px;padding:1px 5px;}
-    .picker-rationale{font-size:11px;color:var(--text,#e2e8f0);line-height:1.4;font-style:italic;opacity:.85;}
+    .picker-signal-bullet{font-size:10px;color:var(--muted);background:rgba(255,255,255,.04);border-radius:var(--radius-xs);padding:1px 5px;}
+    .picker-rationale{font-size:11px;color:var(--text);line-height:1.4;font-style:italic;opacity:.85;}
     .picker-track-record{margin-top:6px;font-size:11px;}
-    .picker-track-record summary{cursor:pointer;color:var(--muted,#64748b);padding:3px 0;user-select:none;font-size:11px;}
+    .picker-track-record summary{cursor:pointer;color:var(--muted);padding:3px 0;user-select:none;font-size:11px;}
     .picker-stats-row{display:flex;flex-wrap:wrap;gap:4px 12px;padding:5px 0;font-size:10px;align-items:baseline;}
-    .picker-stats-row span{color:var(--muted,#64748b);}
-    .picker-stats-row strong{color:var(--text,#e2e8f0);margin-left:3px;}
+    .picker-stats-row span{color:var(--muted);}
+    .picker-stats-row strong{color:var(--text);margin-left:3px;}
     .picker-history-table{width:100%;border-collapse:collapse;font-size:10px;margin-top:4px;}
-    .picker-history-table th{color:var(--muted,#64748b);font-weight:600;padding:3px 5px;border-bottom:1px solid var(--border,#334155);text-align:left;}
-    .picker-history-table td{padding:3px 5px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text,#e2e8f0);}
-    .picker-grade-correct{color:#4ade80;font-weight:700;}
-    .picker-grade-wrong{color:#f87171;font-weight:700;}
+    .picker-history-table th{color:var(--muted);font-weight:600;padding:3px 5px;border-bottom:1px solid var(--border);text-align:left;}
+    .picker-history-table td{padding:3px 5px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text);}
+    .picker-grade-correct{color:var(--success);font-weight:700;}
+    .picker-grade-wrong{color:var(--danger);font-weight:700;}
     .picker-calibration-chart{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
     .picker-cal-bar{display:flex;align-items:center;gap:6px;font-size:10px;}
-    .picker-cal-label{color:var(--muted,#64748b);width:55px;text-align:right;}
-    .picker-cal-track{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
-    .picker-cal-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);border-radius:3px;}
-    .picker-cal-pct{color:var(--text,#e2e8f0);width:30px;}
+    .picker-cal-label{color:var(--muted);width:55px;text-align:right;}
+    .picker-cal-track{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:var(--radius-xs);overflow:hidden;}
+    .picker-cal-fill{height:100%;background:linear-gradient(90deg,var(--primary),#8b5cf6);border-radius:var(--radius-xs);}
+    .picker-cal-pct{color:var(--text);width:30px;}
     .picker-driver-attribution{display:flex;flex-direction:column;gap:4px;margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px;}
-    .picker-driver-title{color:var(--muted,#64748b);font-size:10px;font-weight:600;}
-    .picker-settings-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:10px;color:var(--muted,#64748b);align-items:center;}
+    .picker-driver-title{color:var(--muted);font-size:10px;font-weight:600;}
+    .picker-settings-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:10px;color:var(--muted);align-items:center;}
     .picker-settings-row label{display:flex;align-items:center;gap:3px;}
-    .picker-settings-row select{background:var(--surface,#1e293b);color:var(--text,#e2e8f0);border:1px solid var(--border,#334155);border-radius:3px;font-size:10px;padding:1px 3px;}
-    .picker-watch-btn{margin-left:auto;background:rgba(59,130,246,.12);border:1px solid var(--primary,#3b82f6);color:var(--primary,#3b82f6);border-radius:4px;font-size:13px;font-weight:700;min-width:20px;height:20px;line-height:1;padding:0 6px;cursor:pointer;white-space:nowrap;}
+    .picker-settings-row select{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-xs);font-size:10px;padding:1px 3px;}
+    .picker-watch-btn{margin-left:auto;background:rgba(59,130,246,.12);border:1px solid var(--primary);color:var(--primary);border-radius:var(--radius-xs);font-size:13px;font-weight:700;min-width:20px;height:20px;line-height:1;padding:0 6px;cursor:pointer;white-space:nowrap;}
     .picker-watch-btn:hover{background:rgba(59,130,246,.22);}
-    .picker-watch-btn[disabled]{opacity:.7;cursor:default;color:var(--success,#22c55e);border-color:var(--success,#22c55e);background:rgba(34,197,94,.12);}
-    .picker-del-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.5);color:#f87171;border-radius:4px;font-size:11px;font-weight:700;min-width:20px;height:20px;line-height:1;padding:0 5px;cursor:pointer;white-space:nowrap;}
+    .picker-watch-btn[disabled]{opacity:.7;cursor:default;color:var(--success);border-color:var(--success);background:rgba(34,197,94,.12);}
+    .picker-del-btn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.5);color:var(--danger);border-radius:var(--radius-xs);font-size:11px;font-weight:700;min-width:20px;height:20px;line-height:1;padding:0 5px;cursor:pointer;white-space:nowrap;}
     .picker-del-btn:hover{background:rgba(239,68,68,.22);}
     .picker-del-btn[disabled]{opacity:.5;cursor:default;}
     .picker-perf{font-size:10px;margin-bottom:5px;display:flex;flex-wrap:wrap;gap:3px 8px;align-items:baseline;}
-    .picker-perf .pp-label{color:var(--muted,#64748b);}
-    .picker-perf .pp-val{font-variant-numeric:tabular-nums;color:var(--text,#e2e8f0);}
-    .picker-perf .pp-val.up{color:#4ade80;font-weight:700;}
-    .picker-perf .pp-val.down{color:#f87171;font-weight:700;}
-    .picker-since{font-size:10px;color:var(--muted,#64748b);padding:2px 2px 6px;line-height:1.5;}
-    .picker-since strong{color:var(--text,#e2e8f0);}
-    .picker-since .up{color:#4ade80;}
-    .picker-since .down{color:#f87171;}
+    .picker-perf .pp-label{color:var(--muted);}
+    .picker-perf .pp-val{font-variant-numeric:tabular-nums;color:var(--text);}
+    .picker-perf .pp-val.up{color:var(--success);font-weight:700;}
+    .picker-perf .pp-val.down{color:var(--danger);font-weight:700;}
+    .picker-since{font-size:10px;color:var(--muted);padding:2px 2px 6px;line-height:1.5;}
+    .picker-since strong{color:var(--text);}
+    .picker-since .up{color:var(--success);}
+    .picker-since .down{color:var(--danger);}
     /* ===== Empty-state treatments (loading / config / error) ===== */
-    .empty-loading{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted,#64748b);font-size:11px;padding:10px 6px;text-align:center;}
-    .empty-loading .empty-spinner{width:12px;height:12px;border:2px solid rgba(120,130,150,.3);border-top-color:var(--primary,#3b82f6);border-radius:50%;display:inline-block;animation:emptySpin .8s linear infinite;}
+    .empty-loading{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted);font-size:11px;padding:10px 6px;text-align:center;}
+    .empty-loading .empty-spinner{width:12px;height:12px;border:2px solid rgba(120,130,150,.3);border-top-color:var(--primary);border-radius:50%;display:inline-block;animation:emptySpin .8s linear infinite;}
     @keyframes emptySpin{to{transform:rotate(360deg);}}
     .empty-config{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:10px 8px;}
-    .empty-config .empty-config-title{font-size:11px;font-weight:700;color:var(--text,#e2e8f0);}
-    .empty-config .empty-config-body{font-size:11px;color:var(--muted,#64748b);line-height:1.4;}
-    .empty-error{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:10px 8px;color:var(--danger,#ef4444);font-size:11px;line-height:1.4;}
-    .cta-settings{background:rgba(59,130,246,.12);border:1px solid var(--primary,#3b82f6);color:var(--primary,#3b82f6);border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;line-height:1.4;}
+    .empty-config .empty-config-title{font-size:11px;font-weight:700;color:var(--text);}
+    .empty-config .empty-config-body{font-size:11px;color:var(--muted);line-height:1.4;}
+    .empty-error{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:10px 8px;color:var(--danger);font-size:11px;line-height:1.4;}
+    .cta-settings{background:rgba(59,130,246,.12);border:1px solid var(--primary);color:var(--primary);border-radius:var(--radius-xs);font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;line-height:1.4;}
     .cta-settings:hover{background:rgba(59,130,246,.22);}
-    .cta-retry{background:rgba(239,68,68,.12);border:1px solid var(--danger,#ef4444);color:var(--danger,#ef4444);border-radius:5px;font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;line-height:1.4;}
+    .cta-retry{background:rgba(239,68,68,.12);border:1px solid var(--danger);color:var(--danger);border-radius:var(--radius-xs);font-size:11px;font-weight:700;padding:4px 10px;cursor:pointer;line-height:1.4;}
     .cta-retry:hover{background:rgba(239,68,68,.22);}
     .cta-settings.cta-inline{font-size:10px;padding:2px 7px;margin-top:5px;}
     /* ── Performance & Calibration dashboard (#performanceModal) ───────────── */
     #performanceModal .modal{width:680px;}
     .perf-headline{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
-    .perf-bignum{flex:1;min-width:150px;background:var(--surface2,rgba(255,255,255,.04));border:1px solid var(--border,#334155);border-radius:10px;padding:12px 14px;}
-    .perf-bignum .perf-bn-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted,#64748b);font-weight:700;}
-    .perf-bignum .perf-bn-value{font-size:26px;font-weight:800;color:var(--text,#e2e8f0);line-height:1.1;margin-top:4px;}
-    .perf-bignum .perf-bn-sub{font-size:10px;color:var(--muted,#64748b);margin-top:2px;}
+    .perf-bignum{flex:1;min-width:150px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 14px;}
+    .perf-bignum .perf-bn-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;}
+    .perf-bignum .perf-bn-value{font-size:26px;font-weight:800;color:var(--text);line-height:1.1;margin-top:4px;}
+    .perf-bignum .perf-bn-sub{font-size:10px;color:var(--muted);margin-top:2px;}
     .perf-section{margin-top:14px;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;}
-    .perf-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted,#64748b);margin-bottom:8px;}
+    .perf-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;}
     .perf-table{width:100%;border-collapse:collapse;font-size:11px;}
-    .perf-table th{color:var(--muted,#64748b);font-weight:600;padding:3px 6px;border-bottom:1px solid var(--border,#334155);text-align:left;}
-    .perf-table td{padding:3px 6px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text,#e2e8f0);}
+    .perf-table th{color:var(--muted);font-weight:600;padding:3px 6px;border-bottom:1px solid var(--border);text-align:left;}
+    .perf-table td{padding:3px 6px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text);}
     .perf-row-active{background:rgba(59,130,246,.12);}
     .perf-row-active td{font-weight:700;}
     .perf-cal-low{opacity:.45;}
-    .perf-chip{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--text,#e2e8f0);margin-right:4px;}
-    .perf-muted{color:var(--muted,#64748b);font-size:11px;}
-    .perf-close-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted,#64748b);font-size:20px;cursor:pointer;line-height:1;}
-    .perf-close-x:hover{color:var(--text,#e2e8f0);}
+    .perf-chip{display:inline-block;font-size:10px;padding:1px 6px;border-radius:var(--radius-xs);background:rgba(255,255,255,.06);color:var(--text);margin-right:4px;}
+    .perf-muted{color:var(--muted);font-size:11px;}
+    .perf-close-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;line-height:1;}
+    .perf-close-x:hover{color:var(--text);}
     /* [feat:scoreboard] */
     .sb-cards{display:flex;gap:12px;flex-wrap:wrap;}
-    .sb-card{flex:1;min-width:200px;background:var(--surface2,rgba(255,255,255,.04));border:1px solid var(--border,#334155);border-radius:10px;padding:10px 12px;}
+    .sb-card{flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);padding:10px 12px;}
     .sb-card.sb-low{opacity:.55;}
-    .sb-eng{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text,#e2e8f0);}
-    .sb-eng .sb-lowtag{font-size:9px;font-weight:700;color:var(--warn,#f59e0b);margin-left:6px;text-transform:uppercase;}
-    .sb-acc{font-size:22px;font-weight:800;color:var(--text,#e2e8f0);line-height:1.15;margin-top:4px;}
-    .sb-ci{font-size:11px;color:var(--muted,#64748b);font-weight:600;margin-left:4px;}
-    .sb-line{font-size:11px;color:var(--text,#e2e8f0);margin-top:4px;}
-    .sb-pos{color:var(--good,#22c55e);}
-    .sb-neg{color:var(--danger,#ef4444);}
-    .sb-foot{font-size:10px;color:var(--muted,#64748b);margin-top:6px;line-height:1.35;}
+    .sb-eng{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text);}
+    .sb-eng .sb-lowtag{font-size:9px;font-weight:700;color:var(--warn);margin-left:6px;text-transform:uppercase;}
+    .sb-acc{font-size:22px;font-weight:800;color:var(--text);line-height:1.15;margin-top:4px;}
+    .sb-ci{font-size:11px;color:var(--muted);font-weight:600;margin-left:4px;}
+    .sb-line{font-size:11px;color:var(--text);margin-top:4px;}
+    .sb-pos{color:var(--good);}
+    .sb-neg{color:var(--danger);}
+    .sb-foot{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.35;}
     .sb-spark-row{display:flex;align-items:center;gap:8px;margin-top:6px;}
-    .sb-spark-lbl{font-size:10px;color:var(--muted,#64748b);min-width:64px;}
+    .sb-spark-lbl{font-size:10px;color:var(--muted);min-width:64px;}
     .sb-spark{position:relative;display:inline-flex;}
     /* ===== END CSS ZONES ===== */
     /* [feat:mood] — tiny one-tap header mood meter. The glyph is pinned to a
@@ -2578,14 +2642,14 @@
     .mood-pop-faces { display: flex; gap: 2px; justify-content: space-between; }
     .mood-pop-face {
       border: none; background: none; cursor: pointer; font-size: 18px;
-      padding: 3px; border-radius: 6px; line-height: 1; transition: background .12s, transform .12s;
+      padding: 3px; border-radius: var(--radius-md); line-height: 1; transition: background .12s, transform .12s;
     }
     .mood-pop-face:hover { background: var(--primary-light); transform: scale(1.18); }
     .mood-pop-hint { font-size: 10px; color: var(--muted); margin-top: 7px; text-align: center; }
     .mood-pop-more {
       display: block; width: 100%; margin-top: 7px; padding: 4px 6px;
       font-size: 10px; font-weight: 700; color: var(--primary);
-      background: none; border: 1px solid var(--border); border-radius: 6px; cursor: pointer;
+      background: none; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer;
     }
     .mood-pop-more:hover { background: var(--primary-light); }
     .mood-spark { margin-top: 8px; }
@@ -2603,7 +2667,7 @@
       backdrop-filter: blur(12px) saturate(140%);
       -webkit-backdrop-filter: blur(12px) saturate(140%);
       border: 1px solid var(--border-strong);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       position: relative;
     }
     .daily-brief .db-head {
@@ -2614,7 +2678,7 @@
     .daily-brief .db-head .db-title { flex: 1; cursor: pointer; }
     .daily-brief .db-head button {
       background: none; border: 1px solid var(--border-strong); color: var(--muted);
-      cursor: pointer; padding: 1px 7px; border-radius: 6px; font-size: 10px; line-height: 1.4;
+      cursor: pointer; padding: 1px 7px; border-radius: var(--radius-md); font-size: 10px; line-height: 1.4;
     }
     .daily-brief .db-head button:hover { color: var(--primary); border-color: var(--primary); }
     .daily-brief .db-speak { padding: 1px 6px !important; }
@@ -2636,20 +2700,20 @@
     .digest-chip {
       display: inline-block; font-size: 9px; font-weight: 800; font-family: var(--font-mono);
       color: var(--accent, var(--primary)); border: 1px solid var(--accent, var(--primary));
-      border-radius: 8px; padding: 0 5px; letter-spacing: .5px; line-height: 1.5;
+      border-radius: var(--radius-md); padding: 0 5px; letter-spacing: .5px; line-height: 1.5;
     }
     /* [feat:alerts] */
     .alerts-menu-wrap { position: relative; display: inline-block; }
     #alertsBellBtn { position: relative; }
     .alerts-badge {
       position: absolute; top: -6px; right: -6px; min-width: 14px; height: 14px;
-      padding: 0 3px; border-radius: 8px; background: var(--danger, #ef4444); color: #fff;
+      padding: 0 3px; border-radius: var(--radius-md); background: var(--danger); color: #fff;
       font-size: 9px; font-weight: 800; line-height: 14px; text-align: center; box-sizing: border-box;
     }
     .alerts-menu-wrap.has-unread #alertsBellBtn { color: var(--primary); border-color: var(--primary); }
     .alerts-dropdown {
       display: none; position: absolute; right: 0; top: calc(100% + 4px);
-      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-md);
       box-shadow: 0 4px 16px rgba(0,0,0,.35); z-index: 9999; width: 300px; max-height: 60vh;
       overflow-y: auto; text-align: left;
     }
@@ -2727,6 +2791,48 @@
     .pf-ed-sym { font-weight: 800; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .pf-ed-in { margin: 0; font-size: 11px; padding: 4px 6px; }
     .pf-cell.pf-pct-only .pf-amt { display: none; }
+
+    /* ── WS-A: MOTION & FOCUS (appended) ──
+       Tactile press states, keyboard focus ring, global reduced-motion guard. */
+
+    /* Press state for the three button families. .btn/.mini-btn list transform
+       in their transition properties so the press animates; .ibtn's existing
+       transition list has no transform, so its press is instant (fine). */
+    .btn:active, .mini-btn:active, .ibtn:active { transform: translateY(1px); }
+
+    /* Keyboard-only focus ring (uses the per-theme --glow-ring token). Scoped
+       to controls without an existing :focus treatment — text inputs keep
+       their own :focus ring (no double ring). */
+    button:focus-visible, a:focus-visible, [tabindex]:focus-visible,
+    select:focus-visible, input[type=checkbox]:focus-visible, input[type=range]:focus-visible {
+      outline: none;
+      box-shadow: var(--glow-ring);
+    }
+
+    /* Global reduced-motion guard: collapse every CSS animation/transition when
+       the OS requests reduced motion. The two older targeted guards (sk-name
+       marquee, sk-skel shimmer) remain — harmless under this rule. */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+      /* Functional opt-backs: loading spinners communicate in-flight state
+         (not decoration), so they keep rotating — slower and calmer.
+         .spinner    = widget-body loader   (keyframes spin)
+         .spinner-sm = connection-diagnostics glyph (keyframes spin)
+         .empty-spinner = empty-state loader (keyframes emptySpin) */
+      .spinner, .spinner-sm, .empty-spinner {
+        animation-duration: 1.6s !important;
+        animation-iteration-count: infinite !important;
+      }
+    }
+
+    /* WS-E: theme/wild tiles are real <button>s now — strip the UA button
+       font/margin so the existing .theme-tile rules keep full visual control. */
+    button.theme-tile { font-family: inherit; line-height: inherit; margin: 0; appearance: none; -webkit-appearance: none; }
   </style>
 </head>
 <body>
@@ -2814,6 +2920,9 @@
   <button class="ticker-addbtn" onclick="openModal('stockModal')">＋ Add Ticker</button>
 </div>
 
+
+<!-- WS-E (E1): first-run wizard discovery card (filled by renderWizardCard) -->
+<div id="wizardCardSlot"></div>
 
 <!-- MAIN GRID -->
 <div class="main">
@@ -3240,6 +3349,7 @@
 <div class="overlay" id="appSettingsModal">
   <div class="modal" style="width:480px;">
     <div class="modal-title">Dashboard Settings</div>
+    <a href="wizard.html" style="display:block;font-size:10px;color:var(--primary);text-decoration:none;margin:-6px 0 10px;" title="Guided first-run setup — walks through every free key and connection step-by-step">🧭 Setup wizard — guided key &amp; connection setup →</a>
 
     <div class="settings-nav" id="settingsNav">
       <button type="button" class="settings-nav-tab" data-settings-target="data">Data</button>
@@ -3541,16 +3651,16 @@
     <div id="settings-sec-appearance" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
       <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--primary);margin-bottom:8px;">Appearance</div>
       <div class="theme-tiles" id="themeTiles">
-        <div class="theme-tile" data-theme="dark"       onclick="setTheme('dark')"><span class="tt-icon">🌙</span><span class="tt-name">Dark (JARVIS)</span></div>
-        <div class="theme-tile" data-theme="light"      onclick="setTheme('light')"><span class="tt-icon">☀️</span><span class="tt-name">Light</span></div>
-        <div class="theme-tile" data-theme="hicontrast" onclick="setTheme('hicontrast')"><span class="tt-icon">⚡</span><span class="tt-name">Hi-Contrast</span></div>
-        <div class="theme-tile" data-theme="amoled"     onclick="setTheme('amoled')"><span class="tt-icon">⬛</span><span class="tt-name">AMOLED Black</span></div>
-        <div class="theme-tile" data-theme="solarized"  onclick="setTheme('solarized')"><span class="tt-icon">🌞</span><span class="tt-name">Solarized</span></div>
-        <div class="theme-tile" data-theme="nord"       onclick="setTheme('nord')"><span class="tt-icon">❄️</span><span class="tt-name">Nord</span></div>
-        <div class="theme-tile" data-theme="dracula"    onclick="setTheme('dracula')"><span class="tt-icon">🧛</span><span class="tt-name">Dracula</span></div>
-        <div class="theme-tile" data-theme="synthwave"  onclick="setTheme('synthwave')"><span class="tt-icon">🌆</span><span class="tt-name">Synthwave</span></div>
-        <div class="theme-tile" data-theme="matrix"     onclick="setTheme('matrix')"><span class="tt-icon">💊</span><span class="tt-name">Matrix</span></div>
-        <div class="theme-tile" data-theme="sepia"      onclick="setTheme('sepia')"><span class="tt-icon">📜</span><span class="tt-name">Sepia</span></div>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="dark"       onclick="setTheme('dark')"><span class="tt-icon">🌙</span><span class="tt-name">Dark (JARVIS)</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="light"      onclick="setTheme('light')"><span class="tt-icon">☀️</span><span class="tt-name">Light</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="hicontrast" onclick="setTheme('hicontrast')"><span class="tt-icon">⚡</span><span class="tt-name">Hi-Contrast</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="amoled"     onclick="setTheme('amoled')"><span class="tt-icon">⬛</span><span class="tt-name">AMOLED Black</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="solarized"  onclick="setTheme('solarized')"><span class="tt-icon">🌞</span><span class="tt-name">Solarized</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="nord"       onclick="setTheme('nord')"><span class="tt-icon">❄️</span><span class="tt-name">Nord</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="dracula"    onclick="setTheme('dracula')"><span class="tt-icon">🧛</span><span class="tt-name">Dracula</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="synthwave"  onclick="setTheme('synthwave')"><span class="tt-icon">🌆</span><span class="tt-name">Synthwave</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="matrix"     onclick="setTheme('matrix')"><span class="tt-icon">💊</span><span class="tt-name">Matrix</span></button>
+        <button type="button" class="theme-tile" aria-pressed="false" data-theme="sepia"      onclick="setTheme('sepia')"><span class="tt-icon">📜</span><span class="tt-name">Sepia</span></button>
       </div>
 
       <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
@@ -3566,16 +3676,16 @@
           </div>
         </div>
         <div class="theme-tiles" id="wildTiles">
-          <div class="theme-tile wild-tile" data-wild="vaporwave"   onclick="setWildTheme('vaporwave')"><span class="tt-icon">🌴</span><span class="tt-name">Vaporwave</span></div>
-          <div class="theme-tile wild-tile" data-wild="matrix-rain" onclick="setWildTheme('matrix-rain')"><span class="tt-icon">💻</span><span class="tt-name">Matrix Rain</span></div>
-          <div class="theme-tile wild-tile" data-wild="cosmic"      onclick="setWildTheme('cosmic')"><span class="tt-icon">🌌</span><span class="tt-name">Cosmic Drift</span></div>
-          <div class="theme-tile wild-tile" data-wild="lava"        onclick="setWildTheme('lava')"><span class="tt-icon">🌋</span><span class="tt-name">Lava Lamp</span></div>
-          <div class="theme-tile wild-tile" data-wild="glitch"      onclick="setWildTheme('glitch')"><span class="tt-icon">📺</span><span class="tt-name">Glitch / CRT</span></div>
-          <div class="theme-tile wild-tile" data-wild="cyberpunk"   onclick="setWildTheme('cyberpunk')"><span class="tt-icon">🤖</span><span class="tt-name">Cyberpunk</span></div>
-          <div class="theme-tile wild-tile" data-wild="acid"        onclick="setWildTheme('acid')"><span class="tt-icon">🧪</span><span class="tt-name">Acid Trip</span></div>
-          <div class="theme-tile wild-tile" data-wild="plasma"      onclick="setWildTheme('plasma')"><span class="tt-icon">🌀</span><span class="tt-name">Plasma Demo</span></div>
-          <div class="theme-tile wild-tile" data-wild="disco"       onclick="setWildTheme('disco')"><span class="tt-icon">🪩</span><span class="tt-name">Disco Ball</span></div>
-          <div class="theme-tile wild-tile" data-wild="clown"       onclick="setWildTheme('clown')"><span class="tt-icon">🤡</span><span class="tt-name">Clown Mode</span></div>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="vaporwave"   onclick="setWildTheme('vaporwave')"><span class="tt-icon">🌴</span><span class="tt-name">Vaporwave</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="matrix-rain" onclick="setWildTheme('matrix-rain')"><span class="tt-icon">💻</span><span class="tt-name">Matrix Rain</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="cosmic"      onclick="setWildTheme('cosmic')"><span class="tt-icon">🌌</span><span class="tt-name">Cosmic Drift</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="lava"        onclick="setWildTheme('lava')"><span class="tt-icon">🌋</span><span class="tt-name">Lava Lamp</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="glitch"      onclick="setWildTheme('glitch')"><span class="tt-icon">📺</span><span class="tt-name">Glitch / CRT</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="cyberpunk"   onclick="setWildTheme('cyberpunk')"><span class="tt-icon">🤖</span><span class="tt-name">Cyberpunk</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="acid"        onclick="setWildTheme('acid')"><span class="tt-icon">🧪</span><span class="tt-name">Acid Trip</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="plasma"      onclick="setWildTheme('plasma')"><span class="tt-icon">🌀</span><span class="tt-name">Plasma Demo</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="disco"       onclick="setWildTheme('disco')"><span class="tt-icon">🪩</span><span class="tt-name">Disco Ball</span></button>
+          <button type="button" class="theme-tile wild-tile" aria-pressed="false" data-wild="clown"       onclick="setWildTheme('clown')"><span class="tt-icon">🤡</span><span class="tt-name">Clown Mode</span></button>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:6px;">Tip: 🎉 button in the header cycles through themes on left-click and turns wild mode off after the last theme. Right-click turns it off immediately.</div>
       </div>
@@ -3590,11 +3700,11 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
           <label style="font-size:11px;color:var(--muted);">
             Opacity <span id="bgImageOpacityVal" style="color:var(--text);font-weight:600;">60%</span>
-            <input type="range" id="bgImageOpacity" min="0" max="100" step="5" value="60" style="width:100%;" oninput="onBgImageOpacityInput(this.value)" />
+            <input type="range" id="bgImageOpacity" min="0" max="100" step="5" value="60" style="width:100%;" oninput="onBgImageOpacityInput(this.value)" onchange="onBgImageOpacityCommit(this.value)" />
           </label>
           <label style="font-size:11px;color:var(--muted);">
             Dim overlay <span id="bgImageDimVal" style="color:var(--text);font-weight:600;">35%</span>
-            <input type="range" id="bgImageDim" min="0" max="90" step="5" value="35" style="width:100%;" oninput="onBgImageDimInput(this.value)" />
+            <input type="range" id="bgImageDim" min="0" max="90" step="5" value="35" style="width:100%;" oninput="onBgImageDimInput(this.value)" onchange="onBgImageDimCommit(this.value)" />
           </label>
         </div>
         <div style="font-size:10px;color:var(--muted);margin-top:6px;line-height:1.45;">
@@ -3674,8 +3784,7 @@
     </details>
 
     <div class="mactions">
-      <button class="btn btn-ghost" onclick="closeModal('appSettingsModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="closeModal('appSettingsModal')">Done</button>
+      <button class="btn btn-primary" onclick="closeAppSettings()">Close</button>
     </div>
   </div>
 </div>
@@ -3826,6 +3935,7 @@
         <div style="font-size:10px;font-weight:400;opacity:.7;">save to cloud</div>
       </button>
     </div>
+    <button class="btn btn-ghost" style="font-size:11px;padding:6px;width:100%;margin-bottom:10px;" onclick="ghUndoLastPull()" title="Re-apply the config snapshot saved automatically right before your last Pull. Merge-safe: newer local data (picks, trackers, journals) is kept and pick baselines are never re-anchored.">&#10226; Undo last pull (re-apply pre-pull config)</button>
 
     <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin-bottom:10px;">
       <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;">
@@ -3857,6 +3967,7 @@
 
     <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:14px;">
       The dashboard has three tiers for fetching stock prices. You don't need any of them to see stocks at all — it will fall back to public proxies — but setting one up is <b>free</b> and makes things much more reliable.
+      Prefer step-by-step guidance? The <a href="wizard.html" style="color:var(--primary);">setup wizard</a> walks through this and every other key.
     </div>
 
     <div style="background:var(--surface2);border:1px solid var(--border-strong);border-radius:10px;padding:12px 14px;margin-bottom:10px;">
@@ -3901,6 +4012,27 @@
     <div class="mactions">
       <button class="btn btn-ghost" onclick="closeModal('stockHelpModal')">Close</button>
       <button class="btn btn-primary" onclick="closeModal('stockHelpModal'); openStockSettings();">Open settings →</button>
+    </div>
+  </div>
+</div>
+
+<!-- KEYBOARD SHORTCUTS HELP (WS-E) — static list; opened with '?' -->
+<div class="overlay" id="shortcutsHelpModal">
+  <div class="modal" style="width:380px;">
+    <div class="modal-title">Keyboard shortcuts</div>
+    <div style="font-size:12px;color:var(--text);line-height:2.1;">
+      <div><kbd>/</kbd> — focus the search box</div>
+      <div><kbd>?</kbd> — this help</div>
+      <div><kbd>Esc</kbd> — close modals / clear news focus</div>
+      <div><kbd>j</kbd> / <kbd>k</kbd> — next / previous headline</div>
+      <div><kbd>o</kbd> or <kbd>Enter</kbd> — open the focused headline</div>
+      <div><kbd>m</kbd> — mark headline read / unread</div>
+      <div><kbd>Shift+H</kbd> — hide portfolio amounts (panic hide)</div>
+      <div><kbd>Ctrl+Shift+L</kbd> — view logs</div>
+      <div><kbd>Ctrl+Alt+L</kbd> — download logs</div>
+    </div>
+    <div class="mactions">
+      <button class="btn btn-primary" onclick="closeModal('shortcutsHelpModal')">Close</button>
     </div>
   </div>
 </div>
@@ -3980,6 +4112,7 @@ const LOG_BUFFER_MAX = 5000;
 // so it can't fill the ~5 MB localStorage budget.
 const SP_LOG_PERSIST_KEY  = 'sp_logs_persistent';
 const SP_LOG_PERSIST_MAX  = 250_000;     // ~250 KB hard cap
+const SP_LOG_PERSIST_DEBOUNCE_MS = 30_000; // info-level flush cadence (errors flush immediately)
 const _origLog    = console.log.bind(console);
 const _origWarn   = console.warn.bind(console);
 const _origError  = console.error.bind(console);
@@ -3993,21 +4126,36 @@ let   _logPersistTimer = null;
 let   _logServerSkipUntil = 0;
 let   _logServerFails = 0;
 
-// Append a single line to the persisted log, auto-rotating when over budget.
-// Used by the early error trap (before the regular logger is wired) and by
-// `_persistRecentLogs` for steady-state writes.
+// In-memory copy of the persisted log. Hydrated ONCE at boot; appenders mutate
+// this string and flush it with a single setItem. Steady-state logging no
+// longer re-reads + re-concats the ≤250 KB store on every write.
+let _logPersistStr = (() => { try { return localStorage.getItem(SP_LOG_PERSIST_KEY) || ''; } catch (_) { return ''; } })();
+// Rotate when over budget: drop ~25 % of oldest content, then realign on a
+// line boundary so we never leave a half line at the start of the file.
+function _logPersistRotate(str) {
+  if (str.length > SP_LOG_PERSIST_MAX) {
+    str = str.slice(str.length - Math.floor(SP_LOG_PERSIST_MAX * 0.75));
+    const nl = str.indexOf('\n');
+    if (nl > 0) str = str.slice(nl + 1);
+  }
+  return str;
+}
+// Single-setItem flush of the in-memory string to localStorage.
+function _logPersistFlush() {
+  try { localStorage.setItem(SP_LOG_PERSIST_KEY, _logPersistStr); }
+  catch (_) {
+    // Quota exceeded? Drop the persisted store entirely to recover.
+    _logPersistStr = '';
+    try { localStorage.removeItem(SP_LOG_PERSIST_KEY); } catch (_) {}
+  }
+}
+// Append a single line to the persisted log and flush immediately. Used by the
+// early error traps (before the regular logger is wired) + the session marker,
+// so it stays write-now (those lines are exactly the crash-debugging ones).
 function _logPersistAppend(line) {
   try {
-    const cur = localStorage.getItem(SP_LOG_PERSIST_KEY) || '';
-    let next = cur + line + '\n';
-    if (next.length > SP_LOG_PERSIST_MAX) {
-      // Drop ~25 % of oldest content, then realign on a line boundary so we
-      // never leave a half line at the start of the file.
-      next = next.slice(next.length - Math.floor(SP_LOG_PERSIST_MAX * 0.75));
-      const nl = next.indexOf('\n');
-      if (nl > 0) next = next.slice(nl + 1);
-    }
-    localStorage.setItem(SP_LOG_PERSIST_KEY, next);
+    _logPersistStr = _logPersistRotate(_logPersistStr + line + '\n');
+    _logPersistFlush();
   } catch (_) {}
 }
 // Mark the start of a tab session so multi-session logs stay readable.
@@ -4034,14 +4182,22 @@ function _pushLog(level, args) {
   if (_logBuffer.length > LOG_BUFFER_MAX) _logBuffer.splice(0, _logBuffer.length - LOG_BUFFER_MAX);
   _logQueue.push({ level, msg });
   if (!_logFlushTimer) _logFlushTimer = setTimeout(_flushLogs, 200);
-  // Debounced persist to localStorage. A short delay coalesces rapid bursts
-  // (Market-AI fan-out, stock fetch retries) into one write.
-  if (!_logPersistTimer) _logPersistTimer = setTimeout(_persistRecentLogs, 1500);
+  // Persist to localStorage: error-level lines flush IMMEDIATELY (they're the
+  // crash-debugging payload), info-level lines coalesce on a 30 s debounce so
+  // steady-state polling doesn't rewrite the ≤250 KB store every few seconds.
+  // (pagehide / visibilitychange→hidden also force a flush — see the
+  // visibility hooks near startStockRefreshLoop.)
+  if (level === 'LOG' || level === 'WARN') {
+    if (!_logPersistTimer) _logPersistTimer = setTimeout(_persistRecentLogs, SP_LOG_PERSIST_DEBOUNCE_MS);
+  } else {
+    _persistRecentLogs();
+  }
 }
 // Snapshot the most recent in-memory buffer into the persistent store. Lines
 // the user already saw in the previous tab session remain in the file thanks
 // to the rotating cap in `_logPersistAppend` (we just append fresh ones).
 function _persistRecentLogs() {
+  if (_logPersistTimer) { try { clearTimeout(_logPersistTimer); } catch (_) {} }
   _logPersistTimer = null;
   // We track which buffer index we last wrote so we don't re-append lines.
   const start = _persistRecentLogs._cursor || 0;
@@ -4050,19 +4206,8 @@ function _persistRecentLogs() {
   _persistRecentLogs._cursor = _logBuffer.length;
   let blob = '';
   for (const e of fresh) blob += `[${e.ts}] [${e.level}] ${e.msg}\n`;
-  try {
-    const cur = localStorage.getItem(SP_LOG_PERSIST_KEY) || '';
-    let next = cur + blob;
-    if (next.length > SP_LOG_PERSIST_MAX) {
-      next = next.slice(next.length - Math.floor(SP_LOG_PERSIST_MAX * 0.75));
-      const nl = next.indexOf('\n');
-      if (nl > 0) next = next.slice(nl + 1);
-    }
-    localStorage.setItem(SP_LOG_PERSIST_KEY, next);
-  } catch (_) {
-    // Quota exceeded? Drop the persisted store entirely to recover.
-    try { localStorage.removeItem(SP_LOG_PERSIST_KEY); } catch(_) {}
-  }
+  _logPersistStr = _logPersistRotate(_logPersistStr + blob);
+  _logPersistFlush();
 }
 function _flushLogs() {
   _logFlushTimer = null;
@@ -4883,6 +5028,25 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+// WS-E (E6): '/' focuses the search box, '?' opens the keyboard-shortcuts help.
+// Guarded like the news-list j/k handler (don't hijack typing in INPUT/TEXTAREA/
+// contentEditable) plus SELECT, and bail entirely while any modal is open or the
+// calculator display has keyboard focus (it owns '/' as division there).
+// Capture phase + stopPropagation so '/' beats the calculator's global
+// capture-phase fallback, which would otherwise swallow it as an operator.
+window.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key !== '/' && e.key !== '?') return;
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+  if (document.activeElement && document.activeElement.id === 'calcDisplay') return;
+  if (document.querySelector('.overlay.open')) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.key === '/') document.getElementById('searchInput')?.focus();
+  else openModal('shortcutsHelpModal');
+}, true);
+
 /* ════════════════════════════════════════════
    STATE — persisted to localStorage
 ════════════════════════════════════════════ */
@@ -5079,8 +5243,14 @@ function _readPersistedState() {
 try {
   const parsed = _readPersistedState();
   S = parsed ? Object.assign({}, DEFAULTS, parsed) : Object.assign({}, DEFAULTS);
+  // A wrong-typed field in otherwise-valid JSON must not throw below — the
+  // catch-all would silently reset the ENTIRE state to DEFAULTS. Coerce just
+  // the broken field to its default instead.
+  if (!Array.isArray(S.feeds))      S.feeds      = DEFAULTS.feeds;
+  if (!Array.isArray(S.stocks))     S.stocks     = DEFAULTS.stocks;
+  if (!Array.isArray(S.clocks))     S.clocks     = DEFAULTS.clocks;
+  if (!Array.isArray(S.quickLinks)) S.quickLinks = DEFAULTS.quickLinks;
   S.feeds = S.feeds.map(f => ({ badge:'b-custom', ...f }));
-  if (!S.quickLinks) S.quickLinks = DEFAULTS.quickLinks;
   {
     const n = normalizeWidgetBgAlphaValue(S.widgetBgAlpha);
     if (n !== S.widgetBgAlpha) {
@@ -5454,8 +5624,10 @@ function _safeFlightTracker(arr) {
   return arr
     .filter(f => f && typeof f === 'object' && typeof f.code === 'string'
                  && /^[A-Z]{2,3}\d{1,4}$/.test(f.code))
-    .map(f => ({
-      id:       typeof f.id       === 'string' ? f.id       : (Date.now() + '_' + f.code),
+    .map((f, i) => ({
+      // id ends up inside an onclick attribute (cardHTML) — restrict to a safe
+      // charset; anything else is regenerated, never passed through.
+      id:       (typeof f.id === 'string' && /^[\w-]+$/.test(f.id)) ? f.id : (Date.now() + '_' + f.code + '_' + i),
       code:     f.code,
       date:     typeof f.date     === 'string' ? f.date     : '',
       origIata: typeof f.origIata === 'string' ? f.origIata : '',
@@ -5475,8 +5647,10 @@ function _safeHotelTracker(arr) {
   const s = v => typeof v === 'string' ? v : '';
   return arr
     .filter(h => h && typeof h === 'object' && typeof h.name === 'string' && h.name.trim())
-    .map(h => ({
-      id:           s(h.id) || (Date.now() + '_' + s(h.name).toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,20)),
+    .map((h, i) => ({
+      // Same safe-charset rule as _safeFlightTracker — id is rendered into an
+      // onclick attribute by the hotel card.
+      id:           /^[\w-]+$/.test(s(h.id)) ? h.id : (Date.now() + '_' + s(h.name).toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,20) + '_' + i),
       name:         s(h.name), city: s(h.city), address: s(h.address), country: s(h.country),
       checkIn:      s(h.checkIn), checkOut: s(h.checkOut),
       nights:       (typeof h.nights === 'number' && isFinite(h.nights)) ? h.nights : null,
@@ -5497,9 +5671,11 @@ function _isExportableCacheKey(k) {
       k === 'sp_widget_layout' || k === 'sp_flight_tracker' || k === 'sp_hotel_tracker') return false;
   if (k.indexOf('sp_gh') === 0) return false;   // PAT / repo / path / idb / sync bookkeeping
   if (k === 'sp_cold_migrated') return false;   // cold-tier device-local migration flag (never travels)
+  if (k === 'sp_prepull_backup') return false;  // pre-pull undo snapshot — device-local, would nest a whole payload inside a payload
   if (k === 'sp_logs_persistent' || k === 'sp_unparseable_log' || k === 'sp_network_failures' ||
       k === 'sp_auto_diagnostic' || k === 'sp_geo_denied_until') return false;  // debug / device-ephemeral
   if (k === 'sp_dismissed_hints') return false;  // one-time hint dismissals — device-local, never sync (signal-enable-hints HLD)
+  if (k === 'sp_wizard_card_dismissed') return false;  // WS-E first-run wizard-card dismissal — device-local, never sync
   if (k === 'sp_news_digest') return false;  // [feat:digest] recomputable watchlist-news digest cache — never travels
   if (k === 'sp_alerts') return false;  // [feat:alerts] per-device alert history/state — never syncs/exports
   return true;
@@ -5516,26 +5692,172 @@ function _collectCacheSnapshot() {
   return out;
 }
 
+// Union-merge a tracker list from a pulled/imported payload into the local
+// one. LOCAL ENTRIES ALWAYS SURVIVE — a Pull/Import must never clobber
+// personal data added since the last Push (the reported failure mode: add a
+// flight locally, Pull a stale config.json, flight gone). Incoming entries
+// are appended unless a local entry already covers the same dedup key
+// (flights: code|date — the same key ftImport dedups on; hotels: normalized
+// name|checkIn — the same key the hotel widget dedups on). Deletions
+// propagate via Push (the pushed payload replaces the cloud copy) and via
+// the widgets' own date-based pruning; the QR keys handoff remains the one
+// deliberate REPLACE/mirror channel (_applyKeysPayload writes directly).
+function _mergeTrackerLists(localArr, incomingArr, keyFn) {
+  const local = Array.isArray(localArr) ? localArr : [];
+  const seen = new Set(local.map(keyFn));
+  return local.concat((incomingArr || []).filter(e => !seen.has(keyFn(e))));
+}
+const _flightDedupKey = f => (f?.code || '') + '|' + (f?.date || '');
+const _hotelDedupKey  = h => String(h?.name || '').toLowerCase().trim() + '|' + (h?.checkIn || '');
+
+// Merge an incoming (pulled/imported) day-keyed journal with the local one —
+// local days win (this machine's copy is the freshest it has), incoming-only
+// days fill in, and on a same-day collision a graded copy beats an ungraded
+// one (grades are append-only facts; never trade a graded day for an ungraded
+// one). Keeps a stale cloud config from erasing local history.
+function _mergeDayKeyedJournal(incoming, local, isGraded) {
+  const inc = (incoming && typeof incoming === 'object' && !Array.isArray(incoming)) ? incoming : {};
+  const loc = (local && typeof local === 'object' && !Array.isArray(local)) ? local : {};
+  const out = Object.assign({}, inc);
+  for (const day of Object.keys(loc)) {
+    const i = out[day], l = loc[day];
+    out[day] = (i && isGraded(i) && !isGraded(l || {})) ? i : l;
+  }
+  return out;
+}
+function _mergeMaiJournal(incoming) {
+  return _mergeDayKeyedJournal(incoming, (typeof S !== 'undefined' && S?.maiJournal) || {}, e => !!e?.gradedAt);
+}
+// Picker journal days are graded when their grades map has entries.
+function _mergePickerJournal(incoming) {
+  return _mergeDayKeyedJournal(incoming, (typeof S !== 'undefined' && S?.pickerJournal) || {},
+    e => Object.keys(e?.grades || {}).length > 0);
+}
+// dailyPriceLog days are flat {SYM: price} fact maps — union per day, local
+// wins per ticker. Grading (Market-AI + picker) reads outcome prices from
+// here, so losing local days breaks pick grading on this machine.
+function _mergeDailyPriceLog(incoming) {
+  const inc = (incoming && typeof incoming === 'object' && !Array.isArray(incoming)) ? incoming : {};
+  const loc = (typeof S !== 'undefined' && S?.dailyPriceLog && typeof S.dailyPriceLog === 'object' && !Array.isArray(S.dailyPriceLog)) ? S.dailyPriceLog : {};
+  const out = Object.assign({}, inc);
+  for (const day of Object.keys(loc)) {
+    const i = out[day], l = loc[day];
+    out[day] = (i && typeof i === 'object' && l && typeof l === 'object') ? Object.assign({}, i, l) : l;
+  }
+  return out;
+}
+
+// The ONE place that decides what survives when an incoming config (Pull /
+// file Import / pre-pull Undo) is applied over the live state. Mutates and
+// returns `merged` (a copy of the incoming state). Keeps: every local secret
+// the payload omits (keyless payloads always do), a locally-set background
+// image and manual weather location, and the day-keyed data stores via the
+// local-wins merges above. All three apply paths MUST go through this so
+// "re-applying a config" can never clobber picks, trackers, or journals.
+function _mergeLocalPreserves(merged, candidate) {
+  const SECRET_PRESERVE = ['stockApiKey','stockProxyUrl','groqApiKey','geminiApiKey',
+    'mistralApiKey','gcalOauthClientId','fredApiKey','eiaApiKey','quiverApiKey',
+    'yahooCookies','icsUrl'];
+  for (const k of SECRET_PRESERVE) if (!merged[k] && S?.[k]) merged[k] = S[k];
+  if (!merged.bgImageUrl && S?.bgImageUrl) {
+    merged.bgImageUrl = S.bgImageUrl;
+    if (merged.bgImageOpacity == null && S.bgImageOpacity != null) merged.bgImageOpacity = S.bgImageOpacity;
+    if (merged.bgImageDim     == null && S.bgImageDim     != null) merged.bgImageDim     = S.bgImageDim;
+  }
+  merged.maiJournal    = _mergeMaiJournal(candidate.maiJournal);
+  merged.pickerJournal = _mergePickerJournal(candidate.pickerJournal);
+  merged.dailyPriceLog = _mergeDailyPriceLog(candidate.dailyPriceLog);
+  if (!merged.weatherLocation && S?.weatherLocation) merged.weatherLocation = S.weatherLocation;
+  return merged;
+}
+
+// One-slot automatic snapshot of the full local config, written right before
+// a Pull mutates anything — "save the current config" insurance. Device-local
+// (excluded from exports/sync via _isExportableCacheKey). Reapplied by
+// ghUndoLastPull() through the same merge machinery as a Pull, so an undo can
+// never rebaseline picks or clobber data either.
+function _writePrePullBackup() {
+  try {
+    localStorage.setItem('sp_prepull_backup',
+      JSON.stringify({ kind: 'startpage-prepull-backup', ts: Date.now(), payload: _buildSyncPayload() }));
+    return true;
+  } catch (_) { return false; }
+}
+function _applyPrePullBackup() {
+  let bak = null;
+  try { bak = JSON.parse(localStorage.getItem('sp_prepull_backup') || 'null'); } catch (_) {}
+  if (!bak || bak.kind !== 'startpage-prepull-backup' || !bak.payload || typeof bak.payload.state !== 'object') return null;
+  const parsed = bak.payload;
+  const candidate = parsed.state;
+  S = normalizeImportedState(_mergeLocalPreserves(Object.assign({}, candidate), candidate));
+  save({ mirror: true });
+  _applyOutOfBandKeys(parsed);
+  return bak.ts;
+}
+function ghUndoLastPull() {
+  const st = document.getElementById('ghSyncStatus');
+  const ts = _applyPrePullBackup();
+  if (ts == null) {
+    if (st) st.innerHTML = '<span style="color:var(--warning)">No pre-pull backup exists on this device yet (one is saved automatically on every Pull).</span>';
+    return;
+  }
+  if (st) st.innerHTML = '<span style="color:var(--primary)">Pre-pull config re-applied (snapshot from ' + esc(new Date(ts).toLocaleString()) + '). Reloading…</span>';
+  setTimeout(() => location.reload(), 900);
+}
+
+// Best-effort timestamp of a serialized cache value. Most page caches are
+// written as { ts: <ms epoch>, ... } (a few use an ISO string or a different
+// field name). Returns ms epoch, or null when no recognizable timestamp —
+// null means "can't compare", and the caches restore falls back to its old
+// incoming-wins behavior for that key.
+function _cacheSnapshotTs(raw) {
+  if (typeof raw !== 'string' || !raw) return null;
+  try {
+    const o = JSON.parse(raw);
+    if (!o || typeof o !== 'object') return null;
+    const t = o.ts ?? o.fetchedAt ?? o.savedAt ?? o.updatedAt ?? o.generatedAt ?? null;
+    if (typeof t === 'number' && isFinite(t)) return t;
+    if (typeof t === 'string') { const ms = Date.parse(t); return isFinite(ms) ? ms : null; }
+    return null;
+  } catch (_) { return null; }
+}
+
 // Restore the out-of-band payload keys (theme, widgetLayout, flightTracker, hotelTracker)
 // plus the generic `caches` snapshot. Called by both local import and GitHub Pull.
+// Trackers are MERGED into the local lists (see _mergeTrackerLists), not replaced.
 function _applyOutOfBandKeys(parsed) {
   if (parsed?.theme && typeof THEME_ORDER !== 'undefined' && THEME_ORDER.includes(parsed.theme))
     try { localStorage.setItem('sp_theme', parsed.theme); } catch(_) {}
   if (parsed?.widgetLayout && typeof parsed.widgetLayout === 'object' && !Array.isArray(parsed.widgetLayout))
     try { localStorage.setItem('sp_widget_layout', JSON.stringify(parsed.widgetLayout)); } catch(_) {}
   const flights = _safeFlightTracker(parsed?.flightTracker);
-  if (flights !== null)
-    try { localStorage.setItem('sp_flight_tracker', JSON.stringify(flights)); } catch(_) {}
+  if (flights !== null) {
+    let next = flights;
+    try { next = _mergeTrackerLists(JSON.parse(localStorage.getItem('sp_flight_tracker') || '[]'), flights, _flightDedupKey); } catch(_) {}
+    try { localStorage.setItem('sp_flight_tracker', JSON.stringify(next)); } catch(_) {}
+  }
   const hotels = _safeHotelTracker(parsed?.hotelTracker);
-  if (hotels !== null)
-    try { localStorage.setItem('sp_hotel_tracker', JSON.stringify(hotels)); } catch(_) {}
+  if (hotels !== null) {
+    let next = hotels;
+    try { next = _mergeTrackerLists(JSON.parse(localStorage.getItem('sp_hotel_tracker') || '[]'), hotels, _hotelDedupKey); } catch(_) {}
+    try { localStorage.setItem('sp_hotel_tracker', JSON.stringify(next)); } catch(_) {}
+  }
   // Generic cache snapshot — restore every page cache (re-guarded so a stray secret/
-  // handled key in the payload is never written back).
+  // handled key in the payload is never written back). FRESHNESS GUARD: when both
+  // the local and incoming copy carry a recognizable timestamp, keep the newer one —
+  // a stale cloud snapshot must not overwrite today's data (reported with
+  // sp_picker_cache: a Pull replaced the current stock picks with old ones).
   if (parsed?.caches && typeof parsed.caches === 'object') {
     for (const k in parsed.caches) {
       if (!_isExportableCacheKey(k)) continue;
       const v = parsed.caches[k];
-      if (typeof v === 'string') try { localStorage.setItem(k, v); } catch(_) {}
+      if (typeof v !== 'string') continue;
+      try {
+        const incTs = _cacheSnapshotTs(v);
+        const locTs = _cacheSnapshotTs(localStorage.getItem(k));
+        if (incTs != null && locTs != null && locTs >= incTs) continue;  // local is fresher — keep it
+        localStorage.setItem(k, v);
+      } catch(_) {}
     }
   }
 }
@@ -5582,6 +5904,11 @@ function doExportSettings(opts = {}) {
       delete stateCopy.fredApiKey;
       delete stateCopy.eiaApiKey;
       delete stateCopy.quiverApiKey;
+      // Session/bearer secrets: raw Yahoo A1/A3/GUC cookies and the Google
+      // Calendar "secret address" iCal URL (the URL itself is the credential).
+      // Both are in KEYS_QR_FIELDS — keep this list aligned with it.
+      delete stateCopy.yahooCookies;
+      delete stateCopy.icsUrl;
     }
     // `gcalToken` is an ephemeral ~1h access token. Never export it (even with
     // keys) — another browser would just see an expired blob, and it's a bearer secret.
@@ -5653,20 +5980,14 @@ function importSettingsFile(evt) {
       const candidate = (parsed.kind === 'startpage-settings' && parsed.state) ? parsed.state : parsed;
       if (!candidate || typeof candidate !== 'object')
         throw new Error('Could not locate a state object in the file.');
-      // Merge: preserve locally-configured secrets the file omits (common for keyless exports)
-      const merged = Object.assign({}, candidate);
-      if (!merged.stockApiKey        && S?.stockApiKey)        merged.stockApiKey        = S.stockApiKey;
-      if (!merged.stockProxyUrl      && S?.stockProxyUrl)      merged.stockProxyUrl      = S.stockProxyUrl;
-      if (!merged.groqApiKey         && S?.groqApiKey)         merged.groqApiKey         = S.groqApiKey;
-      if (!merged.geminiApiKey       && S?.geminiApiKey)       merged.geminiApiKey       = S.geminiApiKey;
-      if (!merged.mistralApiKey      && S?.mistralApiKey)      merged.mistralApiKey      = S.mistralApiKey;
-      if (!merged.gcalOauthClientId  && S?.gcalOauthClientId)  merged.gcalOauthClientId  = S.gcalOauthClientId;
-      if (!merged.fredApiKey   && S?.fredApiKey)   merged.fredApiKey   = S.fredApiKey;
-      if (!merged.eiaApiKey    && S?.eiaApiKey)     merged.eiaApiKey    = S.eiaApiKey;
-      if (!merged.quiverApiKey && S?.quiverApiKey)  merged.quiverApiKey = S.quiverApiKey;
+      // Shared apply path: preserve local secrets the file omits, the
+      // background image, manual weather location, and merge the day-keyed
+      // data stores (journals + price log) with local-wins semantics.
+      const merged = _mergeLocalPreserves(Object.assign({}, candidate), candidate);
       S = normalizeImportedState(merged);
       save({ mirror: true });  // major mutation — force the recovery mirror current
-      // Restore out-of-band keys (theme, widgetLayout, flightTracker).
+      // Restore out-of-band keys (theme, widgetLayout, flight/hotel trackers —
+      // trackers MERGE into local lists, never replace them).
       // Missing keys (older export versions) are silently skipped — local values stay.
       _applyOutOfBandKeys(parsed);
       const importedHadKeys  = !!(candidate?.stockApiKey || candidate?.stockProxyUrl);
@@ -6239,6 +6560,8 @@ function _buildSyncPayload() {
   delete stateCopy.gcalOauthClientId; delete stateCopy.gcalToken;
   // Intelligence signal API keys — always strip, never sync
   delete stateCopy.fredApiKey; delete stateCopy.eiaApiKey; delete stateCopy.quiverApiKey;
+  // Yahoo session cookies + secret iCal URL — credentials, never sync (KEYS_QR_FIELDS)
+  delete stateCopy.yahooCookies; delete stateCopy.icsUrl;
   // Defensively strip any gh* that crept in from an old state object
   delete stateCopy.ghPat; delete stateCopy.ghRepo; delete stateCopy.ghPath;
   let theme = 'dark', widgetLayout = null, flightTracker = [], hotelTracker = [];
@@ -6771,7 +7094,10 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // Minimum runnable set, used as a fallback if the repo file listing fails.
-const APP_RUN_FILES = ['index.html', 'worker.js'];
+// Keep in sync with what the app actually loads at runtime: the page itself,
+// the Worker source (deployed separately but kept locally), the lazy-loaded
+// QR libs (Show/Scan keys QR breaks without them), and the first-run wizard.
+const APP_RUN_FILES = ['index.html', 'worker.js', 'qrcode.js', 'jsQR.js', 'wizard.html'];
 
 // Cloud Sync mirrors the WHOLE repo (everything needed to run + docs) EXCEPT the
 // excluded paths below. `ideas/` is excluded per the user's request; `backup/`
@@ -6865,13 +7191,34 @@ async function _ghFetchFileText(hdrs, repo, fname, sha) {
 // destroy a good local file. Returns a reason string when invalid, else null.
 function _validatePulledFile(fname, text) {
   if (typeof text !== 'string' || text.length === 0) return 'is empty';
+  // A GitHub API error body is JSON with a "message" key — none of the
+  // runtime files legitimately start that way (config.json never reaches
+  // this path; it's excluded from the file mirror).
+  const looksLikeApiError = /^\s*\{/.test(text) && /"message"\s*:/.test(text.slice(0, 400));
   if (/(^|\/)index\.html$/i.test(fname)) {
     if (text.length < 100000) return `is suspiciously small (${text.length} bytes; expected ~1 MB)`;
     if (!/<!doctype html/i.test(text) && !/<html[\s>]/i.test(text)) return 'does not look like HTML';
-    if (/^\s*\{/.test(text) && /"message"\s*:/.test(text.slice(0, 400))) return 'looks like a GitHub API error response';
+    if (looksLikeApiError) return 'looks like a GitHub API error response';
   }
   if (/(^|\/)worker\.js$/i.test(fname)) {
     if (text.length < 200) return `is suspiciously small (${text.length} bytes)`;
+  }
+  // Runtime files added 2026-06-04 (QR key handoff + onboarding wizard).
+  // Thresholds are ~¼ of their actual sizes (57 KB / 257 KB / 63 KB) so
+  // normal growth/shrink never false-positives, but an error page or
+  // truncated fetch can't overwrite a working copy.
+  if (/(^|\/)wizard\.html$/i.test(fname)) {
+    if (text.length < 15000) return `is suspiciously small (${text.length} bytes; expected ~60 KB)`;
+    if (!/<!doctype html/i.test(text) && !/<html[\s>]/i.test(text)) return 'does not look like HTML';
+    if (looksLikeApiError) return 'looks like a GitHub API error response';
+  }
+  if (/(^|\/)qrcode\.js$/i.test(fname)) {
+    if (text.length < 15000) return `is suspiciously small (${text.length} bytes; expected ~55 KB)`;
+    if (looksLikeApiError) return 'looks like a GitHub API error response';
+  }
+  if (/(^|\/)jsQR\.js$/i.test(fname)) {
+    if (text.length < 60000) return `is suspiciously small (${text.length} bytes; expected ~250 KB)`;
+    if (looksLikeApiError) return 'looks like a GitHub API error response';
   }
   return null;
 }
@@ -6998,28 +7345,17 @@ async function ghPull() {
     if (!parsed || typeof parsed !== 'object') throw new Error('Pulled file is not a valid JSON object.');
     const candidate = (parsed.kind === 'startpage-settings' && parsed.state) ? parsed.state : parsed;
     if (!candidate || typeof candidate !== 'object') throw new Error('No state object found in pulled file.');
-    const merged = Object.assign({}, candidate);
-    // Preserve every local secret key — none of these are in a keyless pushed config
-    if (!merged.stockApiKey       && S?.stockApiKey)        merged.stockApiKey       = S.stockApiKey;
-    if (!merged.stockProxyUrl     && S?.stockProxyUrl)      merged.stockProxyUrl     = S.stockProxyUrl;
-    if (!merged.groqApiKey        && S?.groqApiKey)         merged.groqApiKey        = S.groqApiKey;
-    if (!merged.geminiApiKey      && S?.geminiApiKey)       merged.geminiApiKey      = S.geminiApiKey;
-    if (!merged.mistralApiKey     && S?.mistralApiKey)      merged.mistralApiKey     = S.mistralApiKey;
-    if (!merged.gcalOauthClientId && S?.gcalOauthClientId)  merged.gcalOauthClientId = S.gcalOauthClientId;
-    if (!merged.fredApiKey   && S?.fredApiKey)   merged.fredApiKey   = S.fredApiKey;
-    if (!merged.eiaApiKey    && S?.eiaApiKey)     merged.eiaApiKey    = S.eiaApiKey;
-    if (!merged.quiverApiKey && S?.quiverApiKey)  merged.quiverApiKey = S.quiverApiKey;
-    // Preserve a locally-set background image when the pulled config doesn't carry
-    // one (e.g. a stale config.json pushed before the wallpaper was set). Losing
-    // the background on every pull was the reported surprise; opacity/dim ride along.
-    if (!merged.bgImageUrl && S?.bgImageUrl) {
-      merged.bgImageUrl = S.bgImageUrl;
-      if (merged.bgImageOpacity == null && S.bgImageOpacity != null) merged.bgImageOpacity = S.bgImageOpacity;
-      if (merged.bgImageDim     == null && S.bgImageDim     != null) merged.bgImageDim     = S.bgImageDim;
-    }
+    // "Save the current config" insurance: snapshot the full local config
+    // BEFORE anything mutates, so ⟲ Undo last pull can always re-apply it.
+    _writePrePullBackup();
+    // Shared apply path (same as file Import + Undo): preserve local secrets,
+    // background image, manual weather location, and merge the day-keyed
+    // data stores (journals + price log) with local-wins semantics — a stale
+    // cloud copy can't clobber picks, trackers, journals, or grading data.
+    const merged = _mergeLocalPreserves(Object.assign({}, candidate), candidate);
     S = normalizeImportedState(merged);
     save({ mirror: true });  // major mutation — force the recovery mirror current
-    _applyOutOfBandKeys(parsed); // theme, widgetLayout, flight/hotel trackers, caches
+    _applyOutOfBandKeys(parsed); // theme, widgetLayout, caches; flight/hotel trackers MERGE into local
     // Also mirror ALL repo files (everything needed to run + docs, MINUS ideas/,
     // backup/, VCS dirs, and the settings file itself) to disk so a fresh machine
     // gets the whole runnable project — not just index.html/worker.js. Available
@@ -7084,6 +7420,10 @@ function aiToast(msg, ms = 2400) {
     el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:white;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,.2);z-index:1000;opacity:0;transition:opacity .2s;pointer-events:none;';
     document.body.appendChild(el);
   }
+  // WS-E (E4): announce toasts to assistive tech. Set unconditionally (not only
+  // at creation) so a pre-existing #aiToast element is covered too.
+  el.setAttribute('role', 'status');
+  el.setAttribute('aria-live', 'polite');
   el.textContent = msg;
   el.style.opacity = '1';
   clearTimeout(el._t);
@@ -8352,15 +8692,40 @@ function clockItemHtml(c, idx, isLocal) {
   </div>`;
 }
 
+// Identity key of the currently-built clock rows. Rows are rebuilt (innerHTML)
+// ONLY when the clock list changes; the per-second tick updates just the
+// time/AM-PM text nodes so the subtree isn't re-created 1×/s.
+let _clockRowsKey = '';
 function renderClocks() {
   const el = document.getElementById('clockList');
-  // Local clock always first (non-removable)
-  let html = clockItemHtml({ city: LOCAL_CITY, tz: LOCAL_TZ }, -1, true);
-  // User-added clocks (skip if same tz as local to avoid duplicate)
+  if (!el) return;
+  // Local clock always first (non-removable); user-added clocks skip the
+  // local tz to avoid a duplicate row.
+  const items = [{ city: LOCAL_CITY, tz: LOCAL_TZ, idx: -1, isLocal: true }];
   S.clocks.forEach((c, i) => {
-    if (c.tz !== LOCAL_TZ) html += clockItemHtml(c, i, false);
+    if (c.tz !== LOCAL_TZ) items.push({ city: c.city, tz: c.tz, idx: i, isLocal: false });
   });
-  el.innerHTML = html;
+  const key = items.map(it => `${it.idx}|${it.city}|${it.tz}`).join('§');
+  if (key !== _clockRowsKey || el.children.length !== items.length) {
+    _clockRowsKey = key;
+    let html = '';
+    for (const it of items) html += clockItemHtml({ city: it.city, tz: it.tz }, it.idx, it.isLocal);
+    el.innerHTML = html;   // full build embeds current times — no update needed this tick
+    return;
+  }
+  // Steady-state tick: update only the time text + AM/PM span per row.
+  const now = new Date();
+  for (let i = 0; i < items.length; i++) {
+    const row = el.children[i];
+    const timeEl = row && row.querySelector ? row.querySelector('.ck-time') : null;
+    if (!timeEl) continue;
+    const ts = now.toLocaleTimeString('en-US', { timeZone: items[i].tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    const [t, ap] = ts.split(' ');
+    if (timeEl.firstChild && timeEl.firstChild.nodeType === 3) timeEl.firstChild.nodeValue = t;
+    else timeEl.textContent = t;   // fallback if the text node is missing
+    const apEl = timeEl.querySelector('.ck-ampm');
+    if (apEl) apEl.textContent = ap || '';
+  }
 }
 function removeClock(i) { S.clocks.splice(i,1); save(); renderClocks(); }
 function addClock() {
@@ -10340,7 +10705,87 @@ function normalizedDelta(d = {}) {
   };
 }
 
+// ── Stocks & ticker diff rendering ───────────────────────────────────────────
+// renderTicker()/renderStocks() run after every fetch-merge step (up to ~12×/min
+// at the 15 s proxy cadence). Rebuilding innerHTML each time restarted the
+// ticker marquee and tore down every watchlist row. Each function is now a
+// dispatcher over two paths:
+//   • full rebuild (_renderTickerFull / _renderStocksFull — the ORIGINAL bodies,
+//     moved verbatim) whenever the ordered symbol list or any structural bit
+//     changed (add/remove/reorder, a name change, banner/pf-cell presence, a
+//     ticker item changing shape between none/stale/live states);
+//   • in-place diff when the structure is unchanged — only changed cell
+//     text/classes are touched, so row elements (and their inline drag/click
+//     handlers) persist and the ticker's CSS marquee animation never restarts.
+// _tkLastRender/_skLastRender cache what the previous render showed; they are
+// recomputed on every call and compared to pick the path.
+let _tkLastRender = null;
+let _skLastRender = null;
+
 function renderTicker() {
+  const now = Date.now();
+  // Per-item display state, mirroring _renderTickerFull's markup. shape is the
+  // STRUCTURE of the item ('none' em-dash / 'stale' muted / 'live' / 'live+mkt'
+  // with extended-hours badge); any shape change → full rebuild, because the
+  // set of child spans differs between shapes.
+  const items = S.stocks.map(sym => {
+    const d = stockCache[sym];
+    const havePrice = d && d.price != null && d.price !== '';
+    if (!havePrice) return { shape: 'none' };
+    if (!isPriceFresh(d, now)) return { shape: 'stale', price: '$' + d.price };
+    const delta = normalizedDelta(d);
+    const up = delta.change != null ? delta.change >= 0 : null;
+    const chgTxt = delta.change != null ? Math.abs(delta.change).toFixed(2) : '—';
+    const pctTxt = delta.pct != null ? Math.abs(delta.pct).toFixed(2) + '%' : '—';
+    const m = _stockMarketExtras(d);
+    return {
+      shape: m ? 'live+mkt' : 'live',
+      price: '$' + d.price,
+      chgCls: 't-chg ' + (up === null ? '' : (up ? 'up' : 'down')),
+      chgTxt: `${up === null ? '' : (up ? '▲' : '▼')} ${chgTxt} (${pctTxt})`,
+      mktCls: m ? 't-mkt ' + m.dirCls : '',
+      mktTitle: m ? m.label + ' session' : '',
+      mktTxt: m ? m.label + (m.pct ? ' ' + m.pct : '') : '',
+    };
+  });
+  const listKey = S.stocks.join('\u0001');
+  const shapeKey = items.map(it => it.shape).join(',');
+  const prevR = _tkLastRender;
+  _tkLastRender = { listKey, shapeKey };
+  const inner = document.getElementById('tickerInner');
+  const nodes = (prevR && prevR.listKey === listKey && prevR.shapeKey === shapeKey && inner)
+    ? inner.querySelectorAll('.t-item') : null;
+  if (!nodes || nodes.length !== items.length * 2) { _renderTickerFull(); return; }
+  // In-place path: patch BOTH duplicated marquee halves; never touch innerHTML,
+  // never read scrollWidth, never reset animationDuration — the CSS marquee
+  // keeps scrolling without the visible restart jump.
+  const setText = (node, v) => { if (node && node.textContent !== v) node.textContent = v; };
+  const setCls = (node, v) => { if (node && node.className !== v) node.className = v; };
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    if (it.shape === 'none') continue;              // static '—' item
+    for (const itemEl of [nodes[i], nodes[i + items.length]]) {
+      setText(itemEl.querySelector('.t-price'), it.price);
+      if (it.shape === 'stale') continue;           // '·refreshing' chg is static
+      const chgEl = itemEl.querySelector('.t-chg');
+      setCls(chgEl, it.chgCls);
+      setText(chgEl, it.chgTxt);
+      if (it.shape === 'live+mkt') {
+        const mktEl = itemEl.querySelector('.t-mkt');
+        if (mktEl) {
+          setCls(mktEl, it.mktCls);
+          if (mktEl.getAttribute('title') !== it.mktTitle) mktEl.setAttribute('title', it.mktTitle);
+          setText(mktEl, it.mktTxt);
+        }
+      }
+    }
+  }
+}
+
+// Full ticker rebuild — the original renderTicker() body, moved here VERBATIM.
+// Runs when the symbol list (or any item's structural shape) changed: rebuilds
+// both marquee halves, re-measures scrollWidth and resets animationDuration.
+function _renderTickerFull() {
   const now = Date.now();
   const items = S.stocks.map(sym => {
     const d = stockCache[sym];
@@ -10373,6 +10818,133 @@ function renderTicker() {
 }
 
 function renderStocks() {
+  // Build the same per-row display strings _renderStocksFull would emit, then
+  // decide the path: identical structure → patch only the changed cells in
+  // place; any structural change (list, names, banner, pf presence, missing
+  // DOM) → full rebuild. NOTE: the cell markup built here MUST stay in
+  // lock-step with the row template inside _renderStocksFull — drift would not
+  // break correctness (the diff path applies its own strings consistently) but
+  // would briefly show the dispatcher's markup instead of the template's.
+  let next = null;
+  if (S.stocks.length) {
+    const now = Date.now();
+    const anyStale = S.stocks.some(sym => !isPriceFresh(stockCache[sym], now));
+    const updatingPill = anyStale ? '<span class="sk-updating-pill" title="Waiting for fresh quotes this session">prices updating…</span>' : '';
+    const rows = S.stocks.map((sym) => {
+      const d  = stockCache[sym] || {};
+      const fresh = isPriceFresh(d, now);
+      const prevCell = (d.prev != null && d.prev !== '') ? '$'+d.prev : '—';
+      const openCell = (d.open != null && d.open !== '') ? '$'+d.open : '—';
+      const havePrice = d.price != null && d.price !== '';
+      let curCls, curTitle = '', curInner, chgInner, stale = false;
+      if (fresh) {
+        const delta = normalizedDelta(d);
+        const up = delta.change != null ? delta.change >= 0 : null;
+        const dirCls = up === null ? '' : (up ? 'up' : 'down');
+        const sign = up === null ? '' : (up ? '+' : '-');
+        const chgText = delta.change != null ? `${sign}${Math.abs(delta.change).toFixed(2)}` : '—';
+        const pctText = delta.pct != null ? `(${sign}${Math.abs(delta.pct).toFixed(2)}%)` : '';
+        const mkt = renderStockMarketBadge(d);
+        curCls = `sk-cur ${dirCls}`;
+        curInner = `${havePrice ? '$'+d.price : '—'}${mkt}`;
+        chgInner = `<span class="sk-chg ${up === null ? '' : (up?'up':'down')}">${chgText}</span>`
+          + (pctText ? `<span class="sk-pct ${up === null ? '' : (up?'up':'down')}">${pctText}</span>` : '');
+      } else if (havePrice) {
+        stale = true;
+        const asOf = _quoteAsOf(d);
+        curCls = 'sk-cur';
+        curTitle = asOf ? `Last fresh quote ${asOf} — refreshing` : 'Refreshing…';
+        curInner = `$${d.price}<span class="sk-asof">${asOf ? 'as of '+asOf+' · refreshing' : 'refreshing'}</span>`;
+        chgInner = '<span class="sk-chg">—</span>';
+      } else {
+        stale = true;
+        curCls = 'sk-cur';
+        curTitle = 'Updating…';
+        curInner = '<span class="sk-skel"></span>';
+        chgInner = '<span class="sk-chg"><span class="sk-skel sk-skel-sm"></span></span>';
+      }
+      const pred = renderStockPredictionIcon(sym, _maiPredictionsByTicker?.[sym]);
+      // Name cell string is used ONLY for change detection (a name change forces
+      // a full rebuild so setupStockNameScrollers re-measures the marquee).
+      const name = `<a class="sk-id-link" href="${yahooQuoteUrl(sym)}" target="_blank" rel="noopener noreferrer" title="${esc(d.name || sym)}"><span class="sk-sym">${sym}</span><span class="sk-name"><span class="sk-name-inner">${esc(d.name || '')}</span></span></a>`;
+      const pf = (typeof _pfRowCell === 'function') ? _pfRowCell(sym) : '';
+      return { sym, stale, pred, name, curCls, curTitle, curInner, chgInner, prevCell, openCell, pf };
+    });
+    const hideBanner = S.stockProxyUrl || S.stockApiKey || localStorage.getItem('sp_hide_api_banner') === '1';
+    next = {
+      listKey: JSON.stringify(S.stocks),
+      bannerOn: !hideBanner,
+      hdrCell: getMarketStatusBadge() + updatingPill,
+      rows,
+      pfSummary: (typeof _pfSummaryLine === 'function') ? _pfSummaryLine() : '',
+    };
+  }
+  const prevR = _skLastRender;
+  _skLastRender = next;
+  const el = document.getElementById('stocksBody');
+  const canDiff = !!(next && prevR && el
+    && prevR.listKey === next.listKey
+    && prevR.bannerOn === next.bannerOn
+    && !!prevR.pfSummary === !!next.pfSummary
+    && prevR.rows.length === next.rows.length
+    && next.rows.every((r, i) => prevR.rows[i].name === r.name && !!prevR.rows[i].pf === !!r.pf));
+  if (!canDiff) { _renderStocksFull(); return; }
+  // Sanity-check the live DOM still matches the cached structure (row count and
+  // per-row data-sym); anything unexpected → full rebuild, never a wrong patch.
+  const rowEls = el.querySelectorAll('.stocks-list > .sk-row:not(.sk-hdr-row)');
+  let domOk = rowEls.length === next.rows.length;
+  if (domOk) {
+    for (let i = 0; i < rowEls.length; i++) {
+      if (!rowEls[i].getAttribute || rowEls[i].getAttribute('data-sym') !== next.rows[i].sym) { domOk = false; break; }
+    }
+  }
+  if (!domOk) { _renderStocksFull(); return; }
+  // ── In-place patch: same structure → update only what changed ──────────────
+  if (prevR.hdrCell !== next.hdrCell) {
+    const hdrRow = el.querySelector('.sk-hdr-row');
+    if (hdrRow && hdrRow.children && hdrRow.children[1]) hdrRow.children[1].innerHTML = next.hdrCell;
+  }
+  for (let i = 0; i < next.rows.length; i++) {
+    const r = next.rows[i], p = prevR.rows[i], rowEl = rowEls[i];
+    if (p.stale !== r.stale) rowEl.classList.toggle('sk-stale', r.stale);
+    if (p.pred !== r.pred) { const c = rowEl.firstElementChild; if (c) c.innerHTML = r.pred; }
+    if (p.curCls !== r.curCls || p.curTitle !== r.curTitle || p.curInner !== r.curInner) {
+      const c = rowEl.querySelector('.sk-cur');
+      if (c) {
+        if (p.curCls !== r.curCls) c.className = r.curCls;
+        if (p.curTitle !== r.curTitle) { if (r.curTitle) c.setAttribute('title', r.curTitle); else c.removeAttribute('title'); }
+        if (p.curInner !== r.curInner) c.innerHTML = r.curInner;
+      }
+    }
+    if (p.prevCell !== r.prevCell) { const c = rowEl.querySelector('.sk-prev'); if (c) c.textContent = r.prevCell; }
+    if (p.openCell !== r.openCell) { const c = rowEl.querySelector('.sk-open'); if (c) c.textContent = r.openCell; }
+    if (p.chgInner !== r.chgInner) { const c = rowEl.querySelector('.sk-chg-col'); if (c) c.innerHTML = r.chgInner; }
+    if (r.pf && p.pf !== r.pf) { const c = rowEl.querySelector('.pf-cell'); if (c) c.outerHTML = r.pf; }
+  }
+  if (next.pfSummary && prevR.pfSummary !== next.pfSummary) {
+    const sEl = el.querySelector('.pf-summary');
+    if (sEl) sEl.outerHTML = next.pfSummary;
+  }
+  // Tail effects ALSO run on the diff path — these panels read the price data
+  // that just changed. setupStockNameScrollers is deliberately NOT re-run here:
+  // names are unchanged on this path (a name change forces a full rebuild
+  // above), so the measured marquee state is still valid.
+  try { el.classList.toggle('pf-revealed', _pfEnabled && _pfEnabled() && _pfRevealed && !_pfPercentOnly()); } catch (_) {}
+  try {
+    if (typeof renderEventCalendarStrip === 'function' && typeof buildEventList === 'function') {
+      const ecEl = document.getElementById('ec-strip-container');
+      if (ecEl) ecEl.innerHTML = renderEventCalendarStrip(buildEventList());
+    }
+  } catch(_) {}
+  try { if (typeof renderEarningsCockpit === 'function') renderEarningsCockpit(); } catch(_) {}
+  try { if (typeof renderDailyBrief === 'function') renderDailyBrief(); } catch(_) {} // [feat:brief]
+}
+
+// Full stocks rebuild — the original renderStocks() body, moved here VERBATIM
+// (only the row's data-sym attribute was added). Runs on any structural change:
+// add/remove/reorder, a name change, banner or pf presence change, or when the
+// in-place patcher finds the DOM doesn't match its cache.
+function _renderStocksFull() {
   const el = document.getElementById('stocksBody');
   if (!S.stocks.length) {
     el.innerHTML = '<div class="center-msg">No stocks. Click ＋ to add.</div>';
@@ -10431,7 +11003,7 @@ function renderStocks() {
     }
     const pred = _maiPredictionsByTicker?.[sym];
     const predIcon = renderStockPredictionIcon(sym, pred);
-    return `<div class="sk-row${rowStaleCls}"
+    return `<div class="sk-row${rowStaleCls}" data-sym="${esc(sym)}"
       draggable="true"
       ondragstart="stockDragStart(event,${idx})"
       ondragover="stockDragOver(event)"
@@ -10454,10 +11026,10 @@ function renderStocks() {
     </div>`;
   }).join('');
   const hideBanner = S.stockProxyUrl || S.stockApiKey || localStorage.getItem('sp_hide_api_banner') === '1';
-  const banner = hideBanner ? '' : `<div style="margin:4px 6px 6px;padding:6px 8px;background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;font-size:10px;line-height:1.35;color:#9a3412;display:flex;align-items:center;gap:5px;">
+  const banner = hideBanner ? '' : `<div class="stocks-api-banner">
     <span style="font-size:12px;">🔑</span>
     <span onclick="openStockSettings()" style="flex:1;cursor:pointer;"><b>Set up a Yahoo proxy</b> for 15-second refresh on any network. <span style="text-decoration:underline;">Click to set up →</span></span>
-    <button onclick="dismissApiBanner()" title="Dismiss — still available via the ⚙ button" style="background:none;border:none;cursor:pointer;color:#9a3412;font-size:14px;line-height:1;padding:0 2px;opacity:.6;">✕</button>
+    <button onclick="dismissApiBanner()" title="Dismiss — still available via the ⚙ button">✕</button>
   </div>`;
   // [feat:pnl] one portfolio summary line after the rows ('' when feature off).
   const pfSummary = (typeof _pfSummaryLine === 'function') ? _pfSummaryLine() : '';
@@ -11271,7 +11843,9 @@ function applyTheme(t) {
   if (btn) btn.textContent = THEME_LABELS[theme] || '🌙 Dark';
   // Highlight active tile in settings modal
   document.querySelectorAll('#themeTiles .theme-tile').forEach(el => {
-    el.classList.toggle('active', el.getAttribute('data-theme') === theme);
+    const on = el.getAttribute('data-theme') === theme;
+    el.classList.toggle('active', on);
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');  // WS-E: tiles are <button>s
   });
 }
 function setTheme(t) { applyTheme(t); }
@@ -11506,7 +12080,9 @@ function _updateWildSettingsUI() {
   if (onR  && S) onR.checked  = !!S.wildMode;
   if (offR && S) offR.checked = !S.wildMode;
   document.querySelectorAll('#wildTiles .wild-tile').forEach(el => {
-    el.classList.toggle('active', S && S.wildMode && el.getAttribute('data-wild') === S.wildTheme);
+    const on = !!(S && S.wildMode && el.getAttribute('data-wild') === S.wildTheme);
+    el.classList.toggle('active', on);
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');  // WS-E: tiles are <button>s
   });
 }
 
@@ -11666,20 +12242,33 @@ function setBgImageUrl(v) {
   if (val) aiToast('Background image applied', 1800);
 }
 
+// Slider drag (oninput, fires per pixel step): live preview ONLY — update the
+// label + CSS var directly. No S mutation, no save(). The commit handlers
+// below (onchange, fires once on release) mutate S and do a single save().
 function onBgImageOpacityInput(pct) {
   const v = Math.max(0, Math.min(1, (+pct || 0) / 100));
-  S.bgImageOpacity = v;
   const label = document.getElementById('bgImageOpacityVal');
   if (label) label.textContent = `${Math.round(v * 100)}%`;
+  if ((S.bgImageUrl || '').trim()) document.documentElement.style.setProperty('--bg-image-opacity', String(v));
+}
+
+function onBgImageOpacityCommit(pct) {
+  const v = Math.max(0, Math.min(1, (+pct || 0) / 100));
+  S.bgImageOpacity = v;
   applyBackgroundImage();
   save();
 }
 
 function onBgImageDimInput(pct) {
   const v = Math.max(0, Math.min(1, (+pct || 0) / 100));
-  S.bgImageDim = v;
   const label = document.getElementById('bgImageDimVal');
   if (label) label.textContent = `${Math.round(v * 100)}%`;
+  if ((S.bgImageUrl || '').trim()) document.documentElement.style.setProperty('--bg-image-dim', String(v));
+}
+
+function onBgImageDimCommit(pct) {
+  const v = Math.max(0, Math.min(1, (+pct || 0) / 100));
+  S.bgImageDim = v;
   applyBackgroundImage();
   save();
 }
@@ -14438,6 +15027,12 @@ function getHorizonAdaptedPriors(horizonDays) {
 // Called from saveStockCache() (hot path); retention = PRICE_LOG_KEEP_DAYS,
 // which must stay >= max horizon (30) + grace so _getDailyPrice() can still
 // resolve outcome prices for the longest-horizon predictions.
+// Memoized parse of sp_peer_cache for saveDailyPriceSnapshot's hot path
+// (called from saveStockCache every refresh). Keyed on the RAW string so any
+// picker write to the key invalidates it automatically — no coupling to the
+// picker's write sites.
+let _peerCacheRawMemo = null;
+let _peerCacheParsedMemo = null;
 function saveDailyPriceSnapshot() {
   if (!Object.keys(stockCache).length) return;
   const key = _localDateKey(new Date());
@@ -14452,7 +15047,12 @@ function saveDailyPriceSnapshot() {
   // Without this the picks never appear in dailyPriceLog, so picker grading
   // (gradePickerJournal) can never resolve an outcome price for them.
   try {
-    const peer = JSON.parse(localStorage.getItem('sp_peer_cache') || '{}');
+    const raw = localStorage.getItem('sp_peer_cache') || '{}';
+    if (raw !== _peerCacheRawMemo) {
+      _peerCacheParsedMemo = JSON.parse(raw);
+      _peerCacheRawMemo = raw;
+    }
+    const peer = _peerCacheParsedMemo || {};
     const wanted = new Set(['SPY']);
     for (const e of Object.values(S.pickerJournal || {})) {
       for (const t of (e && e.tickers) || []) if (t && t.sym) wanted.add(String(t.sym).toUpperCase());
@@ -14462,6 +15062,13 @@ function saveDailyPriceSnapshot() {
     }
   } catch (_) {}
   if (!Object.keys(snap).length) return;
+  // Early-return when nothing moved: identical snapshot for today already
+  // stored → skip the rewrite (and the prune walk) entirely.
+  const prevSnap = S.dailyPriceLog[key];
+  if (prevSnap) {
+    const pk = Object.keys(prevSnap), sk = Object.keys(snap);
+    if (pk.length === sk.length && sk.every(s => prevSnap[s] === snap[s])) return;
+  }
   S.dailyPriceLog[key] = snap;
   // Prune entries older than PRICE_LOG_KEEP_DAYS (single named constant so the
   // prune window and the grading lookup window can't drift apart).
@@ -16631,7 +17238,9 @@ async function _connTestLLM(id, key) {
   let target, opts;
   if (id === 'gemini') {
     target = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key);
-    opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ping' }] }], generationConfig: { maxOutputTokens: 1 } }) };
+    // thinkingConfig matches queryGemini — without it 2.5-flash spends seconds
+    // "thinking" even on a 1-token ping (and would burn the budget on thought).
+    opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'ping' }] }], generationConfig: { maxOutputTokens: 1, thinkingConfig: { thinkingBudget: 0 } } }) };
   } else {
     target = id === 'groq' ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.mistral.ai/v1/chat/completions';
     const model = id === 'groq' ? 'llama-3.1-8b-instant' : 'mistral-small-latest';
@@ -17200,19 +17809,35 @@ async function queryGemini(prompt, signal) {
   const key = (S.geminiApiKey || '').trim();
   if (!key) return null;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`;
-  const body = {
+  // gemini-2.5-flash ships with dynamic "thinking" ON by default. On this
+  // app's large prompts it routinely thinks for longer than every caller's
+  // abort timeout (12–45 s), which surfaced as Gemini "always timing out".
+  // thinkingBudget: 0 disables thinking; responses come back in seconds.
+  const mkBody = (withThinkingOff) => JSON.stringify({
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: {
       temperature: 0.3,
       responseMimeType: 'application/json',
+      ...(withThinkingOff ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
     },
-  };
-  const r = await _aiFetch('gemini', url, {
+  });
+  const post = (body) => _aiFetch('gemini', url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
     signal,
   });
+  let r = await post(mkBody(true));
+  if (!r.ok && r.status === 400) {
+    // Defensive: if Google repoints the model alias at something that rejects
+    // thinkingConfig (400 INVALID_ARGUMENT naming it), retry once without.
+    let detail400 = '';
+    try { detail400 = await r.text(); } catch(_) {}
+    if (/thinking/i.test(detail400)) {
+      console.warn('[Gemini] model rejected thinkingConfig — retrying without it');
+      r = await post(mkBody(false));
+    }
+  }
   if (!r.ok) {
     // Surface the actual Google error message so failures are debuggable
     let detail = '';
@@ -19097,7 +19722,12 @@ function gradeMaiJournal() {
       }
     }
     console.log(`[Grading] Complete: ${gradedCount} graded, ${skippedCount} skipped, ${totalEntries} total`);
-    save();
+    // Persist only when something was NEWLY graded. This runs on every
+    // saveStockCache() (8-12×/min at the 15 s proxy cadence) and the
+    // unconditional save() was a full JSON.stringify(S) + sync localStorage
+    // write each time even when nothing changed. Mirrors the gradedCount
+    // gate used for _maiRunLearning below.
+    if (gradedCount > 0) save();
     // Re-fit learned weights whenever new grades come in.
     if (gradedCount > 0) try { _maiRunLearning(); } catch (_) {}
   } catch (e) { console.log('[MarketAI] grading failed:', e); }
@@ -20931,6 +21561,7 @@ try {
 // existing render hooks for the common case; this just keeps the brief current
 // when the tab stays open across the day boundary or as caches refresh.
 try {
+  if (_briefRecomputeTimer) clearInterval(_briefRecomputeTimer);   // clear-before-set: never leak a duplicate interval
   _briefRecomputeTimer = setInterval(() => {
     try { if (!document.hidden && typeof renderDailyBrief === 'function') renderDailyBrief(); } catch (_) {}
   }, _BRIEF_RECOMPUTE_MS);
@@ -22413,12 +23044,17 @@ async function testGeminiKey() {
   const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
   for (const model of models) {
     try {
+      // Disable thinking on the 2.5 family (same as queryGemini) — otherwise
+      // the 5-token budget is consumed by thought and the reply comes back
+      // empty. 2.0-family models reject thinkingConfig with HTTP 400, so it
+      // is only sent where supported.
+      const supportsThinking = /^gemini-2\.5|^gemini-flash-latest/.test(model);
       const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ role: 'user', parts: [{ text: 'Reply with the single word OK' }] }],
-          generationConfig: { maxOutputTokens: 5 },
+          generationConfig: { maxOutputTokens: 5, ...(supportsThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {}) },
         }),
       });
       if (r.ok) {
@@ -23183,13 +23819,13 @@ setInterval(() => {
     loadIcsEvents();
   }
 }, 60 * 60 * 1000);
-// Refresh weather data every 15 min; re-detect location to catch travel
-// Also force location cache expiry periodically to detect travel
+// Refresh weather data every 15 min. NOTE: this interval must NOT clear
+// sp_geo_denied_until — doing so re-prompted geolocation every 15 min and
+// defeated the app's own denial cooldown. Forced re-detect lives only in the
+// manual paths (useBrowserLocation / the permission-grant handler).
 setInterval(() => {
   if (document.hidden) return;
   console.log('[Weather] Periodic refresh (15 min interval)');
-  // Clear location permission denial cooldown to allow fresh geolocation attempt
-  try { localStorage.removeItem('sp_geo_denied_until'); } catch(_) {}
   initWeather();
 }, 15 * 60 * 1000);
 
@@ -23232,6 +23868,15 @@ function openModal(id) {
   const modalEl = overlay.querySelector('.modal') || overlay;
   modalEl.setAttribute('role', 'dialog');
   modalEl.setAttribute('aria-modal', 'true');
+  // WS-E (E5): name the dialog from its .modal-title so screen readers announce
+  // it (skip when the modal already carries an explicit aria-label).
+  if (!modalEl.getAttribute('aria-label')) {
+    const titleEl = modalEl.querySelector('.modal-title');
+    if (titleEl) {
+      if (!titleEl.id) titleEl.id = id + '-title';
+      modalEl.setAttribute('aria-labelledby', titleEl.id);
+    }
+  }
   overlay.classList.add('open');
   // Build the settings jump-bar wiring once.
   if (id === 'appSettingsModal') { try { _buildSettingsNav(); } catch(_) {} try { _syncAlertsSettingsUi(); } catch(_) {} }
@@ -23252,6 +23897,39 @@ function closeModal(id) {
   if (_lastModalOpener && document.contains(_lastModalOpener)) { try { _lastModalOpener.focus(); } catch(_) {} }
   _lastModalOpener = null;
 }
+// WS-E (E3): Settings has a single "Close" button — but warn before silently
+// discarding key text typed into a per-field-Save input and never saved.
+// Pairs: input id ↔ the stored value its Save button writes.
+function _settingsUnsavedKeyFields() {
+  const norm = v => (v || '').trim();
+  const pairs = [
+    ['proxyUrlInputSettings', () => S.stockProxyUrl],
+    ['apiKeyInputSettings',   () => S.stockApiKey],
+    ['groqKeyInput',          () => S.groqApiKey],
+    ['geminiKeyInput',        () => S.geminiApiKey],
+    ['mistralKeyInput',       () => S.mistralApiKey],
+  ];
+  const dirty = [];
+  for (const [inputId, stored] of pairs) {
+    const el = document.getElementById(inputId);
+    if (!el) continue;
+    let v = norm(el.value);
+    if (inputId === 'proxyUrlInputSettings' && v) {
+      // Mirror saveProxyUrl()'s normalization so an equivalent URL isn't flagged.
+      if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+      v = v.replace(/\/+$/, '');
+    }
+    if (v !== norm(stored())) dirty.push(inputId);
+  }
+  return dirty;
+}
+function closeAppSettings() {
+  let dirty = [];
+  try { dirty = _settingsUnsavedKeyFields(); } catch (_) {}
+  if (dirty.length && !confirm('You have an unsaved key — close anyway?')) return;
+  closeModal('appSettingsModal');
+}
+window.closeAppSettings = closeAppSettings;
 let _lastModalOpener = null;
 function _modalFocusables(root) {
   if (!root) return [];
@@ -23399,6 +24077,40 @@ document.addEventListener('click', (e) => {
     if (typeof _rerenderHintWidget === 'function') _rerenderHintWidget(feature);
   }
 });
+
+/* ── WS-E (E1): first-run wizard discovery card ─────────────────────────────
+   One dismissible card at the top of the grid linking the guided setup
+   (wizard.html) — shown while the dashboard looks unconfigured: no saved
+   sp_state at all, OR no stock source AND no AI keys. The dismissal lives in a
+   STANDALONE device-local localStorage key (never in S, excluded from
+   export/sync in _isExportableCacheKey — same convention as sp_dismissed_hints). */
+const WIZARD_CARD_DISMISS_KEY = 'sp_wizard_card_dismissed';
+function _wizardCardEligible() {
+  try {
+    if (localStorage.getItem(WIZARD_CARD_DISMISS_KEY) === '1') return false;
+    if (!localStorage.getItem('sp_state')) return true;
+    const hasStock = !!((S.stockProxyUrl || '').trim() || (S.stockApiKey || '').trim());
+    const hasAi = !!((S.groqApiKey || '').trim() || (S.geminiApiKey || '').trim() || (S.mistralApiKey || '').trim());
+    return !hasStock && !hasAi;
+  } catch (_) { return false; }
+}
+function renderWizardCard() {
+  const slot = document.getElementById('wizardCardSlot');
+  if (!slot) return;
+  if (!_wizardCardEligible()) { slot.innerHTML = ''; return; }
+  slot.innerHTML = `<div class="empty-config is-hint" style="margin:10px 14px 0;">`
+    + `<button type="button" class="hint-dismiss" onclick="dismissWizardCard()" aria-label="Dismiss setup suggestion" title="Dismiss — the wizard stays reachable from Settings">✕</button>`
+    + `<div class="empty-config-title">💡 New here?</div>`
+    + `<div class="empty-config-body">A guided setup walks you through every free key and connection — no terminal needed.</div>`
+    + `<a class="cta-settings cta-inline" href="wizard.html">Run the guided setup →</a>`
+    + `</div>`;
+}
+function dismissWizardCard() {
+  try { localStorage.setItem(WIZARD_CARD_DISMISS_KEY, '1'); } catch (_) {}
+  renderWizardCard();
+}
+window.dismissWizardCard = dismissWizardCard;
+try { renderWizardCard(); } catch (_) {}
 
 /* ── Peek thumbnails (HLD: widget-peek-thumbnails) ──────────────────────────
    A single muted one-line summary shown ONLY when a widget is collapsed, built
@@ -23815,6 +24527,8 @@ function renderWidgetLayoutList() {
       <span class="wl-handle">≡</span>
       <span class="wl-name">${esc(w.name)}</span>
       <span class="wl-col">${esc(colLabel)}</span>
+      <button type="button" class="wl-move" data-dir="up" onclick="wlMove('${esc(w.id)}', -1)" aria-label="Move ${esc(w.name)} up" title="Move up within its column" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:10px;line-height:1;padding:2px 3px;">▲</button>
+      <button type="button" class="wl-move" data-dir="down" onclick="wlMove('${esc(w.id)}', 1)" aria-label="Move ${esc(w.name)} down" title="Move down within its column" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:10px;line-height:1;padding:2px 3px;">▼</button>
       <input class="wl-chk" type="checkbox" ${hidden ? '' : 'checked'} onchange="toggleWidgetHidden('${esc(w.id)}', !this.checked)" />
     </div>`;
   }).join('');
@@ -23891,6 +24605,31 @@ function wlDragEnd(e) {
   document.querySelectorAll('.wl-row').forEach(r => r.classList.remove('dragging','drop-over'));
   _wlDragId = null; _wlDragCol = null;
 }
+// WS-E (E7): keyboard/touch reorder — ▲/▼ swap the widget with its same-column
+// neighbour and persist through the exact same path wlDrop uses
+// (_saveWidgetLayout → applyWidgetLayout → re-render). No second serializer.
+function wlMove(id, delta) {
+  const host = document.getElementById('widgetLayoutList');
+  if (!host) return;
+  const row = host.querySelector(`.wl-row[data-wid="${CSS.escape(id)}"]`);
+  if (!row) return;
+  const col = row.getAttribute('data-col') || '';
+  const ids = [...host.querySelectorAll(`.wl-row[data-col="${CSS.escape(col)}"]`)]
+    .map(r => r.getAttribute('data-wid'));
+  const i = ids.indexOf(id), j = i + (delta < 0 ? -1 : 1);
+  if (i < 0 || j < 0 || j >= ids.length) return;   // already at the edge
+  [ids[i], ids[j]] = [ids[j], ids[i]];
+  const layout = _loadWidgetLayout();
+  ids.forEach((wid, idx) => { layout[wid] = Object.assign({}, layout[wid], { order: idx }); });
+  _saveWidgetLayout(layout);
+  applyWidgetLayout();
+  try {
+    renderWidgetLayoutList();
+    // Keep keyboard focus on the moved row's same-direction button.
+    host.querySelector(`.wl-row[data-wid="${CSS.escape(id)}"] .wl-move[data-dir="${delta < 0 ? 'up' : 'down'}"]`)?.focus();
+  } catch (_) {}
+}
+window.wlMove = wlMove;
 
 /* ════════════════════════════════════════════
    INIT STOCKS
@@ -24237,6 +24976,7 @@ document.addEventListener('visibilitychange', () => {
     // archive write.
     try { save({ mirror: true }); } catch (_) {}
     try { _flushColdToIdb(true); } catch (_) {}
+    try { _persistRecentLogs(); } catch (_) {}   // flush debounced log tail
   } else {
     try { updateClock(); renderClocks(); } catch(_) {}
     try { renderSvcBar(); updateAllWidgetMeta(); } catch(_) {}
@@ -24246,7 +24986,7 @@ document.addEventListener('visibilitychange', () => {
 });
 // Force a mirror flush on unload so the recovery copy matches sp_state when the
 // tab closes. pagehide is more reliable than beforeunload on mobile/bfcache.
-window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catch (_) {} try { _flushColdToIdb(true); } catch (_) {} });
+window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catch (_) {} try { _flushColdToIdb(true); } catch (_) {} try { _persistRecentLogs(); } catch (_) {} });
 
 // ══════════════════════════════════════════════════════════════════════════════
 // MY FLIGHT TRACKER WIDGET
@@ -24260,6 +25000,13 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
   const CACHE_TTL_FAR  = 2 * 60 * 60 * 1000; // 2 hr for later flights
 
   // ── Persistence ─────────────────────────────────────────────────────────────
+  // Flight ids are interpolated into onclick attributes and CSS selectors.
+  // HTML-escaping is NOT enough there (entities decode before the JS engine
+  // parses the handler), so whitelist the charset instead. _safeFlightTracker
+  // enforces the same rule at the import boundary; this guards legacy/local data.
+  function safeFid(id) {
+    return String(id == null ? '' : id).replace(/[^\w-]/g, '');
+  }
   function loadFlights() {
     try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch(_) { return []; }
   }
@@ -24430,7 +25177,7 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
   function cardHTML(f, live) {
     const code  = esc(f.code);
     const date  = esc(f.date || '');
-    const delBtn = `<button class="ft-card-del" onclick="ftDelete('${f.id}')" title="Remove">&#x2715;</button>`;
+    const delBtn = `<button class="ft-card-del" onclick="ftDelete('${safeFid(f.id)}')" title="Remove">&#x2715;</button>`;
 
     if (live) {
       const oIata = live.origIata || f.origIata || '?';
@@ -24552,18 +25299,18 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
       const div = document.createElement('div');
       div.innerHTML = cardHTML(f, null);
       const card = div.firstElementChild;
-      card.dataset.fid = f.id;
+      card.dataset.fid = safeFid(f.id);
       return card.outerHTML;
     }).join('');
 
     flights.forEach(async (f) => {
       const live = await fetchStatus(f.code, f.date);
-      const card = el.querySelector(`[data-fid="${f.id}"]`);
+      const card = el.querySelector(`[data-fid="${safeFid(f.id)}"]`);
       if (!card) return;
       const tmp = document.createElement('div');
       tmp.innerHTML = cardHTML(f, live);
       const newCard = tmp.firstElementChild;
-      newCard.dataset.fid = f.id;
+      newCard.dataset.fid = safeFid(f.id);
       card.replaceWith(newCard);
     });
     markWidgetUpdated('flight-tracker');
@@ -24616,7 +25363,9 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
   };
 
   window.ftDelete = function(id) {
-    const flights = loadFlights().filter(f => String(f.id) !== String(id));
+    // Compare sanitized-to-sanitized so the X still deletes a legacy entry
+    // whose stored id contains chars safeFid strips from the rendered card.
+    const flights = loadFlights().filter(f => safeFid(f.id) !== safeFid(id));
     saveFlights(flights);
     renderAndFetch();
   };
@@ -24810,11 +25559,15 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
     if (ci && co) return f(ci) + ' – ' + f(co);
     return ci ? f(ci) : co ? f(co) : '';
   }
+  // Same rule as the flight tracker's safeFid: the id lands inside an onclick
+  // JS string, where esc() is useless (entities decode before JS parses) —
+  // whitelist the charset instead.
+  function safeHid(id){ return String(id == null ? '' : id).replace(/[^\w-]/g, ''); }
   function cardHTML(h){
     const nightsTxt = h.nights ? ' (' + h.nights + ' night' + (h.nights>1?'s':'') + ')' : '';
     const metaLine = [h.city, fmtRange(h.checkIn, h.checkOut) + nightsTxt].filter(Boolean).join(' · ');
     return '<div class="ft-card">'
-      + '<button class="ft-card-del" onclick="hotelDelete(\'' + esc(h.id) + '\')" title="Remove">&#x2715;</button>'
+      + '<button class="ft-card-del" onclick="hotelDelete(\'' + safeHid(h.id) + '\')" title="Remove">&#x2715;</button>'
       + '<div class="ft-card-route">🏨 ' + esc(h.name) + '</div>'
       + '<div class="ft-card-meta">' + esc(metaLine) + '</div>'
       + (h.confirmation ? '<div class="ft-card-meta" style="opacity:.65">Conf ' + esc(h.confirmation) + '</div>' : '')
@@ -24920,7 +25673,7 @@ window.addEventListener('pagehide', () => { try { save({ mirror: true }); } catc
     _msg('AI (' + used + ') found ' + stays.length + ' stay' + (stays.length===1?'':'s') + ' — confirm below.');
     _showHotelConfirm(stays);
   };
-  window.hotelDelete = function(id){ save(load().filter(h => h.id !== id)); render(); };
+  window.hotelDelete = function(id){ save(load().filter(h => safeHid(h.id) !== safeHid(id))); render(); };
 
   // ── Confirm dialog (AI-fallback path only) ──────────────────────────────────
   let _hotelPending = null;
@@ -26641,6 +27394,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // AM-window refresh interval: only fetch while the widget is visible AND in the
     // AM session window (no point polling futures all afternoon, and a hidden widget
     // shouldn't fetch at all).
+    if (_overnightInterval) clearInterval(_overnightInterval);   // clear-before-set: never leak a duplicate interval
     _overnightInterval = setInterval(() => {
       try {
         const el = document.getElementById('overnightBrief');
@@ -27298,6 +28052,27 @@ document.addEventListener('DOMContentLoaded', function() { initHormuzMonitor(); 
     } catch (e) { console.warn(_TAG, 'EDGAR Form 4 ' + ticker + ':', e.message); return []; }
   }
 
+  // Single-flight in-flight dedup. Concurrent fetchInsiderTrades() invocations
+  // (the Market-AI Promise.all fan-out + the DOMContentLoaded boot fetch +
+  // smart-money renders) each read the caches BEFORE any of them writes, so
+  // every one of them saw "stale" and refired the same Quiver/EDGAR request —
+  // observed live as 6 identical failed EDGAR fetches per ticker per boot.
+  // Each pending per-ticker request is parked here so every concurrent caller
+  // awaits the SAME underlying fetch; the entry is removed on settle.
+  const _tradesInFlight = {};   // key: 'cc:TICKER' | 'ins:TICKER' → Promise<cache entry>
+  function _tradesSingleFlight(key, task) {
+    let p = _tradesInFlight[key];
+    if (!p) {
+      p = Promise.resolve().then(task);
+      _tradesInFlight[key] = p;
+      // Detach cleanup; the no-op rejection handler keeps this side-chain from
+      // raising unhandledrejection (awaiters still see the original outcome).
+      p.then(function() { delete _tradesInFlight[key]; },
+             function() { delete _tradesInFlight[key]; });
+    }
+    return p;
+  }
+
   async function fetchInsiderTrades(tickers) {
     if (!Array.isArray(tickers) || !tickers.length) return {};
     if (typeof S !== 'undefined' && S && S.insiderEnabled === false) return {};
@@ -27311,14 +28086,18 @@ document.addEventListener('DOMContentLoaded', function() { initHormuzMonitor(); 
       if (!ticker) continue;
 
       if (!cc[ticker] || (now - (cc[ticker].ts || 0)) > _4H) {
-        const data = await _quiverFetch('congresstrading/' + ticker);
-        cc[ticker] = { ts: now, data: data || [] };
+        cc[ticker] = await _tradesSingleFlight('cc:' + ticker, async function() {
+          const data = await _quiverFetch('congresstrading/' + ticker);
+          return { ts: Date.now(), data: data || [] };
+        });
       }
       if (!cache[ticker] || (now - (cache[ticker].ts || 0)) > _4H) {
-        let data = await _quiverFetch('insiders/' + ticker);
-        let source = 'quiver';
-        if (!data) { data = await _fetchInsiderTradesEDGAR(ticker); source = 'edgar'; }
-        cache[ticker] = { ts: now, data: data || [], source: source };
+        cache[ticker] = await _tradesSingleFlight('ins:' + ticker, async function() {
+          let data = await _quiverFetch('insiders/' + ticker);
+          let source = 'quiver';
+          if (!data) { data = await _fetchInsiderTradesEDGAR(ticker); source = 'edgar'; }
+          return { ts: Date.now(), data: data || [], source: source };
+        });
       }
     }
 
@@ -29018,19 +29797,30 @@ async function _renderSincePerformance(picks) {
   }
   spyNow = priceMap.SPY != null ? priceMap.SPY : null;
 
-  // Recover picks that never captured an entry price or name (legacy picks, or
-  // picks made while no Worker proxy was set — fetchPeerSnapshot used to return
-  // nothing). Anchor entryPrice to the first observed price and persist it, so
-  // the since-pick return accrues from here instead of showing "price pending".
+  // Recover picks that never captured an entry price or name (legacy picks,
+  // picks made while no Worker proxy was set, or a re-applied config whose
+  // cache predates entry-price enrichment). Anchor at the PICK-DATE close
+  // from dailyPriceLog first (it survives Pull/Import via merge) — NEVER
+  // re-baseline the starting point to today's price when the true entry is
+  // recoverable. Today's price remains the last-resort fallback only.
+  const pickDayKey = cached.ts ? _localDateKey(new Date(cached.ts)) : null;
   let spyEntry = +cached.spyEntry;
   let dirty = false;
   for (const p of picks) {
-    const s = snap[String(p.sym).toUpperCase()];
-    if (!s) continue;
-    if (!(p.entryPrice > 0) && s.price > 0) { p.entryPrice = s.price; dirty = true; }
-    if (!p.name && s.name) p.name = s.name;
+    const sym = String(p.sym).toUpperCase();
+    const s = snap[sym];
+    if (!(p.entryPrice > 0)) {
+      const logged = pickDayKey ? +_getDailyPrice(sym, pickDayKey, 0) : 0;
+      if (logged > 0) { p.entryPrice = logged; dirty = true; }
+      else if (s && s.price > 0) { p.entryPrice = s.price; dirty = true; }
+    }
+    if (!p.name && s && s.name) p.name = s.name;
   }
-  if (!(spyEntry > 0) && spyNow > 0) { spyEntry = spyNow; dirty = true; }
+  if (!(spyEntry > 0)) {
+    const loggedSpy = pickDayKey ? +_getDailyPrice('SPY', pickDayKey, 0) : 0;
+    if (loggedSpy > 0) { spyEntry = loggedSpy; dirty = true; }
+    else if (spyNow > 0) { spyEntry = spyNow; dirty = true; }
+  }
   if (dirty && Array.isArray(cached.picks)) {
     const bySym = {}; picks.forEach(p => { bySym[String(p.sym).toUpperCase()] = p; });
     cached.picks.forEach(cp => {

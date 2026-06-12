@@ -402,7 +402,9 @@ async function _testLLM(id, key){
   let target, opts;
   if (id === 'gemini'){
     target = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(key);
-    opts = { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ contents:[{ role:'user', parts:[{ text:'ping' }] }], generationConfig:{ maxOutputTokens:1 } }) };
+    // thinkingConfig matches the app's queryGemini call shape — 2.5-flash
+    // defaults to "thinking", which is slow and eats the 1-token budget.
+    opts = { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ contents:[{ role:'user', parts:[{ text:'ping' }] }], generationConfig:{ maxOutputTokens:1, thinkingConfig:{ thinkingBudget:0 } } }) };
   } else {
     target = id==='groq' ? 'https://api.groq.com/openai/v1/chat/completions' : 'https://api.mistral.ai/v1/chat/completions';
     const model = id==='groq' ? 'llama-3.1-8b-instant' : 'mistral-small-latest';

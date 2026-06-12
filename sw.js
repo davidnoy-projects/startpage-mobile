@@ -7,7 +7,7 @@
  *
  * Bump CACHE when the shell changes so old caches are evicted on activate.
  */
-const CACHE = 'startpage-shell-v3';
+const CACHE = 'startpage-shell-v4';
 const SHELL = [
   './',
   './index.html',
